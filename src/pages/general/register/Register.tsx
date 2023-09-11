@@ -1,12 +1,46 @@
-import React from 'react'
+import axios from "axios";
 import { Link } from 'react-router-dom';
+import { useState } from "react";
+import AuthenticationUtil from "../../../utils/AuthenticationUtil";
 
 import ImageLight from '../../../assets/images/create-account-office.jpeg';
 import ImageDark from '../../../assets/images/create-account-office-dark.jpeg';
 import { GithubIcon, TwitterIcon } from '../../../icons';
 import { Input, Label, Button } from '@windmill/react-ui';
+import { Alert } from '@windmill/react-ui'
+
 
 function Register() {
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+    repassword: ""
+  });
+
+  const [message, setMessage] = useState({
+    success: "",
+    message: ""
+  });
+
+  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    try {
+      if (AuthenticationUtil.confirmPassword(credentials.password, credentials.repassword)) {
+        const data = {
+          user: {
+            email: credentials.email,
+            password: credentials.password
+          }
+        }
+        const response = await axios.post('http://localhost:3000/signup', data);
+        setMessage({ success: "success", message: "Signup successly" })
+      } else {
+        setMessage({ success: "fail", message: "Invalid password or re-password" })
+      }
+    } catch (error: any) {
+      setMessage({ success: "fail", message: "Interval sever error! Can't signup" })
+    }
+  }
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
@@ -30,17 +64,22 @@ function Register() {
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                 Register
               </h1>
+              {message.success == "success" && <Alert type="success">{message.message}</Alert>}
+              {message.success == "fail" && <Alert type="danger">{message.message}</Alert>}
               <Label>
                 <span>Email</span>
-                <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com" />
+                <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com"
+                  onChange={(event) => setCredentials({ ...credentials, email: event.target.value })} value={credentials.email} />
               </Label>
               <Label className="mt-4">
                 <span>Password</span>
-                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password" />
+                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password"
+                  onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} value={credentials.password} />
               </Label>
               <Label className="mt-4">
                 <span>Confirm password</span>
-                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password" />
+                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password"
+                  onChange={(event) => setCredentials({ ...credentials, repassword: event.target.value })} value={credentials.repassword} />
               </Label>
 
               <Label className="mt-6" check>
@@ -50,13 +89,9 @@ function Register() {
                 </span>
               </Label>
 
-              <Link
-                to="/login"
-              >
-                <Button block className="mt-4">
-                  Create account
-                </Button>
-              </Link>
+              <Button block className="mt-4" onClick={handleRegister}>
+                Create account
+              </Button>
 
               <hr className="my-8" />
 
