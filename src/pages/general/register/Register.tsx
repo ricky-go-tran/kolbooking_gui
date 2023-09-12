@@ -1,9 +1,9 @@
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import AuthenticationUtil from "../../../utils/AuthenticationUtil";
 
-import ImageLight from '../../../assets/images/create-account-office.jpeg';
+import ImageLight from "../../../assets/images/create-account-office.jpeg";
 import ImageDark from '../../../assets/images/create-account-office-dark.jpeg';
 import { GithubIcon, TwitterIcon } from '../../../icons';
 import { Input, Label, Button } from '@windmill/react-ui';
@@ -97,11 +97,7 @@ function Register() {
 
               <Button block layout="outline">
                 <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Github
-              </Button>
-              <Button block className="mt-4" layout="outline">
-                <TwitterIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Twitter
+                Google
               </Button>
 
               <p className="mt-4">

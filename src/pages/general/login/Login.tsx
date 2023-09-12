@@ -86,11 +86,7 @@ const Login = () => {
 
               <Button block layout="outline">
                 <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Github
-              </Button>
-              <Button className="mt-4" block layout="outline">
-                <TwitterIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Twitter
+                Google
               </Button>
 
               <p className="mt-4">
