@@ -32,8 +32,8 @@ function Register() {
             password: credentials.password
           }
         }
-        const response = await axios.post(getProxy("/signup"), data);
-        setMessage({ success: "success", message: "Signup successly" })
+        axios.post(getProxy("/signup"), data).then((response) => { setMessage({ success: "success", message: "Signup successly" }) });
+
       } else {
         setMessage({ success: "fail", message: "Invalid password or re-password" })
       }

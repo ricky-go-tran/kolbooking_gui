@@ -38,8 +38,10 @@ const Login = () => {
             password: credentials.password
           }
         }
-        const response = await axios.post(getProxy("/login"), data);
-        dispatch({ type: "LOGIN_SUCCESS", payload: response.data.status.data.user })
+        axios.post(getProxy("/login"), data).then((res) => {
+          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.status.data.user })
+        });
+
       } else {
         setMessage({ success: "Fail", message: "Invalid email format! Login fail" })
       }
