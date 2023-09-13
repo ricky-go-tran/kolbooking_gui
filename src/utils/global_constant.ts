@@ -10,4 +10,5 @@ export const INITIAL_STATE: AuthType = {
   auth_token: TokenStorage,
   profile: ProfileStorage,
   message: "",
+  loading: false
 }

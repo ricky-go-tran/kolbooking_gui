@@ -1,4 +1,4 @@
-import { ForbiddenIcon } from '../../../icons';
+import { ForbiddenIcon } from "../../../icons";
 
 function Page404() {
   return (

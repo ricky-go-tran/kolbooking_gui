@@ -1,16 +1,16 @@
 import axios from "axios";
 import AuthenticationUtil from "../../../utils/AuthenticationUtil";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useState, useContext } from "react";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthContext";
+import { AuthType } from "../../../utils/global_type";
 
-import ImageLight from '../../../assets/images/login-office.jpeg';
-import ImageDark from '../../../assets/images/login-office-dark.jpeg';
-import { GithubIcon, TwitterIcon } from '../../../icons';
-import { Label, Input, Button } from '@windmill/react-ui';
-import { Alert } from '@windmill/react-ui'
-
-
+import ImageLight from "../../../assets/images/login-office.jpeg";
+import ImageDark from "../../../assets/images/login-office-dark.jpeg";
+import { GithubIcon, TwitterIcon } from "../../../icons";
+import { Alert, Label, Input, Button } from "@windmill/react-ui";
+import { getProxy } from "../../../utils/PathUtil";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -23,8 +23,13 @@ const Login = () => {
     message: ""
   });
 
+  const { state, dispatch } = useContext(AuthContext);
+
+
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    dispatch({ type: "LOGIN_START" });
+
     try {
       if (AuthenticationUtil.emailFormat(credentials.email)) {
         const data = {
@@ -33,13 +38,13 @@ const Login = () => {
             password: credentials.password
           }
         }
-        const response = await axios.post('http://localhost:3000/login', data);
-        // TODO: auth context and reducer
-        console.log(response)
+        const response = await axios.post(getProxy("/login"), data);
+        dispatch({ type: "LOGIN_SUCCESS", payload: response.data.status.data.user })
       } else {
         setMessage({ success: "Fail", message: "Invalid email format! Login fail" })
       }
     } catch (error: any) {
+      dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
       setMessage({ success: "Fail", message: "Interval server error! Login fail" })
     }
 
@@ -84,7 +89,7 @@ const Login = () => {
 
               <hr className="my-8" />
 
-              <Button block layout="outline">
+              <Button block layout="outline" disabled={state.loading}>
                 <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
                 Google
               </Button>

@@ -4,10 +4,10 @@ import { useState } from "react";
 import AuthenticationUtil from "../../../utils/AuthenticationUtil";
 
 import ImageLight from "../../../assets/images/create-account-office.jpeg";
-import ImageDark from '../../../assets/images/create-account-office-dark.jpeg';
-import { GithubIcon, TwitterIcon } from '../../../icons';
-import { Input, Label, Button } from '@windmill/react-ui';
-import { Alert } from '@windmill/react-ui'
+import ImageDark from "../../../assets/images/create-account-office-dark.jpeg";
+import { GithubIcon, TwitterIcon } from "../../../icons";
+import { Alert, Input, Label, Button } from "@windmill/react-ui";
+import { getProxy } from "../../../utils/PathUtil";
 
 
 function Register() {
@@ -32,7 +32,7 @@ function Register() {
             password: credentials.password
           }
         }
-        const response = await axios.post('http://localhost:3000/signup', data);
+        const response = await axios.post(getProxy("/signup"), data);
         setMessage({ success: "success", message: "Signup successly" })
       } else {
         setMessage({ success: "fail", message: "Invalid password or re-password" })

@@ -1,9 +1,16 @@
-import { createContext, useEffect, useReducer, ReactNode } from "react";
+import React, { createContext, useEffect, useReducer, ReactNode } from "react";
 import { INITIAL_STATE } from "../utils/global_constant";
 import { AuthReducer } from "../reducers/AuthReducer";
+import { AuthType } from "../utils/global_type";
 
 
-export const AuthContext: any = createContext(INITIAL_STATE);
+export const AuthContext = createContext<{
+  state: AuthType;
+  dispatch: React.Dispatch<any>;
+}>({
+  state: INITIAL_STATE,
+  dispatch: () => null
+});
 
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
@@ -19,12 +26,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{
-        auth_token: state.auth_token,
-        profile: state.profile,
-        message: state.message,
-        dispatch
-      }} >
+      value={{ state, dispatch }} >
       {children}
     </AuthContext.Provider>
   );
