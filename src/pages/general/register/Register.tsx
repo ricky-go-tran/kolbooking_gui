@@ -1,21 +1,20 @@
 import axios from "axios";
-import AuthenticationUtil from "../../../utils/AuthenticationUtil";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { AuthType } from "../../../utils/global_type";
+import { useState } from "react";
+import AuthenticationUtil from "../../../utils/AuthenticationUtil";
 
-import ImageLight from "../../../assets/images/login-office.jpeg";
-import ImageDark from "../../../assets/images/login-office-dark.jpeg";
+import ImageLight from "../../../assets/images/create-account-office.jpeg";
+import ImageDark from "../../../assets/images/create-account-office-dark.jpeg";
 import { GithubIcon, TwitterIcon } from "../../../icons";
-import { Alert, Label, Input, Button } from "@windmill/react-ui";
+import { Alert, Input, Label, Button } from "@windmill/react-ui";
 import { getProxy } from "../../../utils/PathUtil";
 
-const Login = () => {
+
+function Register() {
   const [credentials, setCredentials] = useState({
     email: "",
-    password: ""
+    password: "",
+    repassword: ""
   });
 
   const [message, setMessage] = useState({
@@ -23,33 +22,24 @@ const Login = () => {
     message: ""
   });
 
-  const { state, dispatch } = useContext(AuthContext);
-
-
-  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    dispatch({ type: "LOGIN_START" });
-
     try {
-      if (AuthenticationUtil.emailFormat(credentials.email)) {
+      if (AuthenticationUtil.confirmPassword(credentials.password, credentials.repassword)) {
         const data = {
           user: {
             email: credentials.email,
             password: credentials.password
           }
         }
-        axios.post(getProxy("/login"), data).then((res) => {
-          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.status.data.user })
-        });
+        axios.post(getProxy("/signup"), data).then((response) => { setMessage({ success: "success", message: "Signup successly" }) });
 
       } else {
-        setMessage({ success: "Fail", message: "Invalid email format! Login fail" })
+        setMessage({ success: "fail", message: "Invalid password or re-password" })
       }
     } catch (error: any) {
-      dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
-      setMessage({ success: "Fail", message: "Interval server error! Login fail" })
+      setMessage({ success: "fail", message: "Interval sever error! Can't signup" })
     }
-
   }
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
@@ -71,27 +61,41 @@ const Login = () => {
           </div>
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
-              <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
-              {message.success == "Fail" && <Alert type="danger">{message.message}</Alert>}
+              <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
+                Register
+              </h1>
+              {message.success == "success" && <Alert type="success">{message.message}</Alert>}
+              {message.success == "fail" && <Alert type="danger">{message.message}</Alert>}
               <Label>
                 <span>Email</span>
-                <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com" required
+                <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com"
                   onChange={(event) => setCredentials({ ...credentials, email: event.target.value })} value={credentials.email} />
               </Label>
-
               <Label className="mt-4">
                 <span>Password</span>
-                <Input crossOrigin="" css="" className="mt-1" type="password" placeholder="***************" required
+                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password"
                   onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} value={credentials.password} />
               </Label>
+              <Label className="mt-4">
+                <span>Confirm password</span>
+                <Input crossOrigin="" css="" className="mt-1" placeholder="***************" type="password"
+                  onChange={(event) => setCredentials({ ...credentials, repassword: event.target.value })} value={credentials.repassword} />
+              </Label>
 
-              <Button className="mt-4" block tag={"button"} onClick={handleLogin} >
-                Log in
+              <Label className="mt-6" check>
+                <Input crossOrigin="" css="" type="checkbox" />
+                <span className="ml-2">
+                  I agree to the <span className="underline">privacy policy</span>
+                </span>
+              </Label>
+
+              <Button block className="mt-4" onClick={handleRegister}>
+                Create account
               </Button>
 
               <hr className="my-8" />
 
-              <Button block layout="outline" disabled={state.loading}>
+              <Button block layout="outline">
                 <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
                 Google
               </Button>
@@ -99,17 +103,9 @@ const Login = () => {
               <p className="mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/forgot-password"
+                  to="/login"
                 >
-                  Forgot your password?
-                </Link>
-              </p>
-              <p className="mt-1">
-                <Link
-                  className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
-                  to="/register"
-                >
-                  Create account
+                  Already have an account? Login
                 </Link>
               </p>
             </div>
@@ -117,7 +113,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Register
