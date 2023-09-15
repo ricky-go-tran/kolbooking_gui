@@ -5,7 +5,7 @@ const AuthenticationUtil = {
     return (password.length >= MIN_PASSWORD_LENGTH && password.length <= MAX_PASSWORD_LENGTH)
   },
   confirmPassword: (password: String, repassword: String) => {
-    return (AuthenticationUtil.isValidPasswordLength(password) && password == repassword)
+    return (AuthenticationUtil.isValidPasswordLength(password) && password === repassword)
   },
   emailFormat: (email: string) => {
     const invalidEmail = EMAIL_PATTERN.test(email)

@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { lazy } from 'react';
+
 import { Routes, BrowserRouter, Route, Navigate } from 'react-router-dom'
-import Login from './pages/general/login/Login'
-import ForgotPassword from './pages/general/forgot-password/ForgotPassword';
-import Register from './pages/general/register/Register';
-import Homepage from './pages/general/homepage/Homepage';
-import Page404 from './pages/general/error/NotFound';
 import { Button } from '@windmill/react-ui'
+
+const ForgotPassword = lazy(() => import('./pages/general/forgot-password/ForgotPassword'));
+const Login = lazy(() => import('./pages/general/login/Login'));
+const Register = lazy(() => import('./pages/general/register/Register'));
+const Homepage = lazy(() => import('./pages/general/homepage/Homepage'));
+const Page404 = lazy(() => import('./pages/general/error/NotFound'));
+const AdminLayout = lazy(() => import('./containers/AdminLayout'));
+const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 
 function App() {
   return (
@@ -15,6 +19,7 @@ function App() {
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/admin/dashboard' element={<AdminLayout> <Dashboard /> </AdminLayout>} />
         <Route path='*' element={<Page404 />} />
       </Routes>
     </BrowserRouter>

@@ -72,7 +72,7 @@ const Login = () => {
           <main className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">Login</h1>
-              {message.success == "Fail" && <Alert type="danger">{message.message}</Alert>}
+              {message.success === "Fail" && <Alert type="danger">{message.message}</Alert>}
               <Label>
                 <span>Email</span>
                 <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com" required
