@@ -1,11 +1,8 @@
 import { ReactNode } from 'react';
 import { NavLink, useMatch } from 'react-router-dom';
+import { IComponent } from '../../utils/global_type';
 
-interface ComponentProps {
-  uri: string;
-  children: ReactNode | JSX.Element;
-}
-export const MatchUri: React.FC<ComponentProps> = ({ uri, children }) => {
+export const MatchUri: React.FC<IComponent> = ({ uri, children }) => {
   const match = useMatch(uri);
   return (
     <> {match && children}</>

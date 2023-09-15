@@ -26,7 +26,11 @@ import { ReactComponent as DropdownIcon } from './dropdown.svg';
 import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg';
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg';
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg';
-
+import { ReactComponent as CancelIcon } from './cancel.svg'
+import { ReactComponent as SuccessIcon } from './success.svg'
+import { ReactComponent as InformationIcon } from './information.svg';
+import { ReactComponent as LockIcon } from './lock.svg';
+import { ReactComponent as UnlockIcon } from './unlock.svg';
 
 export {
   ButtonsIcon,
@@ -57,4 +61,9 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
+  CancelIcon,
+  SuccessIcon,
+  InformationIcon,
+  LockIcon,
+  UnlockIcon
 };

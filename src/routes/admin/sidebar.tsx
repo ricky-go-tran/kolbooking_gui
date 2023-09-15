@@ -7,6 +7,11 @@ const externalRoutes: IRoute[] = [
     name: 'Dashboard',
   },
   {
+    path: "/admin/users",
+    icon: 'PeopleIcon',
+    name: 'Users',
+  },
+  {
     path: '/admin/jobs',
     icon: 'FormsIcon',
     name: 'Jobs',

@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export type AuthType = {
   auth_token: any,
   profile: any,
@@ -23,3 +25,9 @@ interface IIcon {
 export type {
   IIcon
 }
+
+export interface IComponent {
+  uri: string;
+  children: ReactNode | JSX.Element;
+}
+

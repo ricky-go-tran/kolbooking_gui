@@ -86,7 +86,7 @@ const Header = () => {
               isOpen={isNotificationsMenuOpen}
               onClose={() => setIsNotificationsMenuOpen(false)}
             >
-              <DropdownItem tag="a" href="#" className="justify-between">
+              <DropdownItem tag="a" href="/admin/profile" className="justify-between">
                 <span>Messages</span>
                 <Badge type="danger">13</Badge>
               </DropdownItem>
@@ -119,11 +119,11 @@ const Header = () => {
               isOpen={isProfileMenuOpen}
               onClose={() => setIsProfileMenuOpen(false)}
             >
-              <DropdownItem tag="a" href="#">
+              <DropdownItem tag="a" href="/admin/profile">
                 <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Profile</span>
               </DropdownItem>
-              <DropdownItem tag="a" href="#">
+              <DropdownItem tag="a" href="/admin/password/edit">
                 <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Settings</span>
               </DropdownItem>
