@@ -9,7 +9,6 @@ import GeneralLoading from '../pages/general/loading/GeneralLoading';
 const Page404 = lazy(() => import('../pages/general/error/NotFound'));
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
-  debugger;
 
   let location = useLocation();
   return (

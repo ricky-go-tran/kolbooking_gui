@@ -2,9 +2,10 @@ import React from 'react';
 import routes from '../../../routes/admin/sidebar';
 import { NavLink } from 'react-router-dom';
 import * as Icons from "../../../icons";
-import { Button } from '@windmill/react-ui';
+import { Button, Badge } from '@windmill/react-ui';
 import { MatchUri } from '../../general/MatchUri'
 import { IIcon } from '../../../utils/global_type';
+
 
 function Icon({ icon, ...props }: IIcon) {
   // @ts-ignore
@@ -16,9 +17,16 @@ function Icon({ icon, ...props }: IIcon) {
 function SidebarContent() {
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
-      <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/#">
-        KolJob
-      </a>
+      <ul className="flex items-center flex-shrink-0 space-x-6">
+        <li>
+          <a className="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="/#">
+            KolJob
+          </a>
+        </li>
+        <li>
+          <Badge type="success">Admin</Badge>
+        </li>
+      </ul>
       <ul className="mt-6">
         {routes.map((route) =>
         (

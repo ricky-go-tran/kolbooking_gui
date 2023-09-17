@@ -35,13 +35,14 @@ const SetupProfile = () => {
               </h1>
               <Label >
                 <span>Avatar</span>
-                <input type="file" className="block w-full text-sm text-gray-500
-                      file:hidden
+                <Input type="file" css="" crossOrigin="" className="block w-full text-sm text-gray-500
                       file:mr-4 file:py-2 file:px-4
                       file:rounded-md file:border-0
                       file:text-sm file:font-semibold
-                      file:bg-blue-500 file:text-white
-                      hover:file:bg-blue-600
+                      file:bg-purple-600 file:text-white
+                      hover:file:bg-purple-600
+                      mt-1
+
                     "/>
               </Label>
               <Label className="mt-4">
@@ -59,7 +60,7 @@ const SetupProfile = () => {
 
               <Label className="mt-4">
                 <span>Address</span>
-                <Textarea className="mt-1" css="" rows={5} placeholder="Enter some long form content." style={{ resize: "none" }} />
+                <Textarea className="mt-1" css="" rows={5} placeholder="Your address." style={{ resize: "none" }} />
               </Label>
               <hr className="mt-4" />
               <Button block className="mt-6">

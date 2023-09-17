@@ -31,6 +31,14 @@ import { ReactComponent as SuccessIcon } from './success.svg'
 import { ReactComponent as InformationIcon } from './information.svg';
 import { ReactComponent as LockIcon } from './lock.svg';
 import { ReactComponent as UnlockIcon } from './unlock.svg';
+import { ReactComponent as AdminIcon } from './admin.svg';
+import { ReactComponent as LikeIcon } from './like.svg';
+import { ReactComponent as UnlikeIcon } from './unlike.svg';
+import { ReactComponent as LikeOuletIcon } from './like-outlet.svg';
+import { ReactComponent as UnlikeOutletIcon } from './unlike-oulet.svg';
+import { ReactComponent as WarningIcon } from './warning.svg';
+
+
 
 export {
   ButtonsIcon,
@@ -65,5 +73,11 @@ export {
   SuccessIcon,
   InformationIcon,
   LockIcon,
-  UnlockIcon
+  UnlockIcon,
+  AdminIcon,
+  LikeIcon,
+  LikeOuletIcon,
+  UnlikeIcon,
+  UnlikeOutletIcon,
+  WarningIcon
 };

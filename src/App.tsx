@@ -3,6 +3,7 @@ import React, { lazy } from 'react';
 import { Routes, BrowserRouter, Route, Navigate } from 'react-router-dom'
 import { Button } from '@windmill/react-ui'
 
+const HomePage = lazy(() => import('./pages/general/newfeed/HomePage'));
 const ForgotPassword = lazy(() => import('./pages/general/forgot-password/ForgotPassword'));
 const Login = lazy(() => import('./pages/general/login/Login'));
 const Register = lazy(() => import('./pages/general/register/Register'));
@@ -18,12 +19,17 @@ const SetupProfile = lazy(() => import('./pages/general/first-login/SetupProfile
 const SetupKolProfile = lazy(() => import('./pages/kol/setup/SetupKolProfile'));
 const AdminProfile = lazy(() => import('./pages/admin/Profile'));
 const AdminChangePassword = lazy(() => import('./pages/admin/ChangePassword'));
+const NewfeedLayout = lazy(() => import('./containers/NewfeedLayout'));
+const Jobs = lazy(() => import('./pages/general/jobs/Job'));
+const KOL = lazy(() => import('./pages/general/kols/KOL'));
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Homepage />} />
+        <Route path="/" element={<NewfeedLayout><HomePage /></NewfeedLayout>} />
+        <Route path="/jobs" element={<NewfeedLayout><Jobs /></NewfeedLayout>} />
+        <Route path="/kols" element={<NewfeedLayout><KOL /></NewfeedLayout>} />
         <Route path='/login' element={<Login />} />
         <Route path='/forgot-password' element={<ForgotPassword />} />
         <Route path='/register' element={<Register />} />
