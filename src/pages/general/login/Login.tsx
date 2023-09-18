@@ -39,7 +39,11 @@ const Login = () => {
           }
         }
         axios.post(getProxy("/login"), data).then((res) => {
-          dispatch({ type: "LOGIN_SUCCESS", payload: res.data.status.data.user })
+          let response = {
+            token: res.headers.authorization,
+            profile: res.data.status.data.user
+          }
+          dispatch({ type: "LOGIN_SUCCESS", payload: response })
         });
 
       } else {

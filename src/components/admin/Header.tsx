@@ -1,4 +1,7 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
+import { getProxy } from '../../utils/PathUtil';
+
 import {
   SearchIcon,
   MoonIcon,
@@ -11,11 +14,17 @@ import {
 } from '../../icons';
 
 import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
+import axios, { AxiosRequestConfig } from 'axios';
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const { state, dispatch } = useContext(AuthContext);
+  const [profile, setProfile] = useState({});
+
+
+
 
   function handleNotificationsClick() {
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
@@ -26,7 +35,9 @@ const Header = () => {
   };
 
   return (
+
     <header className="z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
+
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
         {/* <!-- Mobile hamburger --> */}
         <button

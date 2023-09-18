@@ -1,8 +1,7 @@
 import { ReactNode } from 'react';
 
 export type AuthType = {
-  auth_token: any,
-  profile: any,
+  auth_token: string,
   message: any | null,
   loading: boolean
 }
