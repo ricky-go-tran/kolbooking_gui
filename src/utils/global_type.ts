@@ -6,6 +6,12 @@ export type AuthType = {
   loading: boolean
 }
 
+export type ProfileType = {
+  fullname: string,
+  avatar: string,
+  role: string
+}
+
 export interface IMainContainer {
   children: React.ReactNode
 };

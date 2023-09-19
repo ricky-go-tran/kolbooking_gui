@@ -1,3 +1,5 @@
+import { ProfileType } from "./global_type";
+
 export let TokenStorage = (): string => {
   let token: string = "";
 
@@ -10,14 +12,19 @@ export let TokenStorage = (): string => {
   return token;
 }
 
-export let ProfileStorage = (): any => {
-  let profile: any = {}
+export let ProfileStorage = (): ProfileType => {
+  let profile: ProfileType = {
+    fullname: "",
+    avatar: "",
+    role: ""
+  }
 
   const storedProfile = localStorage.getItem("profile");
-  if (storedProfile === "null" || storedProfile === null) {
-    profile = "null";
+  if (storedProfile === "null" || storedProfile === null || storedProfile === undefined || storedProfile === "" || storedProfile === "undefined") {
+    profile = { fullname: "", avatar: "", role: "" };
   } else if (typeof storedProfile === "string") {
-    profile = JSON.parse(storedProfile);
+    let temp = JSON.parse(storedProfile);
+    profile = { fullname: temp.fullname, avatar: temp.avatar, role: temp.role };
   }
   return profile;
 }

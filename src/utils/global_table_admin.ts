@@ -7,6 +7,43 @@ interface ITableData {
   date: string
 };
 
+interface ITabelUser {
+  id: string
+  avatar: string
+  fullname: string
+  email: string
+  birthday: string
+  role: "amdin" | "kol" | "base" | undefined
+  role_color: "danger" | "warning" | "success" | undefined
+  status: "valid" | "invalid" | "lock" | undefined
+  status_color: "success" | "warning" | "danger" | undefined
+
+}
+
+interface ITableJob {
+  id: string
+  avatar_owner: string
+  fullname_owner: string
+  email_owner: string
+  avatar_kol: string
+  fullname_kol: string
+  email_kol: string
+  status: "post" | "booking" | "apply" | "complete" | "payment" | "finish" | "cancle" | undefined
+  status_color: "success" | "danger" | "warning" | "neutral" | "primary" | undefined
+  create_at: string
+}
+
+interface ITableReport {
+  id: string
+  avatar_reporter: string
+  fullname_reporter: string
+  email_reporter: string
+  status: "pending" | "proccessing" | "resovled" | "rejected" | undefined
+  status_color: "success" | "danger" | "warning" | "neutral" | "primary" | undefined
+  created_at: string
+}
+
+
 
 const tableData: ITableData[] = [
   {
@@ -373,5 +410,8 @@ const tableData: ITableData[] = [
 
 export default tableData;
 export type {
-  ITableData
+  ITableData,
+  ITabelUser,
+  ITableJob,
+  ITableReport
 };

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 import {
   Table,
   TableHeader,
@@ -15,22 +16,42 @@ import {
 import PageTitle from '../../components/admin/typography/PageTitle';
 import SectionTitle from '../../components/admin/typography/SectionTitle';
 import { EditIcon, TrashIcon, CancelIcon, SuccessIcon, InformationIcon } from '../../icons';
-import { ITableData } from '../../utils/global_table_admin';
-import response from "../../utils/global_table_admin";
+import { ITableReport } from '../../utils/global_table_admin';
+import { getProxy } from '../../utils/PathUtil';
+import axios from 'axios';
+import { fetchToITableReport } from '../../utils/FetchData';
 
 const Report = () => {
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
   const [pageTable, setPageTable] = useState(1)
-  const [dataTable, setDataTable] = useState<ITableData[]>([])
-
+  const [dataTable, setDataTable] = useState<ITableReport[]>([])
+  const [data, setData] = useState<ITableReport[]>([]);
+  const [totalResults, setTotalResults] = useState(0);
   const resultsPerPage = 10;
-  const totalResults = response.length;
+
+  useEffect(() => {
+    axios.get(getProxy('/api/v1/admin/reports'), {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }).then((response) => {
+      let handle_data = fetchToITableReport(response.data.data);
+      setData(handle_data)
+      setTotalResults(handle_data.length)
+      setDataTable(handle_data.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
+
+    }).catch((error) => {
+      console.log(error)
+    })
+
+  }, [])
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
   }
 
   useEffect(() => {
-    setDataTable(response.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
+    setDataTable(data.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
   }, [pageTable])
 
   return (
@@ -41,29 +62,29 @@ const Report = () => {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Client</TableCell>
+              <TableCell>Reporter</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {dataTable.map((user, i) => (
+            {dataTable.map((report, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User avatar" />
+                    <Avatar className="hidden mr-3 md:block" src={report.avatar_reporter} alt="User avatar" />
                     <div>
-                      <p className="font-semibold">{user.name}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{user.job}</p>
+                      <p className="font-semibold">{report.fullname_reporter}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{report.email_reporter}</p>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge type={user.status}>{user.status}</Badge>
+                  <Badge type={report.status_color}>{report.status}</Badge>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
+                  <span className="text-sm">{new Date(report.created_at).toLocaleDateString()}</span>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">

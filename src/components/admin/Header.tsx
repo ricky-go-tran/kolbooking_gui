@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { ProfileContext } from '../../contexts/ProfileContext';
 import { getProxy } from '../../utils/PathUtil';
+
 
 import {
   SearchIcon,
@@ -20,8 +22,10 @@ const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { state, dispatch } = useContext(AuthContext);
-  const [profile, setProfile] = useState({});
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
+  const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
+  const [avatar, setAvatar] = useState("");
+
 
 
 
@@ -120,7 +124,7 @@ const Header = () => {
             >
               <Avatar
                 className="align-middle"
-                src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                src={profile_state.avatar}
                 alt=""
                 aria-hidden="true"
               />
