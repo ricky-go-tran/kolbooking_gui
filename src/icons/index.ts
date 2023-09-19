@@ -26,6 +26,18 @@ import { ReactComponent as DropdownIcon } from './dropdown.svg';
 import { ReactComponent as OutlinePersonIcon } from './outlinePerson.svg';
 import { ReactComponent as OutlineCogIcon } from './outlineCog.svg';
 import { ReactComponent as OutlineLogoutIcon } from './outlineLogout.svg';
+import { ReactComponent as CancelIcon } from './cancel.svg'
+import { ReactComponent as SuccessIcon } from './success.svg'
+import { ReactComponent as InformationIcon } from './information.svg';
+import { ReactComponent as LockIcon } from './lock.svg';
+import { ReactComponent as UnlockIcon } from './unlock.svg';
+import { ReactComponent as AdminIcon } from './admin.svg';
+import { ReactComponent as LikeIcon } from './like.svg';
+import { ReactComponent as UnlikeIcon } from './unlike.svg';
+import { ReactComponent as LikeOuletIcon } from './like-outlet.svg';
+import { ReactComponent as UnlikeOutletIcon } from './unlike-oulet.svg';
+import { ReactComponent as WarningIcon } from './warning.svg';
+
 
 
 export {
@@ -57,4 +69,15 @@ export {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
+  CancelIcon,
+  SuccessIcon,
+  InformationIcon,
+  LockIcon,
+  UnlockIcon,
+  AdminIcon,
+  LikeIcon,
+  LikeOuletIcon,
+  UnlikeIcon,
+  UnlikeOutletIcon,
+  WarningIcon
 };

@@ -1,8 +1,8 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 const windmill = require("@windmill/react-ui/config");
 
-module.exports = windmill({
-  purge: ["src/**/*.js"],
+const config = {
+  purge: ["./src/**/*.{js,jsx,ts,tsx}", "./node_modules/flowbite/**/*.js"],
   theme: {
     extend: {
       fontFamily: {
@@ -14,4 +14,12 @@ module.exports = windmill({
       },
     },
   },
-});
+  variants: {
+    extend: {},
+  },
+  plugins: [require("flowbite/plugin")],
+};
+
+module.exports = {
+  ...windmill(config),
+};

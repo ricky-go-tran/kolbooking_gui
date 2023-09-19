@@ -1,8 +1,8 @@
-export let TokenStorage = () => {
-  let token: string | null = null;
+export let TokenStorage = (): string => {
+  let token: string = "";
 
   const storedToken = localStorage.getItem("token");
-  if (storedToken === "null" || storedToken === null) {
+  if (storedToken === "null" || storedToken === null || storedToken === undefined || storedToken === "" || storedToken === "undefined") {
     token = "null";
   } else if (typeof storedToken === "string") {
     token = JSON.parse(storedToken);
@@ -10,7 +10,7 @@ export let TokenStorage = () => {
   return token;
 }
 
-export let ProfileStorage = () => {
+export let ProfileStorage = (): any => {
   let profile: any = {}
 
   const storedProfile = localStorage.getItem("profile");

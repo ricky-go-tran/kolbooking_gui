@@ -1,18 +1,24 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "./assets/css/taiwind.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import GeneralLoading from "./pages/general/loading/GeneralLoading";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import { Windmill } from '@windmill/react-ui'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <AuthContextProvider>
-      <App />
-    </AuthContextProvider>
+    <Suspense fallback={<GeneralLoading />}>
+      <AuthContextProvider>
+        <Windmill usePreferences>
+          <App />
+        </Windmill>
+      </AuthContextProvider>
+    </Suspense>
   </React.StrictMode>
 );
 

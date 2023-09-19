@@ -64,8 +64,8 @@ function Register() {
               <h1 className="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                 Register
               </h1>
-              {message.success == "success" && <Alert type="success">{message.message}</Alert>}
-              {message.success == "fail" && <Alert type="danger">{message.message}</Alert>}
+              {message.success === "success" && <Alert type="success">{message.message}</Alert>}
+              {message.success === "fail" && <Alert type="danger">{message.message}</Alert>}
               <Label>
                 <span>Email</span>
                 <Input crossOrigin="" css="" className="mt-1" type="email" placeholder="your@email.com"
