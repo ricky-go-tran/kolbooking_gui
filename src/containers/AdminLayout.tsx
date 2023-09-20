@@ -1,16 +1,13 @@
-import React, { useContext, Suspense, useEffect, lazy } from 'react';
-import { BrowserRouter, Route, Routes, useLocation, Navigate } from 'react-router-dom';
-import routes from '../routes/admin/index';
+import React, { useContext } from 'react';
+import { Navigate } from 'react-router-dom';
 import Sidebar from '../components/admin/sidebar/index';
 import Header from '../components/admin/Header';
 import Main from './Main';
-import GeneralLoading from '../pages/general/loading/GeneralLoading';
 import { AuthContext } from '../contexts/AuthContext';
 
-const Page404 = lazy(() => import('../pages/general/error/NotFound'));
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
+  const { state: auth_state } = useContext(AuthContext);
 
 
   if (auth_state.auth_token === "" || auth_state.auth_token === "null") {

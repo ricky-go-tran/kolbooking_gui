@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../../../contexts/AuthContext";
-import { AuthType } from "../../../utils/global_type";
 
 import ImageLight from "../../../assets/images/login-office.jpeg";
 import ImageDark from "../../../assets/images/login-office-dark.jpeg";
-import { GithubIcon, TwitterIcon } from "../../../icons";
+import { GithubIcon } from "../../../icons";
 import { Alert, Label, Input, Button } from "@windmill/react-ui";
 import { getProxy } from "../../../utils/PathUtil";
 
@@ -24,6 +23,7 @@ const Login = () => {
   });
 
   const { state, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,6 +44,7 @@ const Login = () => {
             profile: res.data.status.data.user
           }
           dispatch({ type: "LOGIN_SUCCESS", payload: response })
+          navigate("/redirect/roles")
         });
 
       } else {
@@ -53,8 +54,8 @@ const Login = () => {
       dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
       setMessage({ success: "Fail", message: "Interval server error! Login fail" })
     }
-
   }
+
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
