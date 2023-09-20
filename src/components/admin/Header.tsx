@@ -1,7 +1,6 @@
-import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useContext, useState } from 'react';
 import { ProfileContext } from '../../contexts/ProfileContext';
-import { getProxy } from '../../utils/PathUtil';
+
 
 
 import {
@@ -16,15 +15,15 @@ import {
 } from '../../icons';
 
 import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
-import axios, { AxiosRequestConfig } from 'axios';
+
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext);
   const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
-  const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
-  const [avatar, setAvatar] = useState("");
+
+  const { state: profile_state } = useContext(ProfileContext);
+
 
 
 

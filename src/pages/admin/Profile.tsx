@@ -1,6 +1,6 @@
 import PageTitle from '../../components/admin/typography/PageTitle'
 import SectionTitle from '../../components/admin/typography/SectionTitle'
-import { Input, HelperText, Label, Select, Textarea, Button } from '@windmill/react-ui'
+import { Input, Label, Textarea, Button } from '@windmill/react-ui'
 
 export const Profile = () => {
   return (

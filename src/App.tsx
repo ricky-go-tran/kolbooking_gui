@@ -26,6 +26,8 @@ const AdminChangePassword = lazy(() => import('./pages/admin/ChangePassword'));
 const NewfeedLayout = lazy(() => import('./containers/NewfeedLayout'));
 const Jobs = lazy(() => import('./pages/general/jobs/Job'));
 const KOL = lazy(() => import('./pages/general/kols/KOL'));
+const KolJobs = lazy(() => import('./pages/kol/Jobs'));
+const KolBookmark = lazy(() => import('./pages/kol/Bookmarks'));
 
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
@@ -67,6 +69,7 @@ function App() {
         <Route path='/forgot-password' element={<UnAuthRoutes><ForgotPassword /></UnAuthRoutes>} />
         <Route path='/register' element={<UnAuthRoutes><Register /></UnAuthRoutes>} />
         <Route path='/setup' element={<SetupProfile />} />
+
         <Route path='/admin/dashboard' element={<AdminLayout> <Dashboard /> </AdminLayout>} />
         <Route path='/admin/reports' element={<AdminLayout> <Report /> </AdminLayout>} />
         <Route path='/admin/jobs' element={<AdminLayout> <Job /> </AdminLayout>} />
@@ -75,6 +78,10 @@ function App() {
         <Route path='/admin/profile' element={<AdminLayout><AdminProfile /></AdminLayout>} />
         <Route path='/kol/setup' element={<SetupKolProfile />} />
         <Route path='/admin/password/edit' element={<AdminLayout><AdminChangePassword /></AdminLayout>} />
+
+        <Route path='/kol/jobs' element={<AdminLayout> <KolJobs /> </AdminLayout>} />
+        <Route path='/kol/bookmarks' element={<AdminLayout> <KolBookmark /> </AdminLayout>} />
+
         <Route path='*' element={<Page404 />} />
       </Routes>
     </BrowserRouter>
