@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import GeneralLoading from "./pages/general/loading/GeneralLoading";
 import { AuthContextProvider } from "./contexts/AuthContext";
+import { ProfileContextProvider } from "./contexts/ProfileContext";
 import { Windmill } from '@windmill/react-ui'
 
 const root = ReactDOM.createRoot(
@@ -14,9 +15,11 @@ root.render(
   <React.StrictMode>
     <Suspense fallback={<GeneralLoading />}>
       <AuthContextProvider>
-        <Windmill usePreferences>
-          <App />
-        </Windmill>
+        <ProfileContextProvider>
+          <Windmill usePreferences>
+            <App />
+          </Windmill>
+        </ProfileContextProvider>
       </AuthContextProvider>
     </Suspense>
   </React.StrictMode>

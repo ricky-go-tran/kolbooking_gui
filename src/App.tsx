@@ -1,7 +1,11 @@
-import React, { lazy } from 'react';
-
+import React, { lazy, useEffect, useContext } from 'react';
+import { ProfileContext } from './contexts/ProfileContext';
+import { AuthContext } from './contexts/AuthContext';
 import { Routes, BrowserRouter, Route, Navigate } from 'react-router-dom'
+import { getProxy, getCDNImage } from './utils/PathUtil';
 import { Button } from '@windmill/react-ui'
+import { ProfileType } from './utils/global_type';
+import axios from 'axios';
 
 const HomePage = lazy(() => import('./pages/general/newfeed/HomePage'));
 const ForgotPassword = lazy(() => import('./pages/general/forgot-password/ForgotPassword'));
@@ -24,6 +28,34 @@ const Jobs = lazy(() => import('./pages/general/jobs/Job'));
 const KOL = lazy(() => import('./pages/general/kols/KOL'));
 
 function App() {
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
+  const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
+
+
+  useEffect(() => {
+    if (auth_state.auth_token !== "null" && auth_state.auth_token !== "") {
+      axios.get(getProxy('/api/v1/profiles'), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      })
+        .then(res => {
+          let data = res.data.data.attributes
+          let profileData: ProfileType = {
+            fullname: data.fullname,
+            avatar: data.avatar === "null" ? getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg") : getProxy(data.avatar),
+            role: data.role
+          }
+          profile_dispatch({ type: "FETCH", payload: profileData })
+        })
+        .catch(err => {
+          auth_dispatch({ type: "LOGOUT", payload: null })
+          profile_dispatch({ type: "CLEAR", payload: null })
+        })
+    }
+
+  }, [])
+
   return (
     <BrowserRouter>
       <Routes>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { ProfileContext } from '../../../contexts/ProfileContext';
 import routes from '../../../routes/admin/sidebar';
 import { NavLink } from 'react-router-dom';
 import * as Icons from "../../../icons";
@@ -15,6 +16,8 @@ function Icon({ icon, ...props }: IIcon) {
 
 
 function SidebarContent() {
+  const { state: profile_state, dispatch: profile_state_dispatch } = useContext(ProfileContext);
+
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <ul className="flex items-center flex-shrink-0 space-x-6">
@@ -24,7 +27,9 @@ function SidebarContent() {
           </a>
         </li>
         <li>
-          <Badge type="success">Admin</Badge>
+          {profile_state.role === 'admin' && <Badge type="danger">Admin</Badge>}
+          {profile_state.role === 'kol' && <Badge type="primary">Kol</Badge>}
+          {profile_state.role === 'base' && <Badge type="neutral">Base</Badge>}
         </li>
       </ul>
       <ul className="mt-6">
