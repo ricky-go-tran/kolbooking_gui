@@ -7,7 +7,7 @@ const externalRoutes: IRoute[] = [
     name: 'Statistics',
   },
   {
-    path: "/kol/calendar",
+    path: "/kol/schedule",
     icon: 'CalendarIcon',
     name: 'Calendar',
   },

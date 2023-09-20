@@ -28,6 +28,8 @@ const Jobs = lazy(() => import('./pages/general/jobs/Job'));
 const KOL = lazy(() => import('./pages/general/kols/KOL'));
 const KolJobs = lazy(() => import('./pages/kol/Jobs'));
 const KolBookmark = lazy(() => import('./pages/kol/Bookmarks'));
+const Schedule = lazy(() => import('./pages/kol/Schedule'));
+const KolStatistics = lazy(() => import('./pages/kol/Statistics'));
 
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
@@ -81,6 +83,8 @@ function App() {
 
         <Route path='/kol/jobs' element={<AdminLayout> <KolJobs /> </AdminLayout>} />
         <Route path='/kol/bookmarks' element={<AdminLayout> <KolBookmark /> </AdminLayout>} />
+        <Route path='/kol/schedule' element={<AdminLayout><Schedule /></AdminLayout>} />
+        <Route path='/kol/statistics' element={<AdminLayout><KolStatistics /></AdminLayout>} />
 
         <Route path='*' element={<Page404 />} />
       </Routes>
