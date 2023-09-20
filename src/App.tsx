@@ -1,17 +1,17 @@
 import React, { lazy, useEffect, useContext } from 'react';
 import { ProfileContext } from './contexts/ProfileContext';
 import { AuthContext } from './contexts/AuthContext';
-import { Routes, BrowserRouter, Route, Navigate } from 'react-router-dom'
+import { Routes, BrowserRouter, Route } from 'react-router-dom'
 import { getProxy, getCDNImage } from './utils/PathUtil';
-import { Button } from '@windmill/react-ui'
 import { ProfileType } from './utils/global_type';
 import axios from 'axios';
 
 const HomePage = lazy(() => import('./pages/general/newfeed/HomePage'));
+const UnAuthRoutes = lazy(() => import('./pages/general/redirect/UnAuthRoutes'));
+const RedirectByRole = lazy(() => import('./pages/general/redirect/RedirectByRole'));
 const ForgotPassword = lazy(() => import('./pages/general/forgot-password/ForgotPassword'));
 const Login = lazy(() => import('./pages/general/login/Login'));
 const Register = lazy(() => import('./pages/general/register/Register'));
-const Homepage = lazy(() => import('./pages/general/homepage/Homepage'));
 const Page404 = lazy(() => import('./pages/general/error/NotFound'));
 const AdminLayout = lazy(() => import('./containers/AdminLayout'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -29,7 +29,7 @@ const KOL = lazy(() => import('./pages/general/kols/KOL'));
 
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
-  const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
+  const { dispatch: profile_dispatch } = useContext(ProfileContext);
 
 
   useEffect(() => {
@@ -53,18 +53,19 @@ function App() {
           profile_dispatch({ type: "CLEAR", payload: null })
         })
     }
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<NewfeedLayout><HomePage /></NewfeedLayout>} />
+        <Route path="/redirect/roles" element={<RedirectByRole />} />
         <Route path="/jobs" element={<NewfeedLayout><Jobs /></NewfeedLayout>} />
         <Route path="/kols" element={<NewfeedLayout><KOL /></NewfeedLayout>} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
-        <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<UnAuthRoutes><Login /></UnAuthRoutes>} />
+        <Route path='/forgot-password' element={<UnAuthRoutes><ForgotPassword /></UnAuthRoutes>} />
+        <Route path='/register' element={<UnAuthRoutes><Register /></UnAuthRoutes>} />
         <Route path='/setup' element={<SetupProfile />} />
         <Route path='/admin/dashboard' element={<AdminLayout> <Dashboard /> </AdminLayout>} />
         <Route path='/admin/reports' element={<AdminLayout> <Report /> </AdminLayout>} />

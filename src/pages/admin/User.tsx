@@ -23,7 +23,7 @@ import axios from 'axios';
 import { Alert } from '@windmill/react-ui'
 
 const User = () => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
+  const { state: auth_state } = useContext(AuthContext);
   const [data, setData] = useState<ITabelUser[]>([]);
   const [pageTable, setPageTable] = useState(1)
   const [dataTable, setDataTable] = useState<ITabelUser[]>([])
@@ -48,6 +48,7 @@ const User = () => {
     }).catch((error) => {
       console.log(error)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function onPageChangeTable(p: number) {
@@ -55,7 +56,7 @@ const User = () => {
   }
 
   function unlock(user: ITabelUser) {
-    if (user.status != 'lock') {
+    if (user.status !== 'lock') {
       setAlert("User is already unlocked")
     } else {
       axios.put(getProxy(`/api/v1/admin/users/${user.id}/unlock`), {}, {
@@ -116,7 +117,7 @@ const User = () => {
     <>
       <PageTitle>Job Managements</PageTitle>
       <SectionTitle>Jobs Table</SectionTitle>
-      {alert != "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
+      {alert !== "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
         {alert}
       </Alert>}
       <TableContainer className="mb-8">

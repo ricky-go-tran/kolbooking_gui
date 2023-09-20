@@ -16,8 +16,7 @@ import {
 import PageTitle from '../../components/admin/typography/PageTitle';
 import SectionTitle from '../../components/admin/typography/SectionTitle';
 import { LockIcon } from '../../icons';
-import { ITableData, ITableJob } from '../../utils/global_table_admin';
-import response from "../../utils/global_table_admin";
+import { ITableJob } from '../../utils/global_table_admin';
 import axios from 'axios';
 import { getProxy } from '../../utils/PathUtil';
 import { fetchToITableJob } from '../../utils/FetchData';
@@ -25,7 +24,7 @@ import { Alert } from '@windmill/react-ui'
 
 
 const Job = () => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
+  const { state: auth_state } = useContext(AuthContext);
   const [data, setData] = useState<ITableJob[]>([]);
   const [pageTable, setPageTable] = useState(1)
   const [dataTable, setDataTable] = useState<ITableJob[]>([])
@@ -34,7 +33,6 @@ const Job = () => {
 
 
   const resultsPerPage = 10;
-
 
   useEffect(() => {
     axios.get(getProxy('/api/v1/admin/jobs'), {
@@ -50,7 +48,10 @@ const Job = () => {
     }).catch((error) => {
       console.log(error)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
@@ -92,7 +93,7 @@ const Job = () => {
     <>
       <PageTitle>Job Managements</PageTitle>
       <SectionTitle>Jobs Table</SectionTitle>
-      {alert != "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
+      {alert !== "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
         {alert}
       </Alert>}
       <TableContainer className="mb-8">
