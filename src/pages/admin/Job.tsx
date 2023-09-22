@@ -135,12 +135,12 @@ const Job = () => {
                   <span className="text-sm">{new Date(job.create_at).toLocaleDateString()}</span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-4">
+                  {job.status !== 'cancle' && <div className="flex items-center space-x-4">
                     <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { lock(job) }}>
                       <LockIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
 
-                  </div>
+                  </div>}
                 </TableCell>
               </TableRow>
             ))}

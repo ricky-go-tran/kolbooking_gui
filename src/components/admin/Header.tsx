@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext';
 import { ProfileContext } from '../../contexts/ProfileContext';
 import { getProxy } from '../../utils/PathUtil';
@@ -25,6 +26,7 @@ const Header = () => {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
   const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
   const [avatar, setAvatar] = useState("");
+  const navigate = useNavigate();
 
 
 
@@ -37,6 +39,25 @@ const Header = () => {
   function handleProfileClick() {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+
+  function logout() {
+    axios.delete(getProxy('/logout'), {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }).then((response) => {
+      console.log(response);
+      auth_dispatch({
+        type: 'LOGOUT',
+      });
+      navigate('/login');
+    }).catch(error => {
+      auth_dispatch({
+        type: 'LOGOUT',
+      });
+      navigate('/login');
+    })
+  }
 
   return (
 
@@ -142,7 +163,7 @@ const Header = () => {
                 <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Settings</span>
               </DropdownItem>
-              <DropdownItem onClick={() => alert('Log out!')}>
+              <DropdownItem onClick={() => logout()}>
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Log out</span>
               </DropdownItem>

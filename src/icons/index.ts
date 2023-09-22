@@ -37,6 +37,7 @@ import { ReactComponent as UnlikeIcon } from './unlike.svg';
 import { ReactComponent as LikeOuletIcon } from './like-outlet.svg';
 import { ReactComponent as UnlikeOutletIcon } from './unlike-oulet.svg';
 import { ReactComponent as WarningIcon } from './warning.svg';
+import { ReactComponent as PlayIcon } from './play.svg'
 
 
 
@@ -79,5 +80,6 @@ export {
   LikeOuletIcon,
   UnlikeIcon,
   UnlikeOutletIcon,
-  WarningIcon
+  WarningIcon,
+  PlayIcon
 };

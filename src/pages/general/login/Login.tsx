@@ -9,7 +9,12 @@ import ImageLight from "../../../assets/images/login-office.jpeg";
 import ImageDark from "../../../assets/images/login-office-dark.jpeg";
 import { GithubIcon } from "../../../icons";
 import { Alert, Label, Input, Button } from "@windmill/react-ui";
-import { getProxy } from "../../../utils/PathUtil";
+import { getProxy, getCDNImage } from "../../../utils/PathUtil";
+import { ProfileContext } from "../../../contexts/ProfileContext";
+import { ProfileType } from '../../../utils/global_type';
+import { CredentialResponse, GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+
+
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -23,7 +28,24 @@ const Login = () => {
   });
 
   const { state, dispatch } = useContext(AuthContext);
+  const { dispatch: profile_dispatch } = useContext(ProfileContext);
   const navigate = useNavigate();
+
+
+  const handleLoginGoogle = (responseGoogle: CredentialResponse) => {
+    console.log(responseGoogle)
+    axios.post(getProxy('/auth/google_oauth2/callback'), responseGoogle).then((res) => {
+      console.log(res)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  const clickGoogleLogin = useGoogleLogin({ onSuccess: (response) => { console.log(response) }, onError: (err) => { console.log(err) } });
+
+  const googleLogin = () => {
+    axios.post(getProxy('/auth/google_oauth2'))
+  }
 
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -44,6 +66,24 @@ const Login = () => {
             profile: res.data.status.data.user
           }
           dispatch({ type: "LOGIN_SUCCESS", payload: response })
+          axios.get(getProxy('/api/v1/profiles'), {
+            headers: {
+              Authorization: response.token,
+            },
+          })
+            .then(res => {
+              let data = res.data.data.attributes
+              let profileData: ProfileType = {
+                fullname: data.fullname,
+                avatar: data.avatar === "null" ? getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg") : getProxy(data.avatar),
+                role: data.role
+              }
+              profile_dispatch({ type: "FETCH", payload: profileData })
+            })
+            .catch(err => {
+              dispatch({ type: "LOGOUT", payload: null })
+              profile_dispatch({ type: "CLEAR", payload: null })
+            })
           navigate("/redirect/roles")
         });
 
@@ -90,16 +130,28 @@ const Login = () => {
                   onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} value={credentials.password} />
               </Label>
 
-              <Button className="mt-4" block tag={"button"} onClick={handleLogin} >
+              <Button className="mt-4" block tag={"button"} onClick={handleLogin} disabled={state.loading} >
                 Log in
               </Button>
 
               <hr className="my-8" />
 
-              <Button block layout="outline" disabled={state.loading}>
+              <GoogleLogin
+                onSuccess={handleLoginGoogle}
+
+                theme="filled_blue"
+                shape="circle"
+
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+
+              />
+
+              {/* <Button block layout="outline" disabled={state.loading} onClick={clickGoogleLogin}>
                 <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
                 Google
-              </Button>
+              </Button> */}
 
               <p className="mt-4">
                 <Link

@@ -47,9 +47,9 @@ const getColorOfStatusJob = (status: string | undefined): ColorBageType => {
 const getColorOfStatusReport = (status: string | undefined): ColorBageType => {
   if (status === "pending") {
     return "warning";
-  } else if (status === "proccessing") {
+  } else if (status === "proccess") {
     return "primary"
-  } else if (status === "resovled") {
+  } else if (status === "sovled") {
     return "success"
   } else if (status === "rejected") {
     return "danger"

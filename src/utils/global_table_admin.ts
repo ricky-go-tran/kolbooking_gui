@@ -38,7 +38,7 @@ interface ITableReport {
   avatar_reporter: string
   fullname_reporter: string
   email_reporter: string
-  status: "pending" | "proccessing" | "resovled" | "rejected" | undefined
+  status: "pending" | "proccess" | "sovled" | "rejected" | undefined
   status_color: "success" | "danger" | "warning" | "neutral" | "primary" | undefined
   created_at: string
 }
