@@ -1,10 +1,9 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthContext';
 import { ProfileContext } from '../../contexts/ProfileContext';
+import { AuthContext } from '../../contexts/AuthContext';
+import axios from 'axios';
 import { getProxy } from '../../utils/PathUtil';
-
-
 import {
   SearchIcon,
   MoonIcon,
@@ -15,9 +14,8 @@ import {
   OutlineCogIcon,
   OutlineLogoutIcon,
 } from '../../icons';
-
 import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
-import axios, { AxiosRequestConfig } from 'axios';
+
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext);
@@ -27,10 +25,6 @@ const Header = () => {
   const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
   const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
-
-
-
-
 
   function handleNotificationsClick() {
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
