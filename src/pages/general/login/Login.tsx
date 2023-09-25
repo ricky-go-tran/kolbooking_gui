@@ -43,9 +43,7 @@ const Login = () => {
 
   const clickGoogleLogin = useGoogleLogin({ onSuccess: (response) => { console.log(response) }, onError: (err) => { console.log(err) } });
 
-  const googleLogin = () => {
-    axios.post(getProxy('/auth/google_oauth2'))
-  }
+
 
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,12 +77,14 @@ const Login = () => {
                 role: data.role
               }
               profile_dispatch({ type: "FETCH", payload: profileData })
+
+              navigate("/redirect/roles")
             })
             .catch(err => {
               dispatch({ type: "LOGOUT", payload: null })
               profile_dispatch({ type: "CLEAR", payload: null })
             })
-          navigate("/redirect/roles")
+
         });
 
       } else {
@@ -95,6 +95,7 @@ const Login = () => {
       setMessage({ success: "Fail", message: "Interval server error! Login fail" })
     }
   }
+
 
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">

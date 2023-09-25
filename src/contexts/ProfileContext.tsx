@@ -14,6 +14,10 @@ export const ProfileContext = createContext<{
 export const ProfileContextProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(ProfileReducer, PROFILE_INIT_STATE);
 
+  useEffect(() => {
+    localStorage.setItem("profile", JSON.stringify(state));
+  }, [state]);
+
   return (
     <ProfileContext.Provider
       value={{ state, dispatch }} >

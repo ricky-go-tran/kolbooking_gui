@@ -12,9 +12,10 @@ export const INITIAL_STATE: AuthType = {
   message: "",
   loading: false
 }
+export const PROFILE_INIT_STATE: ProfileType = ProfileStorage()
 
-export const PROFILE_INIT_STATE: ProfileType = {
-  fullname: "",
-  avatar: "",
-  role: ""
-}
+// export const PROFILE_INIT_STATE: ProfileType = {
+//   fullname: "",
+//   avatar: "",
+//   role: ""
+// }

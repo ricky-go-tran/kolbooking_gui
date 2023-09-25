@@ -23,7 +23,6 @@ const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
   const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
-  const [avatar, setAvatar] = useState("");
   const navigate = useNavigate();
 
   function handleNotificationsClick() {
@@ -40,15 +39,16 @@ const Header = () => {
         Authorization: auth_state.auth_token,
       },
     }).then((response) => {
-      console.log(response);
       auth_dispatch({
         type: 'LOGOUT',
       });
+      profile_dispatch({ type: 'CLEAR' })
       navigate('/login');
     }).catch(error => {
       auth_dispatch({
         type: 'LOGOUT',
       });
+      profile_dispatch({ type: 'CLEAR' })
       navigate('/login');
     })
   }
@@ -129,7 +129,7 @@ const Header = () => {
               </DropdownItem>
             </Dropdown>
           </li>
-          {/* <!-- Profile menu --> */}
+
           <li className="relative">
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none"
@@ -149,13 +149,13 @@ const Header = () => {
               isOpen={isProfileMenuOpen}
               onClose={() => setIsProfileMenuOpen(false)}
             >
-              <DropdownItem tag="a" href="/admin/profile">
+              <DropdownItem tag="a" href="/profile">
                 <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Profile</span>
               </DropdownItem>
-              <DropdownItem tag="a" href="/admin/password/edit">
+              <DropdownItem tag="a" href="/profile/password/edit">
                 <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Settings</span>
+                <span>Change password</span>
               </DropdownItem>
               <DropdownItem onClick={() => logout()}>
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />

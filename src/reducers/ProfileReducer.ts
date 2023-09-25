@@ -17,7 +17,7 @@ export const ProfileReducer = (state: ProfileType, action: any) => {
         role: ""
       }
     default: {
-      return state;
+      return ProfileStorage();
 
     }
   }

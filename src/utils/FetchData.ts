@@ -1,4 +1,4 @@
-import { ITabelUser, ITableJob, ITableReport } from "./global_table_admin"
+import { ITabelUser, ITableJob, ITableReport, ITableBookmark } from "./global_table_admin"
 import { getProxy, getCDNImage } from "./PathUtil";
 
 type ColorType = "danger" | "warning" | "success" | undefined
@@ -52,6 +52,18 @@ const getColorOfStatusReport = (status: string | undefined): ColorBageType => {
   } else if (status === "sovled") {
     return "success"
   } else if (status === "rejected") {
+    return "danger"
+  } else {
+    return undefined
+  }
+}
+
+const getColorOfStatusBookmark = (status: string | undefined): ColorBageType => {
+  if (status === "care") {
+    return "primary";
+  } else if (status === "attention") {
+    return "warning"
+  } else if (status === "extremely") {
     return "danger"
   } else {
     return undefined
@@ -159,6 +171,35 @@ export const fetchToITableReport = (reports: any[]): ITableReport[] => {
       status: report.attributes.status,
       status_color: getColorOfStatusReport(report.attributes.status),
       created_at: report.attributes.created_at
+    }
+    return item;
+  })
+  return results;
+}
+
+
+
+export const fetchToITableBookmark = (bookmarks: any[]): ITableBookmark[] => {
+  let results: ITableBookmark[] = []
+  results = bookmarks.map((bookmark: any) => {
+    let job = {
+      image: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
+      name: "Nothing",
+    }
+    if (bookmark.attributes.job.data != null) {
+      job.image = bookmark.attributes.job.data.attributes.avatar === "null" ? job.image :
+        getProxy(bookmark.attributes.job.data.attributes.image);
+      job.name = bookmark.attributes.job.data.attributes.name;
+
+    }
+    let item: ITableBookmark = {
+      id: `${bookmark.attributes.id}`,
+      image_job: job.image,
+      name_job: job.name,
+      status: bookmark.attributes.status,
+      status_color: getColorOfStatusBookmark(bookmark.attributes.status),
+      created_at: bookmark.attributes.created_at
+
     }
     return item;
   })

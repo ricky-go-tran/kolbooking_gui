@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import { ProfileContext } from '../../../contexts/ProfileContext';
-import routes from '../../../routes/admin/sidebar';
+import adminRoutes from '../../../routes/admin/sidebar';
+import kolRoutes from '../../../routes/kol/sidebar';
 import { NavLink } from 'react-router-dom';
 import * as Icons from "../../../icons";
-import { Button, Badge } from '@windmill/react-ui';
+import { Badge } from '@windmill/react-ui';
 import { MatchUri } from '../../general/MatchUri'
 import { IIcon } from '../../../utils/global_type';
+import { IRoute } from '../../../utils/global_type';
 
 
 function Icon({ icon, ...props }: IIcon) {
@@ -16,7 +18,28 @@ function Icon({ icon, ...props }: IIcon) {
 
 
 function SidebarContent() {
-  const { state: profile_state, dispatch: profile_state_dispatch } = useContext(ProfileContext);
+  const { state: profile_state } = useContext(ProfileContext);
+
+  const renderSideBar = (routes: IRoute[]) => {
+
+    return routes.map((route) =>
+    (
+      <li className="relative px-6 py-3" key={route.name}>
+        <NavLink className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" to={route.path}>
+          <MatchUri uri={route.path} >
+            <span
+              className="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+              aria-hidden="true"
+            ></span></MatchUri>
+
+          <Icon className="w-5 h-5" aria-hidden="true" icon={route.icon || ""} />
+          <span className="ml-4">{route.name}</span>
+        </NavLink>
+      </li>
+
+    )
+    )
+  }
 
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
@@ -33,23 +56,8 @@ function SidebarContent() {
         </li>
       </ul>
       <ul className="mt-6">
-        {routes.map((route) =>
-        (
-          <li className="relative px-6 py-3" key={route.name}>
-            <NavLink className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200" to={route.path}>
-              <MatchUri uri={route.path} >
-                <span
-                  className="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                  aria-hidden="true"
-                ></span></MatchUri>
-
-              <Icon className="w-5 h-5" aria-hidden="true" icon={route.icon || ""} />
-              <span className="ml-4">{route.name}</span>
-            </NavLink>
-          </li>
-
-        )
-        )}
+        {profile_state.role === 'admin' && renderSideBar(adminRoutes)}
+        {profile_state.role === 'kol' && renderSideBar(kolRoutes)}
       </ul>
     </div>
   )

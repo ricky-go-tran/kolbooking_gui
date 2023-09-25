@@ -32,7 +32,7 @@ const Job = () => {
   const [resultsPerPage, setResultPerPage] = useState(0)
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/admin/jobs'), {
+    axios.get(getProxy('/api/v1/kol/jobs'), {
       headers: {
         Authorization: auth_state.auth_token,
       },
@@ -48,17 +48,123 @@ const Job = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-
-
   function onPageChangeTable(p: number) {
     setPageTable(p)
   }
 
-  function lock(job: ITableJob) {
-    if (job.status === 'cancle') {
-      setAlert("Job is already unlocked")
+  function apply(job: ITableJob) {
+    if (job.status !== "post" && job.status !== "booking") {
+      setAlert("Job status must post or booking")
     } else {
-      axios.put(getProxy(`/api/v1/admin/jobs/${job.id}/cancle`), {}, {
+      axios.put(getProxy(`/api/v1/kol/jobs/${job.id}/apply`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableJob[] = dataTable.map((item) => {
+          if (item.id === job.id) {
+            let rs: ITableJob = {
+              ...item,
+              status: 'apply',
+              status_color: 'neutral'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setDataTable(handle_data)
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
+  function complete(job: ITableJob) {
+    if (job.status !== "apply") {
+      setAlert("Job status must apply")
+    } else {
+      axios.put(getProxy(`/api/v1/kol/jobs/${job.id}/complete`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableJob[] = dataTable.map((item) => {
+          if (item.id === job.id) {
+            let rs: ITableJob = {
+              ...item,
+              status: 'complete',
+              status_color: 'primary'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setDataTable(handle_data)
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
+  function payment(job: ITableJob) {
+    if (job.status !== "complete") {
+      setAlert("Job status must complete")
+    } else {
+      axios.put(getProxy(`/api/v1/kol/jobs/${job.id}/payment`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableJob[] = dataTable.map((item) => {
+          if (item.id === job.id) {
+            let rs: ITableJob = {
+              ...item,
+              status: 'payment',
+              status_color: 'primary'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setDataTable(handle_data)
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
+  function finish(job: ITableJob) {
+    if (job.status !== "payment" && job.status !== "complete") {
+      setAlert("Job status must payment or complete")
+    } else {
+      axios.put(getProxy(`/api/v1/kol/jobs/${job.id}/finish`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableJob[] = dataTable.map((item) => {
+          if (item.id === job.id) {
+            let rs: ITableJob = {
+              ...item,
+              status: 'finish',
+              status_color: 'success'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setDataTable(handle_data)
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
+  }
+  function cancle(job: ITableJob) {
+    if (job.status === "payment" || job.status === "complete") {
+      setAlert("Job status must diferent payment and complete")
+    } else {
+      axios.put(getProxy(`/api/v1/kol/jobs/${job.id}/cancle`), {}, {
         headers: {
           Authorization: auth_state.auth_token,
         },
@@ -82,8 +188,24 @@ const Job = () => {
     }
   }
 
+  function handleAction(event: React.ChangeEvent<HTMLSelectElement>, job: ITableJob) {
+    let action = event.target.value
+    if (action === 'apply') {
+      apply(job)
+    } else if (action === 'complete') {
+      complete(job)
+    } else if (action === 'payment') {
+      payment(job)
+    } else if (action === 'finish') {
+      finish(job)
+    } else if (action === 'cancle') {
+      cancle(job)
+    }
+
+  }
+
   useEffect(() => {
-    axios.get(getProxy('/api/v1/admin/jobs'), {
+    axios.get(getProxy('/api/v1/kol/jobs'), {
       headers: {
         Authorization: auth_state.auth_token,
       },
@@ -149,12 +271,15 @@ const Job = () => {
                   <span className="text-sm">{new Date(job.create_at).toLocaleDateString()}</span>
                 </TableCell>
                 <TableCell>
-                  {job.status !== 'cancle' && <div className="flex items-center space-x-4">
-                    <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { lock(job) }}>
-                      <LockIcon className="w-5 h-5" aria-hidden="true" />
-                    </Button>
-
-                  </div>}
+                  <div className="flex items-center space-x-4">
+                    <select id="countries" onChange={(event) => handleAction(event, job)} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option selected disabled>Action</option>
+                      <option value="apply">Apply</option>
+                      <option value="complete">Complete</option>
+                      <option value="payment">Payment</option>
+                      <option value="finish">Finish</option>
+                    </select>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
