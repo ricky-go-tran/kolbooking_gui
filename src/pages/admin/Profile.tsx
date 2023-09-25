@@ -1,98 +1,101 @@
-import PageTitle from '../../components/admin/typography/PageTitle'
-import SectionTitle from '../../components/admin/typography/SectionTitle'
-import { Input, Label, Textarea, Button, Avatar, Alert } from '@windmill/react-ui'
-import { useState, useContext, useEffect, useRef } from 'react'
-import { ProfileContext } from '../../contexts/ProfileContext'
-import { AuthContext } from '../../contexts/AuthContext'
-import axios from 'axios'
-import { getProxy } from '../../utils/PathUtil'
-import { useNavigate } from 'react-router-dom'
-import { HandleResponseError } from '../../utils/ErrorHandleUtil'
-import '../../assets/css/component/avatar_input.css'
+import PageTitle from "../../components/admin/typography/PageTitle";
+import SectionTitle from "../../components/admin/typography/SectionTitle";
+import { Input, Label, Textarea, Button, Alert } from "@windmill/react-ui";
+import { useState, useContext, useEffect, useRef } from "react";
+import { ProfileContext } from "../../contexts/ProfileContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import axios from "axios";
+import { getProxy } from "../../utils/PathUtil";
+import "../../assets/css/component/avatar_input.css";
 
 export const Profile = () => {
-  const { state: auth_state } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext)
-  const [loading, setLoading] = useState(false)
-  const [message, setMessage] = useState('')
-  const [avatar, setAvatar] = useState<File | null>(null)
+  const { state: auth_state } = useContext(AuthContext);
+  const { state: profile_state, dispatch: profile_dispatch } =
+    useContext(ProfileContext);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [avatar, setAvatar] = useState<File | null>(null);
   const [profileData, setProfileData] = useState({
-    avatar: '',
-    fullname: '',
-    birthday: '',
-    phone: '',
-    address: '',
-
-  })
-  const navigate = useNavigate()
+    avatar: "",
+    fullname: "",
+    birthday: "",
+    phone: "",
+    address: "",
+  });
   const previewAvatar = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/profiles'), {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-    }).then((response) => {
-      let handle_data = response.data.data.attributes;
-      setProfileData({
-        avatar: handle_data.avatar,
-        fullname: handle_data.fullname,
-        birthday: handle_data.birthday,
-        phone: handle_data.phone,
-        address: handle_data.address
+    axios
+      .get(getProxy("/api/v1/profiles"), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
       })
-      setLoading(true)
-    }).catch((err) => {
-      console.log(err)
-      // navigate('/server/error')
-    })
+      .then((response) => {
+        let handle_data = response.data.data.attributes;
+        setProfileData({
+          avatar: handle_data.avatar,
+          fullname: handle_data.fullname,
+          birthday: handle_data.birthday,
+          phone: handle_data.phone,
+          address: handle_data.address,
+        });
+        setLoading(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        // navigate('/server/error')
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
+  }, []);
 
   const handleChangeProfile = () => {
     let formData = new FormData();
     if (avatar !== null) {
-      formData.append('profile[avatar]', avatar)
+      formData.append("profile[avatar]", avatar);
     }
-    formData.append('profile[fullname]', profileData.fullname);
-    formData.append('profile[birthday]', profileData.birthday);
-    formData.append('profile[phone]', profileData.phone);
-    formData.append('profile[address]', profileData.address);
-    console.log(formData)
-    axios.put(getProxy('/api/v1/profiles/change'), formData, {
-      headers: {
-        'Authorization': auth_state.auth_token,
-        'Content-Type': 'multipart/form-data'
-      },
-    }).then((response) => {
-      let handle_data = {
-        fullname: response.data.data.attributes.fullname,
-        avatar: response.data.data.attributes.avatar,
-        role: response.data.data.attributes.role
-      }
-      profile_dispatch({ type: 'FETCH', payload: handle_data })
+    formData.append("profile[fullname]", profileData.fullname);
+    formData.append("profile[birthday]", profileData.birthday);
+    formData.append("profile[phone]", profileData.phone);
+    formData.append("profile[address]", profileData.address);
+    console.log(formData);
+    axios
+      .put(getProxy("/api/v1/profiles/change"), formData, {
+        headers: {
+          Authorization: auth_state.auth_token,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        let handle_data = {
+          fullname: response.data.data.attributes.fullname,
+          avatar: response.data.data.attributes.avatar,
+          role: response.data.data.attributes.role,
+        };
+        profile_dispatch({ type: "FETCH", payload: handle_data });
+      })
+      .catch((err) => {
+        console.log(err);
+        // HandleResponseError(err)
+      });
+  };
 
-    }).catch((err) => {
-      console.log(err)
-      // HandleResponseError(err)
-    })
-  }
-
-  const handleFileInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!event.target.files) {
-      setMessage('Image not found')
+      setMessage("Image not found");
       return;
     }
     const file = event.target.files[0];
-    const type = file.type.split('/')[1];
+    const type = file.type.split("/")[1];
     const max_size_support = 1000000; // 1mb
-    const supportFile = ['jpeg', 'png']
+    const supportFile = ["jpeg", "png"];
     const reader = new FileReader();
     if (supportFile.includes(type)) {
       if (file.size <= max_size_support) {
-        setAvatar(file)
-        setMessage('');
+        setAvatar(file);
+        setMessage("");
         reader.onload = (event) => {
           const fileContent = event?.target?.result;
           if (previewAvatar.current !== null) {
@@ -104,77 +107,144 @@ export const Profile = () => {
         if (previewAvatar.current !== null) {
           previewAvatar.current.src = `url(${profile_state.avatar})`;
         }
-        setAvatar(null)
+        setAvatar(null);
         setProfileData({ ...profileData, avatar: profile_state.avatar });
-        setMessage('Upload file under 1mb');
+        setMessage("Upload file under 1mb");
       }
     } else {
       if (previewAvatar.current !== null) {
         previewAvatar.current.src = `${profile_state.avatar}`;
       }
-      setAvatar(null)
-      setMessage('Support type png, jpg and jpeg only');
+      setAvatar(null);
+      setMessage("Support type png, jpg and jpeg only");
     }
-
   };
   return (
     <>
       <PageTitle>Profile</PageTitle>
 
       <SectionTitle>Information</SectionTitle>
-      {message !== "" && <Alert type="danger" className="my-5" onClose={() => { setMessage("") }}>
-        {message}
-      </Alert>}
+      {message !== "" && (
+        <Alert
+          type="danger"
+          className="my-5"
+          onClose={() => {
+            setMessage("");
+          }}
+        >
+          {message}
+        </Alert>
+      )}
 
+      {loading === false && (
+        <div className="flex items-center justify-center h-96">
+          <div
+            style={{ borderTopColor: "transparent" }}
+            className="w-8 h-8 border-4 border-blue-600 rounded-full animate-spin"
+          ></div>
+          <p className="ml-2">Loading...</p>
+        </div>
+      )}
+      {loading === true && (
+        <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+          <Label className="flex flex-col">
+            <span className="mb-2">Avatar</span>
+            <div className="personal-image">
+              <label className="label">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    handleFileInputChange(e);
+                  }}
+                />
+                <figure className="personal-figure">
+                  <img
+                    src={profileData.avatar}
+                    className="personal-avatar"
+                    alt="avatar"
+                    ref={previewAvatar}
+                  />
+                  <figcaption className="personal-figcaption">
+                    <img
+                      src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png"
+                      alt="camera"
+                    />
+                  </figcaption>
+                </figure>
+              </label>
+            </div>
+          </Label>
+          <Label className="mt-4">
+            <span>Full name</span>
+            <Input
+              css=""
+              className="mt-1"
+              placeholder="Your name"
+              crossOrigin=""
+              onChange={(event) =>
+                setProfileData({ ...profileData, fullname: event.target.value })
+              }
+              value={profileData.fullname}
+            />
+          </Label>
+          <Label className="mt-4">
+            <span>Birthday</span>
+            <Input
+              crossOrigin=""
+              css=""
+              className="mt-1"
+              placeholder="Your birthday"
+              type="date"
+              onChange={(event) =>
+                setProfileData({ ...profileData, birthday: event.target.value })
+              }
+              value={profileData.birthday}
+            />
+          </Label>
+          <Label className="mt-4">
+            <span>Phone</span>
+            <Input
+              crossOrigin=""
+              css=""
+              className="mt-1"
+              placeholder="Your phone"
+              type="tel"
+              onChange={(event) =>
+                setProfileData({ ...profileData, phone: event.target.value })
+              }
+              value={profileData.phone}
+            />
+          </Label>
 
-      {loading === false && <div className='flex items-center justify-center h-96'>
-        <div style={{ borderTopColor: 'transparent' }} className="w-8 h-8 border-4 border-blue-600 rounded-full animate-spin"></div>
-        <p className="ml-2">Loading...</p>
-      </div>}
-      {loading === true && <div className="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <Label className="flex flex-col">
-          <span className="mb-2">Avatar</span>
-          <div className="personal-image">
-            <label className="label">
-              <input type="file" accept="image/*" onChange={(e) => { handleFileInputChange(e) }} />
-              <figure className="personal-figure">
-                <img src={profileData.avatar} className="personal-avatar" alt="avatar" ref={previewAvatar} />
-                <figcaption className="personal-figcaption">
-                  <img src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png" alt="camera" />
-                </figcaption>
-              </figure>
-            </label>
-          </div>
-        </Label>
-        <Label className="mt-4">
-          <span>Full name</span>
-          <Input css="" className="mt-1" placeholder="Your name" crossOrigin=""
-            onChange={(event) => setProfileData({ ...profileData, fullname: event.target.value })} value={profileData.fullname} />
-        </Label>
-        <Label className="mt-4">
-          <span>Birthday</span>
-          <Input crossOrigin="" css="" className="mt-1" placeholder="Your birthday" type="date"
-            onChange={(event) => setProfileData({ ...profileData, birthday: event.target.value })} value={profileData.birthday} />
-        </Label>
-        <Label className="mt-4">
-          <span>Phone</span>
-          <Input crossOrigin="" css="" className="mt-1" placeholder="Your phone" type="tel"
-            onChange={(event) => setProfileData({ ...profileData, phone: event.target.value })} value={profileData.phone} />
-        </Label>
+          <Label className="mt-4">
+            <span>Address</span>
+            <Textarea
+              className="mt-1"
+              css=""
+              rows={5}
+              placeholder="Enter some long form content."
+              style={{ resize: "none" }}
+              onChange={(event) =>
+                setProfileData({ ...profileData, address: event.target.value })
+              }
+              value={profileData.address}
+            />
+          </Label>
 
-        <Label className="mt-4">
-          <span>Address</span>
-          <Textarea className="mt-1" css="" rows={5} placeholder="Enter some long form content." style={{ resize: "none" }}
-            onChange={(event) => setProfileData({ ...profileData, address: event.target.value })} value={profileData.address} />
-        </Label>
-
-        <Button block className="mt-6" onClick={() => { handleChangeProfile() }}>
-          Update Profile
-        </Button>
-      </div>}
-
+          <Button
+            block
+            className="mt-6"
+            onClick={() => {
+              handleChangeProfile();
+            }}
+          >
+            Update Profile
+          </Button>
+        </div>
+      )}
     </>
   );
-}
+};
 
 export default Profile;

@@ -1,14 +1,17 @@
 .personal-image {
   text-align: center;
 }
+
 .personal-image input[type="file"] {
   display: none;
 }
+
 .personal-figure {
   position: relative;
   width: 120px;
   height: 120px;
 }
+
 .personal-avatar {
   cursor: pointer;
   width: 120px;
@@ -19,9 +22,11 @@
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
   transition: all ease-in-out 0.3s;
 }
+
 .personal-avatar:hover {
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
 }
+
 .personal-figcaption {
   cursor: pointer;
   position: absolute;
@@ -33,10 +38,12 @@
   background-color: rgba(0, 0, 0, 0);
   transition: all ease-in-out 0.3s;
 }
+
 .personal-figcaption:hover {
   opacity: 1;
   background-color: rgba(0, 0, 0, 0.5);
 }
+
 .personal-figcaption > img {
   position: absolute;
   top: 50%;

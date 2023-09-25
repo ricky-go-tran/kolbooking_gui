@@ -1,5 +1,5 @@
-import KOL from "./KOL"
-import { Pagination } from '@windmill/react-ui'
+import KOL from "./KOL";
+import { Pagination } from "@windmill/react-ui";
 
 const KOLs = () => {
   return (
@@ -13,18 +13,17 @@ const KOLs = () => {
         <KOL />
         <KOL />
         <KOL />
-
       </div>
       <div className="my-5 px-4 py-3 border-t dark:border-gray-700 bg-gray-50 text-gray-500 dark:text-gray-400 dark:bg-gray-800">
         <Pagination
           totalResults={120}
           resultsPerPage={10}
-          onChange={() => { }}
+          onChange={() => {}}
           label="Page navigation"
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default KOLs;

@@ -1,5 +1,5 @@
 import JobBanner from "../../../components/general/jobs/JobBanner";
-import JobContent from "../../../components/general/jobs/JobContent"
+import JobContent from "../../../components/general/jobs/JobContent";
 
 const Jobs = () => {
   return (
@@ -7,7 +7,7 @@ const Jobs = () => {
       <JobBanner />
       <JobContent />
     </>
-  )
-}
+  );
+};
 
 export default Jobs;
