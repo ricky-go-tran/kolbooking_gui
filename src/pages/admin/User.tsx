@@ -24,16 +24,12 @@ import { Alert } from '@windmill/react-ui'
 
 const User = () => {
   const { state: auth_state } = useContext(AuthContext);
-  const [data, setData] = useState<ITabelUser[]>([]);
   const [pageTable, setPageTable] = useState(1)
   const [dataTable, setDataTable] = useState<ITabelUser[]>([])
   const [alert, setAlert] = useState("");
 
-
   const [totalResults, setTotalResults] = useState(0);
-  const resultsPerPage = 5;
-
-
+  const [resultsPerPage, setResultPerPage] = useState(0)
 
   useEffect(() => {
     axios.get(getProxy('/api/v1/admin/users'), {
@@ -42,9 +38,10 @@ const User = () => {
       },
     }).then((response) => {
       let handle_data = fetchToITableUser(response.data.data)
-      setData(handle_data);
-      setTotalResults(response.data.data.length);
-      setDataTable(handle_data.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
+      let meta = response.data.meta;
+      setResultPerPage(meta.items)
+      setTotalResults(meta.count);
+      setDataTable(handle_data)
     }).catch((error) => {
       console.log(error)
     })
@@ -64,7 +61,7 @@ const User = () => {
           Authorization: auth_state.auth_token,
         },
       }).then((response) => {
-        let handle_data: ITabelUser[] = data.map((item) => {
+        let handle_data: ITabelUser[] = dataTable.map((item) => {
           if (item.id === user.id) {
             let rs: ITabelUser = {
               ...item,
@@ -76,7 +73,7 @@ const User = () => {
             return item
           }
         })
-        setData(handle_data)
+        setDataTable(handle_data)
       }).catch((error) => { setAlert("Unlock is failed") })
     }
   }
@@ -90,7 +87,7 @@ const User = () => {
           Authorization: auth_state.auth_token,
         },
       }).then((response) => {
-        let handle_data: ITabelUser[] = data.map((item) => {
+        let handle_data: ITabelUser[] = dataTable.map((item) => {
           if (item.id === user.id) {
             let rs: ITabelUser = {
               ...item,
@@ -102,7 +99,7 @@ const User = () => {
             return item
           }
         })
-        setData(handle_data)
+        setDataTable(handle_data)
       }).catch((error) => {
         console.log(error)
       })
@@ -110,8 +107,26 @@ const User = () => {
   }
 
   useEffect(() => {
-    setDataTable(data.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
-  }, [pageTable, data])
+    axios.get(getProxy('/api/v1/admin/users'), {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+      params: {
+        page: {
+          number: pageTable
+        }
+      }
+    }).then((response) => {
+      let handle_data = fetchToITableUser(response.data.data)
+      let meta = response.data.meta;
+      setResultPerPage(meta.items);
+      setTotalResults(meta.count);
+      setDataTable(handle_data);
+    }).catch((error) => {
+      console.log(error)
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageTable])
 
   return (
     <>
@@ -153,14 +168,14 @@ const User = () => {
                   <span className="text-sm">{new Date(user.birthday).toLocaleDateString()}</span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-4">
+                  {user.status !== 'invalid' && <div className="flex items-center space-x-4">
                     <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { unlock(user) }}>
                       <UnlockIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                     <Button layout="link" size="small" aria-label="Edit" onClick={() => { lock(user) }}>
                       <LockIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
-                  </div>
+                  </div>}
                 </TableCell>
               </TableRow>
             ))}

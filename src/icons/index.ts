@@ -37,8 +37,9 @@ import { ReactComponent as UnlikeIcon } from './unlike.svg';
 import { ReactComponent as LikeOuletIcon } from './like-outlet.svg';
 import { ReactComponent as UnlikeOutletIcon } from './unlike-oulet.svg';
 import { ReactComponent as WarningIcon } from './warning.svg';
-
-
+import { ReactComponent as BookMarkIcon } from './bookmark.svg';
+import { ReactComponent as CalendarIcon } from './calendar.svg';
+import { ReactComponent as PlayIcon } from './play.svg';
 
 export {
   ButtonsIcon,
@@ -79,5 +80,8 @@ export {
   LikeOuletIcon,
   UnlikeIcon,
   UnlikeOutletIcon,
-  WarningIcon
+  WarningIcon,
+  CalendarIcon,
+  BookMarkIcon,
+  PlayIcon
 };

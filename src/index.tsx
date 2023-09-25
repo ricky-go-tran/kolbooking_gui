@@ -7,21 +7,24 @@ import GeneralLoading from "./pages/general/loading/GeneralLoading";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { ProfileContextProvider } from "./contexts/ProfileContext";
 import { Windmill } from '@windmill/react-ui'
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Suspense fallback={<GeneralLoading />}>
-      <AuthContextProvider>
-        <ProfileContextProvider>
-          <Windmill usePreferences>
-            <App />
-          </Windmill>
-        </ProfileContextProvider>
-      </AuthContextProvider>
-    </Suspense>
+    <GoogleOAuthProvider clientId="345818639852-npt2v8lmrrsj8vs4lovm5aou37i4pfji.apps.googleusercontent.com">
+      <Suspense fallback={<GeneralLoading />}>
+        <AuthContextProvider>
+          <ProfileContextProvider>
+            <Windmill usePreferences>
+              <App />
+            </Windmill>
+          </ProfileContextProvider>
+        </AuthContextProvider>
+      </Suspense>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 

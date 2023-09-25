@@ -13,6 +13,7 @@ const ForgotPassword = lazy(() => import('./pages/general/forgot-password/Forgot
 const Login = lazy(() => import('./pages/general/login/Login'));
 const Register = lazy(() => import('./pages/general/register/Register'));
 const Page404 = lazy(() => import('./pages/general/error/NotFound'));
+const Page500 = lazy(() => import('./pages/general/error/ServerError'));
 const AdminLayout = lazy(() => import('./containers/AdminLayout'));
 const Dashboard = lazy(() => import('./pages/admin/Dashboard'));
 const Report = lazy(() => import('./pages/admin/Report'));
@@ -26,7 +27,11 @@ const AdminChangePassword = lazy(() => import('./pages/admin/ChangePassword'));
 const NewfeedLayout = lazy(() => import('./containers/NewfeedLayout'));
 const Jobs = lazy(() => import('./pages/general/jobs/Job'));
 const KOL = lazy(() => import('./pages/general/kols/KOL'));
-
+const KolJobs = lazy(() => import('./pages/kol/Jobs'));
+const KolBookmark = lazy(() => import('./pages/kol/Bookmarks'));
+const Schedule = lazy(() => import('./pages/kol/Schedule'));
+const KolStatistics = lazy(() => import('./pages/kol/Statistics'));
+const ErrorNetwork = lazy(() => import('./pages/general/error/NetworkError'));
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
   const { dispatch: profile_dispatch } = useContext(ProfileContext);
@@ -67,14 +72,22 @@ function App() {
         <Route path='/forgot-password' element={<UnAuthRoutes><ForgotPassword /></UnAuthRoutes>} />
         <Route path='/register' element={<UnAuthRoutes><Register /></UnAuthRoutes>} />
         <Route path='/setup' element={<SetupProfile />} />
+
         <Route path='/admin/dashboard' element={<AdminLayout> <Dashboard /> </AdminLayout>} />
         <Route path='/admin/reports' element={<AdminLayout> <Report /> </AdminLayout>} />
         <Route path='/admin/jobs' element={<AdminLayout> <Job /> </AdminLayout>} />
         <Route path='/admin/users' element={<AdminLayout> <User /> </AdminLayout>} />
         <Route path='/admin/crontab' element={<AdminLayout> <Crontab /> </AdminLayout>} />
-        <Route path='/admin/profile' element={<AdminLayout><AdminProfile /></AdminLayout>} />
+        <Route path='/profile' element={<AdminLayout><AdminProfile /></AdminLayout>} />
         <Route path='/kol/setup' element={<SetupKolProfile />} />
-        <Route path='/admin/password/edit' element={<AdminLayout><AdminChangePassword /></AdminLayout>} />
+        <Route path='/profile/password/edit' element={<AdminLayout><AdminChangePassword /></AdminLayout>} />
+
+        <Route path='/kol/jobs' element={<AdminLayout> <KolJobs /> </AdminLayout>} />
+        <Route path='/kol/bookmarks' element={<AdminLayout> <KolBookmark /> </AdminLayout>} />
+        <Route path='/kol/schedule' element={<AdminLayout><Schedule /></AdminLayout>} />
+        <Route path='/kol/statistics' element={<AdminLayout><KolStatistics /></AdminLayout>} />
+        <Route path='/server/error' element={<Page500 />} />
+        <Route path='/network/error' element={<ErrorNetwork />} />
         <Route path='*' element={<Page404 />} />
       </Routes>
     </BrowserRouter>

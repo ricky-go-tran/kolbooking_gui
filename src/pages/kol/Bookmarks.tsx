@@ -14,76 +14,50 @@ import {
   Pagination,
 } from '@windmill/react-ui';
 import PageTitle from '../../components/admin/typography/PageTitle';
-import SectionTitle from '../../components/admin/typography/SectionTitle';
 import { LockIcon } from '../../icons';
-import { ITableJob } from '../../utils/global_table_admin';
+import { ITableBookmark } from '../../utils/global_table_admin';
 import axios from 'axios';
 import { getProxy } from '../../utils/PathUtil';
-import { fetchToITableJob } from '../../utils/FetchData';
+import { fetchToITableBookmark } from '../../utils/FetchData';
 import { Alert } from '@windmill/react-ui'
+import { HandleResponseError } from '../../utils/ErrorHandleUtil';
+import { useNavigate } from 'react-router-dom';
 
 
-const Job = () => {
+const Bookmark = () => {
   const { state: auth_state } = useContext(AuthContext);
   const [pageTable, setPageTable] = useState(1)
-  const [dataTable, setDataTable] = useState<ITableJob[]>([])
+  const [dataTable, setDataTable] = useState<ITableBookmark[]>([])
   const [totalResults, setTotalResults] = useState(0);
   const [alert, setAlert] = useState("");
   const [resultsPerPage, setResultPerPage] = useState(0)
+  const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/admin/jobs'), {
+    axios.get(getProxy('/api/v1/kol/bookmarks'), {
       headers: {
         Authorization: auth_state.auth_token,
       },
     }).then((response) => {
-      let handle_data = fetchToITableJob(response.data.data)
+      let handle_data = fetchToITableBookmark(response.data.data)
       let meta = response.data.meta;
       setResultPerPage(meta.items)
       setTotalResults(meta.count);
       setDataTable(handle_data)
     }).catch((error) => {
       console.log(error)
+      // HandleResponseError(error, navigate)
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
   }
 
-  function lock(job: ITableJob) {
-    if (job.status === 'cancle') {
-      setAlert("Job is already unlocked")
-    } else {
-      axios.put(getProxy(`/api/v1/admin/jobs/${job.id}/cancle`), {}, {
-        headers: {
-          Authorization: auth_state.auth_token,
-        },
-      }).then((response) => {
-        let handle_data: ITableJob[] = dataTable.map((item) => {
-          if (item.id === job.id) {
-            let rs: ITableJob = {
-              ...item,
-              status: 'cancle',
-              status_color: 'danger'
-            }
-            return rs
-          } else {
-            return item
-          }
-        })
-        setDataTable(handle_data)
-      }).catch((error) => {
-        console.log(error)
-      })
-    }
-  }
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/admin/jobs'), {
+    axios.get(getProxy('/api/v1/kol/bookmarks'), {
       headers: {
         Authorization: auth_state.auth_token,
       },
@@ -93,20 +67,21 @@ const Job = () => {
         }
       }
     }).then((response) => {
-      let handle_data = fetchToITableJob(response.data.data)
+      let handle_data = fetchToITableBookmark(response.data.data)
       let meta = response.data.meta;
       setResultPerPage(meta.items);
       setTotalResults(meta.count);
       setDataTable(handle_data);
     }).catch((error) => {
       console.log(error)
+      // HandleResponseError(error, navigate)
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable])
 
   return (
     <>
-      <PageTitle>Job Managements</PageTitle>
-      <SectionTitle>Jobs Table</SectionTitle>
+      <PageTitle>BookMarks</PageTitle>
       {alert !== "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
         {alert}
       </Alert>}
@@ -114,47 +89,37 @@ const Job = () => {
         <Table>
           <TableHeader>
             <tr>
-              <TableCell>Owner</TableCell>
-              <TableCell>KOL</TableCell>
+              <TableCell>Job</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
             </tr>
           </TableHeader>
           <TableBody>
-            {dataTable.map((job, i) => (
+            {dataTable.map((bookmark, i) => (
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={job.avatar_owner} alt="User avatar" />
+                    <Avatar className="hidden mr-3 md:block" src={bookmark.image_job} alt="User avatar" />
                     <div>
-                      <p className="font-semibold">{job.fullname_owner}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{job.email_owner}</p>
+                      <p className="font-semibold">{bookmark.name_job}</p>
                     </div>
                   </div>
                 </TableCell>
+
                 <TableCell>
-                  <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={job.avatar_kol} alt="User avatar" />
-                    <div>
-                      <p className="font-semibold">{job.fullname_kol}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{job.email_kol}</p>
-                    </div>
-                  </div>
+                  <Badge type={bookmark.status_color}>{bookmark.status}</Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge type={job.status_color}>{job.status}</Badge>
+                  <span className="text-sm">{new Date(bookmark.created_at).toLocaleDateString()}</span>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{new Date(job.create_at).toLocaleDateString()}</span>
-                </TableCell>
-                <TableCell>
-                  {job.status !== 'cancle' && <div className="flex items-center space-x-4">
-                    <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { lock(job) }}>
+                  <div className="flex items-center space-x-4">
+                    <Button layout="link" size="small" aria-label="Edit">
                       <LockIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
 
-                  </div>}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
@@ -173,4 +138,4 @@ const Job = () => {
   );
 }
 
-export default Job;
+export default Bookmark;

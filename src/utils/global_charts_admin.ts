@@ -15,6 +15,11 @@ export const lineLegends: ILegends[] = [
   { title: 'Processed', color: 'bg-purple-600' },
 ];
 
+export const lineStatisticalLegends: ILegends[] = [
+  { title: 'Failed', color: 'bg-teal-600' },
+  { title: 'Processed', color: 'bg-purple-600' },
+];
+
 export const barLegends: ILegends[] = [
   { title: 'Shoes', color: 'bg-teal-600' },
   { title: 'Bags', color: 'bg-purple-600' },

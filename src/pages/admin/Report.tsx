@@ -12,10 +12,11 @@ import {
   Avatar,
   Button,
   Pagination,
+  Alert
 } from '@windmill/react-ui';
 import PageTitle from '../../components/admin/typography/PageTitle';
 import SectionTitle from '../../components/admin/typography/SectionTitle';
-import { EditIcon, TrashIcon, CancelIcon, SuccessIcon, InformationIcon } from '../../icons';
+import { EditIcon, TrashIcon, CancelIcon, SuccessIcon, InformationIcon, PlayIcon } from '../../icons';
 import { ITableReport } from '../../utils/global_table_admin';
 import { getProxy } from '../../utils/PathUtil';
 import axios from 'axios';
@@ -27,6 +28,7 @@ const Report = () => {
   const [dataTable, setDataTable] = useState<ITableReport[]>([])
   const [data, setData] = useState<ITableReport[]>([]);
   const [totalResults, setTotalResults] = useState(0);
+  const [alert, setAlert] = useState("");
   const resultsPerPage = 10;
 
   useEffect(() => {
@@ -50,6 +52,84 @@ const Report = () => {
     setPageTable(p)
   }
 
+  function proccess(report: ITableReport) {
+    if (report.status !== 'pending') {
+      setAlert("Report must be in pending status")
+    } else {
+      axios.put(getProxy(`/api/v1/admin/reports/${report.id}/proccess`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableReport[] = data.map((item) => {
+          if (item.id === report.id) {
+            let rs: ITableReport = {
+              ...item,
+              status: 'proccess',
+              status_color: 'primary'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setData(handle_data)
+      }).catch((error) => { setAlert("Proccess is failed") })
+    }
+  }
+
+  function sovled(report: ITableReport) {
+    if (report.status !== 'proccess') {
+      setAlert("Report must be in process status")
+    } else {
+      axios.put(getProxy(`/api/v1/admin/reports/${report.id}/sovled`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableReport[] = data.map((item) => {
+          if (item.id === report.id) {
+            let rs: ITableReport = {
+              ...item,
+              status: 'sovled',
+              status_color: 'success'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setData(handle_data)
+      }).catch((error) => { setAlert("Proccess is failed") })
+    }
+  }
+
+  function rejected(report: ITableReport) {
+    if (report.status !== 'proccess') {
+      setAlert("Report must be in process status")
+    } else {
+      axios.put(getProxy(`/api/v1/admin/reports/${report.id}/rejected`), {}, {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      }).then((response) => {
+        let handle_data: ITableReport[] = data.map((item) => {
+          if (item.id === report.id) {
+            let rs: ITableReport = {
+              ...item,
+              status: 'rejected',
+              status_color: 'danger'
+            }
+            return rs
+          } else {
+            return item
+          }
+        })
+        setData(handle_data)
+      }).catch((error) => { setAlert("Proccess is failed") })
+    }
+  }
+
   useEffect(() => {
     setDataTable(data.slice((pageTable - 1) * resultsPerPage, pageTable * resultsPerPage))
   }, [pageTable])
@@ -58,6 +138,9 @@ const Report = () => {
     <>
       <PageTitle>Report Management</PageTitle>
       <SectionTitle>Reports Table</SectionTitle>
+      {alert !== "" && <Alert type="danger" className="my-5" onClose={() => { setAlert("") }}>
+        {alert}
+      </Alert>}
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
@@ -91,10 +174,13 @@ const Report = () => {
                     <Button layout="link" size="small" aria-label="Edit">
                       <InformationIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
-                    <Button layout="link" size="small" aria-label="Edit">
+                    <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { proccess(report) }}>
+                      <PlayIcon className="w-5 h-5" aria-hidden="true" />
+                    </Button>
+                    <Button layout="link" size="small" aria-label="Edit" onClick={(e) => { sovled(report) }} >
                       <SuccessIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
-                    <Button layout="link" size="small" aria-label="Delete">
+                    <Button layout="link" size="small" aria-label="Delete" onClick={(e) => { rejected(report) }} >
                       <CancelIcon className="w-5 h-5" aria-hidden="true" />
                     </Button>
                   </div>

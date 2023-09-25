@@ -1,9 +1,9 @@
-import { useContext, useState, useEffect } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ProfileContext } from '../../contexts/ProfileContext';
+import { AuthContext } from '../../contexts/AuthContext';
+import axios from 'axios';
 import { getProxy } from '../../utils/PathUtil';
-
-
 import {
   SearchIcon,
   MoonIcon,
@@ -14,9 +14,8 @@ import {
   OutlineCogIcon,
   OutlineLogoutIcon,
 } from '../../icons';
-
 import { Avatar, Badge, Input, Dropdown, DropdownItem, WindmillContext } from '@windmill/react-ui';
-import axios, { AxiosRequestConfig } from 'axios';
+
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext);
@@ -24,11 +23,7 @@ const Header = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext);
   const { state: profile_state, dispatch: profile_dispatch } = useContext(ProfileContext);
-  const [avatar, setAvatar] = useState("");
-
-
-
-
+  const navigate = useNavigate();
 
   function handleNotificationsClick() {
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
@@ -37,6 +32,26 @@ const Header = () => {
   function handleProfileClick() {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
+
+  function logout() {
+    axios.delete(getProxy('/logout'), {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }).then((response) => {
+      auth_dispatch({
+        type: 'LOGOUT',
+      });
+      profile_dispatch({ type: 'CLEAR' })
+      navigate('/login');
+    }).catch(error => {
+      auth_dispatch({
+        type: 'LOGOUT',
+      });
+      profile_dispatch({ type: 'CLEAR' })
+      navigate('/login');
+    })
+  }
 
   return (
 
@@ -114,7 +129,7 @@ const Header = () => {
               </DropdownItem>
             </Dropdown>
           </li>
-          {/* <!-- Profile menu --> */}
+
           <li className="relative">
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none"
@@ -134,15 +149,15 @@ const Header = () => {
               isOpen={isProfileMenuOpen}
               onClose={() => setIsProfileMenuOpen(false)}
             >
-              <DropdownItem tag="a" href="/admin/profile">
+              <DropdownItem tag="a" href="/profile">
                 <OutlinePersonIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Profile</span>
               </DropdownItem>
-              <DropdownItem tag="a" href="/admin/password/edit">
+              <DropdownItem tag="a" href="/profile/password/edit">
                 <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Settings</span>
+                <span>Change password</span>
               </DropdownItem>
-              <DropdownItem onClick={() => alert('Log out!')}>
+              <DropdownItem onClick={() => logout()}>
                 <OutlineLogoutIcon className="w-4 h-4 mr-3" aria-hidden="true" />
                 <span>Log out</span>
               </DropdownItem>
