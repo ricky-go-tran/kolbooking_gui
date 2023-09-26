@@ -20,6 +20,7 @@ import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
 import { fetchToITableJob } from "../../utils/FetchData";
 import { Alert } from "@windmill/react-ui";
+import JobDetail from "../../components/general/modal/job/JobDetail";
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext);
@@ -87,6 +88,7 @@ const Job = () => {
         });
     }
   }
+
   function complete(job: ITableJob) {
     if (job.status !== "apply") {
       setAlert("Job status must apply");
@@ -121,6 +123,7 @@ const Job = () => {
         });
     }
   }
+
   function payment(job: ITableJob) {
     if (job.status !== "complete") {
       setAlert("Job status must complete");
@@ -155,6 +158,7 @@ const Job = () => {
         });
     }
   }
+
   function finish(job: ITableJob) {
     if (job.status !== "payment" && job.status !== "complete") {
       setAlert("Job status must payment or complete");
@@ -189,6 +193,7 @@ const Job = () => {
         });
     }
   }
+
   function cancle(job: ITableJob) {
     if (job.status === "payment" || job.status === "complete") {
       setAlert("Job status must diferent payment and complete");
@@ -222,6 +227,10 @@ const Job = () => {
           console.log(error);
         });
     }
+  }
+
+  function viewJob(job: ITableJob) {
+    console.log(job);
   }
 
   function handleAction(
@@ -281,6 +290,7 @@ const Job = () => {
           {alert}
         </Alert>
       )}
+      <JobDetail />
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
@@ -294,7 +304,13 @@ const Job = () => {
           </TableHeader>
           <TableBody>
             {dataTable.map((job, i) => (
-              <TableRow key={i}>
+              <TableRow
+                key={i}
+                className="hover:bg-gray-100 cursor-pointer"
+                onClick={(e) => {
+                  viewJob(job);
+                }}
+              >
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <Avatar

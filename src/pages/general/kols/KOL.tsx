@@ -5,14 +5,15 @@ import { useEffect, useState } from "react";
 import { getProxy } from "../../../utils/PathUtil";
 
 const KOL = () => {
-  const [jobs, setJobs] = useState([]);
+  const [kols, setKols] = useState([]);
   const [meta, setMeta] = useState({});
 
   useEffect(() => {
     axios
       .get(getProxy("/api/v1/kols"))
       .then((response) => {
-        console.log(response);
+        setKols(response.data.data);
+        setMeta(response.data.meta);
       })
       .catch((error) => {
         console.log(error);
@@ -22,7 +23,7 @@ const KOL = () => {
   return (
     <>
       <KOLSearch />
-      <KOLs />
+      <KOLs kols={kols} meta={meta} />
     </>
   );
 };
