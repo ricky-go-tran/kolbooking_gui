@@ -89,7 +89,6 @@ function App() {
             </NewfeedLayout>
           }
         />
-
         <Route
           path="/jobs"
           element={
@@ -106,7 +105,6 @@ function App() {
             </NewfeedLayout>
           }
         />
-
         <Route
           path="/kols/:id"
           element={
@@ -115,7 +113,6 @@ function App() {
             </NewfeedLayout>
           }
         />
-
         <Route
           path="/jobs/:id"
           element={
@@ -124,7 +121,6 @@ function App() {
             </NewfeedLayout>
           }
         />
-
         <Route
           path="/login"
           element={
@@ -141,7 +137,6 @@ function App() {
             </UnAuthRoutes>
           }
         />
-
         <Route
           path="/register"
           element={
@@ -150,9 +145,7 @@ function App() {
             </UnAuthRoutes>
           }
         />
-
         <Route path="/setup" element={<SetupProfile />} />
-
         <Route
           path="/admin/dashboard"
           element={
@@ -161,7 +154,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/admin/reports"
           element={
@@ -170,7 +162,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/admin/jobs"
           element={
@@ -179,7 +170,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/admin/users"
           element={
@@ -188,7 +178,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/admin/crontab"
           element={
@@ -205,7 +194,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/profile/password/edit"
           element={
@@ -214,7 +202,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/kol/jobs"
           element={
@@ -223,7 +210,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/kol/bookmarks"
           element={
@@ -232,7 +218,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/kol/schedule"
           element={
@@ -241,7 +226,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route
           path="/kol/statistics"
           element={
@@ -250,7 +234,6 @@ function App() {
             </AdminLayout>
           }
         />
-
         <Route path="/kol/setup" element={<SetupKolProfile />} />
         <Route path="/redirect/roles" element={<RedirectByRole />} />
         <Route path="/server/error" element={<Page500 />} />

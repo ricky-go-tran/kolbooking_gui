@@ -33,9 +33,6 @@ const Detail = () => {
                 <h3 className="text-center text-xl text-gray-900 font-medium leading-8">
                   Joh Doe
                 </h3>
-                <div className="text-center text-gray-400 text-xs font-semibold">
-                  <p>Web Developer</p>
-                </div>
                 <table className="text-xs my-3">
                   <tbody>
                     <tr>
