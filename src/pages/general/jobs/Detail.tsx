@@ -28,7 +28,7 @@ const Detail = () => {
   const params = useParams();
 
   function fetchData(response: AxiosResponse<any, any>): void {
-    let data = response.data.data.attributes;
+    const data = response.data.data.attributes;
     setData(data);
     setLikeCount(data.like_num);
     setUnlikeCount(data.unlike_num);
@@ -61,7 +61,6 @@ const Detail = () => {
     axios
       .get(getProxy(`/api/v1/jobs/${params.id}`), { ...config })
       .then((response) => {
-        console.log(response);
         fetchData(response);
       })
       .catch((error) => {

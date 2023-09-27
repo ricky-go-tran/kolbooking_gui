@@ -5,7 +5,7 @@ interface ITableData {
   amount: number
   status: "success" | "danger" | "warning" | "neutral" | "primary" | undefined
   date: string
-};
+}
 
 interface ITabelUser {
   id: string

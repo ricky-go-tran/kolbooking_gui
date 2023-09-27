@@ -5,13 +5,13 @@ import {
 } from "./global_constant";
 
 const AuthenticationUtil = {
-  isValidPasswordLength: (password: String) => {
+  isValidPasswordLength: (password: string) => {
     return (
       password.length >= MIN_PASSWORD_LENGTH &&
       password.length <= MAX_PASSWORD_LENGTH
     );
   },
-  confirmPassword: (password: String, repassword: String) => {
+  confirmPassword: (password: string, repassword: string) => {
     return (
       AuthenticationUtil.isValidPasswordLength(password) &&
       password === repassword

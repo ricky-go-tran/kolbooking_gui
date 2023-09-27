@@ -1,20 +1,21 @@
-import SectionTitle from '../../components/admin/typography/SectionTitle';
-import PageTitle from '../../components/admin/typography/PageTitle';
-import InfoCard from '../../components/admin/cart/InfoCart';
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../../icons';
-import RoundIcon from '../../components/admin/RoundIcon'
-import { Chart, registerables } from 'chart.js';
-import { Line, Chart as ChartJS } from 'react-chartjs-2';
-import ChartLegend from '../../components/admin/chart/CardLegend';
-import ChartCard from '../../components/admin/chart/ChartCard';
-import { AuthContext } from '../../contexts/AuthContext';
+import SectionTitle from "../../components/admin/typography/SectionTitle";
+import PageTitle from "../../components/admin/typography/PageTitle";
+import InfoCard from "../../components/admin/cart/InfoCart";
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons";
+import RoundIcon from "../../components/admin/RoundIcon";
+import { Chart, registerables } from "chart.js";
+import { Line, Chart as ChartJS } from "react-chartjs-2";
+import ChartLegend from "../../components/admin/chart/CardLegend";
+import ChartCard from "../../components/admin/chart/ChartCard";
+import { AuthContext } from "../../contexts/AuthContext";
+import { lineStatisticalLegends } from "../../utils/global_charts_admin";
+import { useEffect, useContext, useState } from "react";
+import { getProxy } from "../../utils/PathUtil";
 import {
-  lineStatisticalLegends,
-} from '../../utils/global_charts_admin';
-import { useEffect, useContext, useState } from 'react';
-import { getProxy } from '../../utils/PathUtil';
-import { defaultDataForLinechartCrontab, fetchDataForLinechartStatistical } from '../../utils/ChartUtil';
-import axios from 'axios'
+  defaultDataForLinechartCrontab,
+  fetchDataForLinechartStatistical,
+} from "../../utils/ChartUtil";
+import axios from "axios";
 Chart.register(...registerables);
 
 const Statistics = () => {
@@ -22,28 +23,34 @@ const Statistics = () => {
     total: 0,
     finish: 0,
     cancel: 0,
-    profit: 0
+    profit: 0,
   });
-  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
+  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab);
   const { state: auth_state } = useContext(AuthContext);
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/kol/statistical'), {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-    }).then((response) => {
-      setData({
-        total: response.data.total_job,
-        finish: response.data.finish_job,
-        cancel: response.data.cancle_job,
-        profit: response.data.profit
+    axios
+      .get(getProxy("/api/v1/kol/statistical"), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
       })
-      let handle_data = fetchDataForLinechartStatistical(response.data.label, response.data.finish_detail, response.data.cancle_detail)
-      setDataChart(handle_data)
-    }).catch((error) => console.log(error))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+      .then((response) => {
+        setData({
+          total: response.data.total_job,
+          finish: response.data.finish_job,
+          cancel: response.data.cancle_job,
+          profit: response.data.profit,
+        });
+        const handle_data = fetchDataForLinechartStatistical(
+          response.data.label,
+          response.data.finish_detail,
+          response.data.cancle_detail
+        );
+        setDataChart(handle_data);
+      })
+      .catch((error) => console.log(error));
+  }, []);
   return (
     <>
       <PageTitle>Statistics</PageTitle>
@@ -80,7 +87,7 @@ const Statistics = () => {
           />
         </InfoCard>
 
-        <InfoCard title="Profits" value={`${data.profit}`} >
+        <InfoCard title="Profits" value={`${data.profit}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={ChatIcon}
@@ -99,11 +106,8 @@ const Statistics = () => {
           <ChartLegend legends={lineStatisticalLegends} />
         </ChartCard>
       </div>
-
     </>
-  )
-}
+  );
+};
 
 export default Statistics;
-
-

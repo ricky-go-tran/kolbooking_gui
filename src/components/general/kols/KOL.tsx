@@ -8,7 +8,7 @@ import { AuthContext } from "../../../contexts/AuthContext";
 const KOL = ({ kol }: { kol: any }) => {
   return (
     <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-      <Link to={`/kols/${kol.id}`}>
+      <Link to={`/kols/${kol?.profile?.data?.id}`}>
         <img
           className="rounded-t-lg"
           src={
@@ -27,7 +27,7 @@ const KOL = ({ kol }: { kol: any }) => {
           {kol?.profile?.data?.attributes?.address || "Unknown"}
         </p>
         <Link
-          to={`/kols/${kol.id}`}
+          to={`/kols/${kol?.profile?.data?.id}`}
           className="bg-blue-400 hover:bg-blue-300 text-white font-semibold py-2 px-4 border border-gray-400 rounded shadow"
         >
           View Details

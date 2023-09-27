@@ -57,8 +57,8 @@ function App() {
           },
         })
         .then((res) => {
-          let data = res.data.data.attributes;
-          let profileData: ProfileType = {
+          const data = res.data.data.attributes;
+          const profileData: ProfileType = {
             fullname: data.fullname,
             avatar:
               data.avatar === "null"
@@ -70,12 +70,11 @@ function App() {
           };
           profile_dispatch({ type: "FETCH", payload: profileData });
         })
-        .catch((err) => {
+        .catch(() => {
           auth_dispatch({ type: "LOGOUT", payload: null });
           profile_dispatch({ type: "CLEAR", payload: null });
         });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

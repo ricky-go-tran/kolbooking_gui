@@ -14,7 +14,7 @@ export type ProfileType = {
 
 export interface IMainContainer {
   children: React.ReactNode
-};
+}
 
 export interface IRoute {
   path: string
@@ -22,7 +22,7 @@ export interface IRoute {
   name: string
   routes?: IRoute[]
   exact?: boolean
-};
+}
 interface IIcon {
   icon: string
   [key: string]: string | undefined

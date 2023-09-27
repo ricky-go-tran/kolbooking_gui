@@ -1,7 +1,7 @@
 export interface ILegends {
   title: string
   color: string
-};
+}
 
 
 export const doughnutLegends: ILegends[] = [

@@ -74,7 +74,7 @@ export const fetchToITableUser = (users: any[]): ITabelUser[] => {
   let results: ITabelUser[] = []
   results = users.map((user: any) => {
     if (user.attributes.profile.data != null) {
-      let item: ITabelUser = {
+      const item: ITabelUser = {
         id: `${user.attributes.id}`,
         avatar: user.attributes.profile?.data.attributes.avatar == "null" ?
           getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg")
@@ -89,7 +89,7 @@ export const fetchToITableUser = (users: any[]): ITabelUser[] => {
       }
       return item;
     } else {
-      let item: ITabelUser = {
+      const item: ITabelUser = {
         id: `${user.attributes.id}`,
         avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
         fullname: "Not setup",
@@ -110,12 +110,12 @@ export const fetchToITableUser = (users: any[]): ITabelUser[] => {
 export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
   let results: ITableJob[] = []
   results = jobs.map((job: any) => {
-    let owner = {
+    const owner = {
       avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
       fullname: "Not setup",
       email: "Not setup",
     }
-    let kol = {
+    const kol = {
       avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
       fullname: "Not kol",
       email: "Not kol",
@@ -132,7 +132,7 @@ export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
       kol.fullname = job.attributes.kol.data.attributes.fullname;
       kol.email = job.attributes.kol.data.attributes.email;
     }
-    let item: ITableJob = {
+    const item: ITableJob = {
       id: `${job.attributes.id}`,
       avatar_owner: owner.avatar,
       fullname_owner: owner.fullname,
@@ -152,7 +152,7 @@ export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
 export const fetchToITableReport = (reports: any[]): ITableReport[] => {
   let results: ITableReport[] = []
   results = reports.map((report: any) => {
-    let reporter = {
+    const reporter = {
       avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
       fullname: "Not setup",
       email: "Not setup",
@@ -163,7 +163,7 @@ export const fetchToITableReport = (reports: any[]): ITableReport[] => {
       reporter.fullname = report.attributes.reporter.data.attributes.fullname;
       reporter.email = report.attributes.reporter.data.attributes.email;
     }
-    let item: ITableReport = {
+    const item: ITableReport = {
       id: `${report.attributes.id}`,
       avatar_reporter: reporter.avatar,
       fullname_reporter: reporter.fullname,
@@ -182,7 +182,7 @@ export const fetchToITableReport = (reports: any[]): ITableReport[] => {
 export const fetchToITableBookmark = (bookmarks: any[]): ITableBookmark[] => {
   let results: ITableBookmark[] = []
   results = bookmarks.map((bookmark: any) => {
-    let job = {
+    const job = {
       image: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
       name: "Nothing",
     }
@@ -192,7 +192,7 @@ export const fetchToITableBookmark = (bookmarks: any[]): ITableBookmark[] => {
       job.name = bookmark.attributes.job.data.attributes.name;
 
     }
-    let item: ITableBookmark = {
+    const item: ITableBookmark = {
       id: `${bookmark.attributes.id}`,
       image_job: job.image,
       name_job: job.name,
