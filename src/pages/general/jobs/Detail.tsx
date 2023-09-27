@@ -12,7 +12,7 @@ import {
   WarningIcon,
   BookMarkIcon,
 } from "../../../icons";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { getProxy } from "../../../utils/PathUtil";
 import { useParams } from "react-router-dom";
 import { isAuth } from "../../../utils/AuthUtil";
@@ -27,31 +27,42 @@ const Detail = () => {
   const { state: auth_state } = useContext(AuthContext);
   const params = useParams();
 
-  useEffect(() => {
-    axios
-      .get(getProxy(`/api/v1/jobs/${params.id}`))
-      .then((response) => {
-        let data = response.data.data.attributes;
-        setData(data);
-        setLikeCount(data.like_num);
-        setUnlikeCount(data.unlike_num);
-        if (
-          data.current_user_like === undefined ||
-          data.current_user_like === null
-        ) {
-          setLiked(false);
-        } else {
-          setLiked(true);
-        }
+  function fetchData(response: AxiosResponse<any, any>): void {
+    let data = response.data.data.attributes;
+    setData(data);
+    setLikeCount(data.like_num);
+    setUnlikeCount(data.unlike_num);
+    if (
+      data.current_user_like === undefined ||
+      data.current_user_like === null
+    ) {
+      setLiked(false);
+    } else {
+      setLiked(true);
+    }
 
-        if (
-          data.current_user_unlike === undefined ||
-          data.current_user_unlike === null
-        ) {
-          setUnliked(false);
-        } else {
-          setUnliked(true);
-        }
+    if (
+      data.current_user_unlike === undefined ||
+      data.current_user_unlike === null
+    ) {
+      setUnliked(false);
+    } else {
+      setUnliked(true);
+    }
+  }
+
+  useEffect(() => {
+    let config = {};
+    if (isAuth(auth_state)) {
+      config = {
+        headers: { Authorization: auth_state.auth_token },
+      };
+    }
+    axios
+      .get(getProxy(`/api/v1/jobs/${params.id}`), { ...config })
+      .then((response) => {
+        console.log(response);
+        fetchData(response);
       })
       .catch((error) => {
         console.log(error);
@@ -74,8 +85,12 @@ const Detail = () => {
           if (response.status !== 204) {
             setLiked(true);
             setUnliked(false);
-            setLikeCount(likeCount + 1);
-            setUnlikeCount(unlikeCount - 1);
+            if (response.status === 200) {
+              setLikeCount(likeCount + 1);
+              setUnlikeCount(unlikeCount - 1);
+            } else if (response.status === 201) {
+              setLikeCount(likeCount + 1);
+            }
           }
         })
         .catch((err) => {
@@ -100,8 +115,12 @@ const Detail = () => {
           if (response.status !== 204) {
             setLiked(false);
             setUnliked(true);
-            setLikeCount(likeCount - 1);
-            setUnlikeCount(unlikeCount + 1);
+            if (response.status === 200) {
+              setLikeCount(likeCount - 1);
+              setUnlikeCount(unlikeCount + 1);
+            } else if (response.status === 201) {
+              setUnlikeCount(unlikeCount + 1);
+            }
           }
         })
         .catch((err) => {
@@ -135,21 +154,18 @@ const Detail = () => {
                           {data?.title}
                         </div>
                         <div className="max-w-lg mt-3 2xl:max-w-2xl">
-                          <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                            Fashion and Beauty
-                          </span>
-                          <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                            Food and Beverage
-                          </span>
-                          <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                            Health and Fitness
-                          </span>
-                          <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                            Food and Beverage
-                          </span>
-                          <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                            Health and Fitness
-                          </span>
+                          {data?.industry?.data.map((industry: any) => {
+                            return (
+                              <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                {industry.attributes.name}
+                              </span>
+                            );
+                          })}
+                          {data?.industry?.data.length === 0 && (
+                            <span className="inline-block m-2 bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                              Not Industry
+                            </span>
+                          )}
                         </div>
                       </div>
                       <ul className="flex-grow flex flex-row-reverse child">

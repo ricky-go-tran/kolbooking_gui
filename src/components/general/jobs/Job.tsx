@@ -66,8 +66,12 @@ const Job = ({ job }: { job: any }) => {
           if (response.status !== 204) {
             setLiked(true);
             setUnliked(false);
-            setLikeCount(likeCount + 1);
-            setUnlikeCount(unlikeCount - 1);
+            if (response.status === 200) {
+              setLikeCount(likeCount + 1);
+              setUnlikeCount(unlikeCount - 1);
+            } else if (response.status === 201) {
+              setLikeCount(likeCount + 1);
+            }
           }
         })
         .catch((err) => {
@@ -92,8 +96,12 @@ const Job = ({ job }: { job: any }) => {
           if (response.status !== 204) {
             setLiked(false);
             setUnliked(true);
-            setLikeCount(likeCount - 1);
-            setUnlikeCount(unlikeCount + 1);
+            if (response.status === 200) {
+              setLikeCount(likeCount - 1);
+              setUnlikeCount(unlikeCount + 1);
+            } else if (response.status === 201) {
+              setUnlikeCount(unlikeCount + 1);
+            }
           }
         })
         .catch((err) => {
@@ -125,7 +133,9 @@ const Job = ({ job }: { job: any }) => {
       )}
       <div className="border-r border-b border-l border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal flex-grow">
         <div className="mb-8">
-          <div className="text-black font-bold text-xl mb-2">{job.title}</div>
+          <Link to={`/jobs/${job.id}`}>
+            <div className="text-black font-bold text-xl mb-2">{job.title}</div>
+          </Link>
           <p className="text-grey-darker text-base">
             {limitString(job.description || " ")}
           </p>
@@ -141,6 +151,7 @@ const Job = ({ job }: { job: any }) => {
               }
               alt="Avatar of Owner"
             />
+
             <div className="text-sm">
               <p className="text-black leading-none">
                 {job?.owner?.data?.attributes?.fullname || "Unknown"}
@@ -151,38 +162,36 @@ const Job = ({ job }: { job: any }) => {
             </div>
           </div>
           <ul className="flex items-center w-1/3 justify-between">
-            {isAuth() === true && (
-              <>
-                <li
-                  className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
-                  onClick={(e) => {
-                    like(job);
-                  }}
-                >
-                  {liked === false && <LikeOuletIcon />}
-                  {liked === true && <LikeIcon />}
-                  <span>{likeCount}</span>
+            <>
+              <li
+                className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
+                onClick={(e) => {
+                  like(job);
+                }}
+              >
+                {liked === false && <LikeOuletIcon />}
+                {liked === true && <LikeIcon />}
+                <span>{likeCount}</span>
+              </li>
+              <li
+                className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
+                onClick={() => {
+                  unlike(job);
+                }}
+              >
+                {unliked === false && <UnlikeOutletIcon />}
+                {unliked === true && <UnlikeIcon />}
+                <span>{unlikeCount}</span>
+              </li>
+              {profile_state.role === "kol" && (
+                <li className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400">
+                  <BookMarkIcon />
                 </li>
-                <li
-                  className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
-                  onClick={() => {
-                    unlike(job);
-                  }}
-                >
-                  {unliked === false && <UnlikeOutletIcon />}
-                  {unliked === true && <UnlikeIcon />}
-                  <span>{unlikeCount}</span>
-                </li>
-                {profile_state.role === "kol" && (
-                  <li className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400">
-                    <BookMarkIcon />
-                  </li>
-                )}
-                <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
-                  <WarningIcon />
-                </li>
-              </>
-            )}
+              )}
+              <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
+                <WarningIcon />
+              </li>
+            </>
           </ul>
         </div>
       </div>

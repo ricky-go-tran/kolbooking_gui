@@ -1,13 +1,21 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   PeopleIcon,
   IndustryIcon,
   CalendarIcon,
   LineChartIcon,
 } from "../../../icons";
+import { getProxy, getCDNImage } from "../../../utils/PathUtil";
+import { DEFAULT_AVATAR } from "../../../utils/global_constant";
+import { useParams } from "react-router-dom";
+import { isAuth } from "../../../utils/AuthUtil";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const Detail = () => {
+  const [data, setData] = useState<any>(null);
+  const { state: auth_state } = useContext(AuthContext);
+  const params = useParams();
   return (
     <div className="min-h-screen w-full bg-gray-100 flex py-4">
       <div className="w-1/4 flex flex-col items-center justify-start">
