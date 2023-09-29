@@ -2,9 +2,22 @@ import Job from "./Job";
 import { Pagination } from "@windmill/react-ui";
 import { useState, useEffect } from "react";
 
-const Jobs = ({ jobs, meta }: { jobs: any; meta: any }) => {
+const Jobs = ({
+  jobs,
+  totalResults,
+  resultsPerPage,
+  setPageTable,
+}: {
+  jobs: any;
+  totalResults: number;
+  resultsPerPage: number;
+  setPageTable: React.Dispatch<React.SetStateAction<number>>;
+}) => {
   const [alert, setAlert] = useState("");
-  const [pageTable, setPageTable] = useState(1);
+
+  function onPageChangeTable(p: number) {
+    setPageTable(p);
+  }
 
   if (jobs.length !== 0) {
     return (
@@ -14,9 +27,9 @@ const Jobs = ({ jobs, meta }: { jobs: any; meta: any }) => {
         })}
         <div className="my-4 w-11/12 py-3 px-2 border-t dark:border-gray-700 bg-gray-50 text-gray-500 dark:text-gray-400 dark:bg-gray-800">
           <Pagination
-            totalResults={meta.count}
-            resultsPerPage={meta.items}
-            onChange={() => {}}
+            totalResults={totalResults}
+            resultsPerPage={resultsPerPage}
+            onChange={onPageChangeTable}
             label="Page navigation"
           />
         </div>

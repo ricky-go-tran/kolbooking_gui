@@ -15,12 +15,13 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../../components/admin/typography/PageTitle";
 import SectionTitle from "../../components/admin/typography/SectionTitle";
-import { LockIcon } from "../../icons";
+import { LockIcon, InformationIcon } from "../../icons";
 import { ITableJob } from "../../utils/global_table_admin";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
 import { fetchToITableJob } from "../../utils/FetchData";
 import { Alert } from "@windmill/react-ui";
+import JobDetail from "../../components/admin/modal/job/JobDetail";
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext);
@@ -29,6 +30,7 @@ const Job = () => {
   const [totalResults, setTotalResults] = useState(0);
   const [alert, setAlert] = useState("");
   const [resultsPerPage, setResultPerPage] = useState(0);
+  const [detail, setDetail] = useState<number | string>(-1);
 
   useEffect(() => {
     axios
@@ -89,6 +91,10 @@ const Job = () => {
     }
   }
 
+  function viewJob(job: string | number) {
+    setDetail(job);
+  }
+
   useEffect(() => {
     axios
       .get(getProxy("/api/v1/admin/jobs"), {
@@ -129,12 +135,13 @@ const Job = () => {
           {alert}
         </Alert>
       )}
+      {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
       <TableContainer className="mb-8">
         <Table>
           <TableHeader>
             <tr>
+              <TableCell>Job</TableCell>
               <TableCell>Owner</TableCell>
-              <TableCell>KOL</TableCell>
               <TableCell>Status</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Actions</TableCell>
@@ -143,6 +150,18 @@ const Job = () => {
           <TableBody>
             {dataTable.map((job, i) => (
               <TableRow key={i}>
+                <TableCell>
+                  <div className="flex items-center text-sm">
+                    <Avatar
+                      className="hidden mr-3 md:block"
+                      src={job.job_image}
+                      alt="User avatar"
+                    />
+                    <div>
+                      <p className="font-semibold">{job.job_title}</p>
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center text-sm">
                     <Avatar
@@ -158,21 +177,7 @@ const Job = () => {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    <Avatar
-                      className="hidden mr-3 md:block"
-                      src={job.avatar_kol}
-                      alt="User avatar"
-                    />
-                    <div>
-                      <p className="font-semibold">{job.fullname_kol}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {job.email_kol}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
+
                 <TableCell>
                   <Badge type={job.status_color}>{job.status}</Badge>
                 </TableCell>
@@ -181,7 +186,17 @@ const Job = () => {
                     {new Date(job.create_at).toLocaleDateString()}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="flex">
+                  <Button
+                    layout="link"
+                    size="small"
+                    aria-label="Edit"
+                    onClick={() => {
+                      viewJob(job.id);
+                    }}
+                  >
+                    <InformationIcon className="w-5 h-5" aria-hidden="true" />
+                  </Button>
                   {job.status !== "cancle" && (
                     <div className="flex items-center space-x-4">
                       <Button

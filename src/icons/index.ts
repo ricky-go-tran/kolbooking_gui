@@ -36,7 +36,8 @@ import { ReactComponent as LikeIcon } from "./like.svg";
 import { ReactComponent as UnlikeIcon } from "./unlike.svg";
 import { ReactComponent as LikeOuletIcon } from "./like-outlet.svg";
 import { ReactComponent as UnlikeOutletIcon } from "./unlike-oulet.svg";
-import { ReactComponent as WarningIcon } from "./warning.svg";
+import { ReactComponent as WarningOutlineIcon } from "./warning.svg";
+import { ReactComponent as WarningIcon } from "./warning_solid.svg";
 import { ReactComponent as BookMarkIcon } from "./bookmark.svg";
 import { ReactComponent as BookMarkOutlineIcon } from "./bookmark_outline.svg";
 import { ReactComponent as CalendarIcon } from "./calendar.svg";
@@ -83,6 +84,7 @@ export {
   LikeOuletIcon,
   UnlikeIcon,
   UnlikeOutletIcon,
+  WarningOutlineIcon,
   WarningIcon,
   CalendarIcon,
   BookMarkIcon,

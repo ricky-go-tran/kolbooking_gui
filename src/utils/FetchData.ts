@@ -1,8 +1,21 @@
-import { ITabelUser, ITableJob, ITableReport, ITableBookmark } from "./global_table_admin"
+import {
+  ITabelUser,
+  ITableJob,
+  ITableReport,
+  ITableBookmark,
+} from "./global_table_admin";
 import { getProxy, getCDNImage } from "./PathUtil";
+import { DEFAULT_AVATAR, DEFAULT_IMAGE } from "./global_constant";
+import { formatDate } from "./DateUtil";
 
-type ColorType = "danger" | "warning" | "success" | undefined
-type ColorBageType = "success" | "danger" | "warning" | "neutral" | "primary" | undefined
+type ColorType = "danger" | "warning" | "success" | undefined;
+type ColorBageType =
+  | "success"
+  | "danger"
+  | "warning"
+  | "neutral"
+  | "primary"
+  | undefined;
 
 const getColorOfRole = (role: string | undefined): ColorType => {
   if (role === "admin") {
@@ -12,9 +25,9 @@ const getColorOfRole = (role: string | undefined): ColorType => {
   } else if (role === "base") {
     return "success";
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
 const getColorOfStatus = (role: string | undefined): ColorType => {
   if (role === "valid") {
@@ -24,142 +37,144 @@ const getColorOfStatus = (role: string | undefined): ColorType => {
   } else if (role === "lock") {
     return "danger";
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
 const getColorOfStatusJob = (status: string | undefined): ColorBageType => {
   if (status === "post" || status === "booking") {
     return "warning";
   } else if (status === "apply") {
-    return "neutral"
+    return "neutral";
   } else if (status === "complete" || status === "payment") {
-    return "primary"
+    return "primary";
   } else if (status === "finish") {
-    return "success"
+    return "success";
   } else if (status === "cancle") {
-    return "danger"
+    return "danger";
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
 const getColorOfStatusReport = (status: string | undefined): ColorBageType => {
   if (status === "pending") {
     return "warning";
   } else if (status === "proccess") {
-    return "primary"
+    return "primary";
   } else if (status === "sovled") {
-    return "success"
+    return "success";
   } else if (status === "rejected") {
-    return "danger"
+    return "danger";
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
-const getColorOfStatusBookmark = (status: string | undefined): ColorBageType => {
+const getColorOfStatusBookmark = (
+  status: string | undefined
+): ColorBageType => {
   if (status === "care") {
     return "primary";
   } else if (status === "attention") {
-    return "warning"
+    return "warning";
   } else if (status === "extremely") {
-    return "danger"
+    return "danger";
   } else {
-    return undefined
+    return undefined;
   }
-}
+};
 
 export const fetchToITableUser = (users: any[]): ITabelUser[] => {
-  let results: ITabelUser[] = []
+  let results: ITabelUser[] = [];
   results = users.map((user: any) => {
     if (user.attributes.profile.data != null) {
       const item: ITabelUser = {
         id: `${user.attributes.id}`,
-        avatar: user.attributes.profile?.data.attributes.avatar == "null" ?
-          getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg")
-          : getProxy(user.attributes.profile.data.attributes.avatar),
+        avatar:
+          user.attributes.profile?.data.attributes.avatar == "null"
+            ? getCDNImage(DEFAULT_AVATAR)
+            : getProxy(user.attributes.profile.data.attributes.avatar),
         fullname: user.attributes.profile?.data.attributes.fullname,
         email: user.attributes.email,
         birthday: user.attributes.profile?.data.attributes.birthday,
         role: user.attributes.role,
         role_color: getColorOfRole(user.attributes.role),
         status: user.attributes.profile?.data.attributes.status,
-        status_color: getColorOfStatus(user.attributes?.profile.data.attributes.status)
-      }
+        status_color: getColorOfStatus(
+          user.attributes?.profile.data.attributes.status
+        ),
+      };
       return item;
     } else {
       const item: ITabelUser = {
         id: `${user.attributes.id}`,
-        avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
+        avatar: getCDNImage(DEFAULT_AVATAR),
         fullname: "Not setup",
         email: user.attributes.email,
         birthday: "Not setup",
         role: user.attributes.role,
         role_color: getColorOfRole(user.attributes.role),
         status: "invalid",
-        status_color: "warning"
-      }
+        status_color: "warning",
+      };
       return item;
     }
-  })
+  });
 
-  return results
-}
+  return results;
+};
 
 export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
-  let results: ITableJob[] = []
+  let results: ITableJob[] = [];
   results = jobs.map((job: any) => {
     const owner = {
-      avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
+      avatar: getCDNImage(DEFAULT_AVATAR),
       fullname: "Not setup",
       email: "Not setup",
-    }
-    const kol = {
-      avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
-      fullname: "Not kol",
-      email: "Not kol",
-    }
+    };
+
     if (job.attributes.owner.data != null) {
-      owner.avatar = job.attributes.owner.data.attributes.avatar == "null" ? owner.avatar :
-        getProxy(job.attributes.owner.data.attributes.avatar);
+      owner.avatar =
+        job.attributes.owner.data.attributes.avatar == "null"
+          ? owner.avatar
+          : getProxy(job.attributes.owner.data.attributes.avatar);
       owner.fullname = job.attributes.owner.data.attributes.fullname;
       owner.email = job.attributes.owner.data.attributes.email;
     }
-    if (job.attributes.kol.data != null) {
-      kol.avatar = job.attributes.kol.data.attributes.avatar == "null" ? kol.avatar :
-        getProxy(job.attributes.kol.data.attributes.avatar);
-      kol.fullname = job.attributes.kol.data.attributes.fullname;
-      kol.email = job.attributes.kol.data.attributes.email;
-    }
+
     const item: ITableJob = {
       id: `${job.attributes.id}`,
       avatar_owner: owner.avatar,
       fullname_owner: owner.fullname,
       email_owner: owner.email,
-      avatar_kol: kol.avatar,
-      fullname_kol: kol.fullname,
-      email_kol: kol.email,
+      job_image:
+        job.attributes.image === "null"
+          ? getCDNImage(DEFAULT_IMAGE)
+          : job.attributes.image,
+      job_title: job.attributes.title,
       status: job.attributes.status,
       status_color: getColorOfStatusJob(job.attributes.status),
       create_at: job.attributes.created_at,
-    }
+    };
     return item;
   });
-  return results
-}
+  return results;
+};
 
 export const fetchToITableReport = (reports: any[]): ITableReport[] => {
-  let results: ITableReport[] = []
+  let results: ITableReport[] = [];
   results = reports.map((report: any) => {
     const reporter = {
-      avatar: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
+      avatar: getCDNImage(DEFAULT_AVATAR),
       fullname: "Not setup",
       email: "Not setup",
-    }
+    };
     if (report.attributes.reporter.data != null) {
-      reporter.avatar = report.attributes.reporter.data.attributes.avatar == "null" ? reporter.avatar :
-        getProxy(report.attributes.reporter.data.attributes.avatar);
+      reporter.avatar =
+        report.attributes.reporter.data.attributes.avatar == "null"
+          ? reporter.avatar
+          : getProxy(report.attributes.reporter.data.attributes.avatar);
       reporter.fullname = report.attributes.reporter.data.attributes.fullname;
       reporter.email = report.attributes.reporter.data.attributes.email;
     }
@@ -170,27 +185,26 @@ export const fetchToITableReport = (reports: any[]): ITableReport[] => {
       email_reporter: reporter.email,
       status: report.attributes.status,
       status_color: getColorOfStatusReport(report.attributes.status),
-      created_at: report.attributes.created_at
-    }
+      created_at: report.attributes.created_at,
+    };
     return item;
-  })
+  });
   return results;
-}
-
-
+};
 
 export const fetchToITableBookmark = (bookmarks: any[]): ITableBookmark[] => {
-  let results: ITableBookmark[] = []
+  let results: ITableBookmark[] = [];
   results = bookmarks.map((bookmark: any) => {
     const job = {
-      image: getCDNImage("/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"),
+      image: getCDNImage(DEFAULT_IMAGE),
       name: "Nothing",
-    }
+    };
     if (bookmark.attributes.job.data != null) {
-      job.image = bookmark.attributes.job.data.attributes.avatar === "null" ? job.image :
-        getProxy(bookmark.attributes.job.data.attributes.image);
-      job.name = bookmark.attributes.job.data.attributes.name;
-
+      job.image =
+        bookmark.attributes.job.data.attributes.avatar === "null"
+          ? job.image
+          : getProxy(bookmark.attributes.job.data.attributes.image);
+      job.name = bookmark.attributes.job.data.attributes.title;
     }
     const item: ITableBookmark = {
       id: `${bookmark.attributes.id}`,
@@ -198,10 +212,9 @@ export const fetchToITableBookmark = (bookmarks: any[]): ITableBookmark[] => {
       name_job: job.name,
       status: bookmark.attributes.status,
       status_color: getColorOfStatusBookmark(bookmark.attributes.status),
-      created_at: bookmark.attributes.created_at
-
-    }
+      created_at: formatDate(bookmark.attributes.created_at),
+    };
     return item;
-  })
+  });
   return results;
-}
+};

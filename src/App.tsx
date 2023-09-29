@@ -67,6 +67,7 @@ function App() {
                   )
                 : getProxy(data.avatar),
             role: data.role,
+            id: data.id,
           };
           profile_dispatch({ type: "FETCH", payload: profileData });
         })

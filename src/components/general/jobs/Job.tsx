@@ -3,7 +3,7 @@ import {
   LikeIcon,
   UnlikeOutletIcon,
   UnlikeIcon,
-  WarningIcon,
+  WarningOutlineIcon,
   BookMarkIcon,
   BookMarkOutlineIcon,
 } from "../../../icons";
@@ -16,21 +16,22 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { ProfileContext } from "../../../contexts/ProfileContext";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { isAuth } from "../../../utils/AuthUtil";
+import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext";
+import { ReportJobType } from "../../../utils/global_type";
 
 const Job = ({ job }: { job: any }) => {
   const { state: auth_state } = useContext(AuthContext);
   const { state: profile_state } = useContext(ProfileContext);
-  const isAuth = (): boolean => {
-    return (
-      auth_state.auth_token !== "" &&
-      auth_state.auth_token !== null &&
-      auth_state.auth_token !== "null"
-    );
-  };
   const [liked, setLiked] = useState(false);
   const [unliked, setUnliked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [unlikeCount, setUnlikeCount] = useState(0);
+  const [bookmarked, setBookmarked] = useState(false);
+  const config = { headers: { Authorization: auth_state.auth_token } };
+  const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
+    ReportJobGeneralContext
+  );
 
   useEffect(() => {
     setLikeCount(job.like_num);
@@ -48,10 +49,19 @@ const Job = ({ job }: { job: any }) => {
     } else {
       setUnliked(true);
     }
+
+    if (
+      job.current_user_bookmark === undefined ||
+      job.current_user_bookmark === null
+    ) {
+      setBookmarked(false);
+    } else {
+      setBookmarked(true);
+    }
   }, []);
 
   const like = (job: any) => {
-    if (isAuth()) {
+    if (isAuth(auth_state)) {
       axios
         .post(
           getProxy(`/api/v1/emoji_jobs/${job.id}/like`),
@@ -81,7 +91,7 @@ const Job = ({ job }: { job: any }) => {
   };
 
   const unlike = (job: any) => {
-    if (isAuth()) {
+    if (isAuth(auth_state)) {
       axios
         .post(
           getProxy(`/api/v1/emoji_jobs/${job.id}/unlike`),
@@ -108,6 +118,47 @@ const Job = ({ job }: { job: any }) => {
           console.log(err);
         });
     }
+  };
+
+  const mark = (job: any) => {
+    const body = { bookmark: { job_id: job.id, status: "care" } };
+    axios
+      .post(getProxy(`/api/v1/kol/bookmarks/${job.id}/mark`), body, config)
+      .then((response) => {
+        setBookmarked(true);
+      })
+      .then((error) => {
+        console.log(error);
+      });
+  };
+  const unmark = (job: any) => {
+    axios
+      .delete(getProxy(`/api/v1/kol/bookmarks/${job.id}/unmark`), config)
+      .then((response) => {
+        setBookmarked(false);
+      })
+      .then((error) => {
+        console.log(error);
+      });
+  };
+
+  const bookmark = (job: any) => {
+    if (bookmarked === false) {
+      mark(job);
+    } else {
+      unmark(job);
+    }
+  };
+
+  const reported = (job: any) => {
+    const payload: ReportJobType = {
+      id_job: job.id,
+      title: "",
+      description: "",
+      id_reporter: profile_state.id,
+    };
+
+    report_job_dispatch({ type: "FETCH", payload: payload });
   };
 
   return (
@@ -184,12 +235,22 @@ const Job = ({ job }: { job: any }) => {
                 <span>{unlikeCount}</span>
               </li>
               {profile_state.role === "kol" && (
-                <li className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400">
-                  <BookMarkIcon />
+                <li
+                  className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
+                  onClick={() => {
+                    bookmark(job);
+                  }}
+                >
+                  {bookmarked === false && <BookMarkOutlineIcon />}
+                  {bookmarked === true && <BookMarkIcon />}
                 </li>
               )}
               <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
-                <WarningIcon />
+                <WarningOutlineIcon
+                  onClick={() => {
+                    reported(job);
+                  }}
+                />
               </li>
             </>
           </ul>
