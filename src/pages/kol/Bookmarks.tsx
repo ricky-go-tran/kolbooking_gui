@@ -15,7 +15,7 @@ import {
 } from "@windmill/react-ui";
 import PageTitle from "../../components/admin/typography/PageTitle";
 import { LockIcon } from "../../icons";
-import { ITableBookmark } from "../../utils/global_table_admin";
+import { ITableBookmark } from "../../global_variable/global_table_admin";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
 import { fetchToITableBookmark } from "../../utils/FetchData";

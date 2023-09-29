@@ -11,7 +11,7 @@ import { GithubIcon } from "../../../icons";
 import { Alert, Label, Input, Button } from "@windmill/react-ui";
 import { getProxy, getCDNImage } from "../../../utils/PathUtil";
 import { ProfileContext } from "../../../contexts/ProfileContext";
-import { ProfileType } from "../../../utils/global_type";
+import { ProfileType } from "../../../global_variable/global_type";
 import {
   CredentialResponse,
   GoogleLogin,

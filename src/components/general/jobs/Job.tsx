@@ -9,7 +9,10 @@ import {
 } from "../../../icons";
 import { useContext, useState, useEffect } from "react";
 import { getCDNImage, getProxy } from "../../../utils/PathUtil";
-import { DEFAULT_IMAGE, DEFAULT_AVATAR } from "../../../utils/global_constant";
+import {
+  DEFAULT_IMAGE,
+  DEFAULT_AVATAR,
+} from "../../../global_variable/global_constant";
 import { limitString } from "../../../utils/StringUtil";
 import { formatDate } from "../../../utils/DateUtil";
 import { AuthContext } from "../../../contexts/AuthContext";
@@ -18,7 +21,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { isAuth } from "../../../utils/AuthUtil";
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext";
-import { ReportJobType } from "../../../utils/global_type";
+import { ReportJobType } from "../../../global_variable/global_type";
 
 const Job = ({ job }: { job: any }) => {
   const { state: auth_state } = useContext(AuthContext);
@@ -153,8 +156,8 @@ const Job = ({ job }: { job: any }) => {
   const reported = (job: any) => {
     const payload: ReportJobType = {
       id_job: job.id,
-      title: "",
-      description: "",
+      title_job: job.title,
+      name_onwer: job?.owner?.data?.attributes?.fullname || "Unknown",
       id_reporter: profile_state.id,
     };
 

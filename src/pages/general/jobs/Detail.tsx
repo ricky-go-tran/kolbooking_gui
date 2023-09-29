@@ -1,7 +1,7 @@
 import JobDetailBanner from "../../../components/general/jobs/JobDetailBanner";
 import OwnerInfoCard from "../../../components/general/jobs/OwnerInforCard";
 import { getCDNImage } from "../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../utils/global_constant";
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant";
 import JobBasicInfo from "../../../components/general/jobs/JobBasicInfo";
 import { useEffect, useState, useContext } from "react";
 import {

@@ -3,7 +3,7 @@ import { ProfileContext } from "./contexts/ProfileContext";
 import { AuthContext } from "./contexts/AuthContext";
 import { Routes, BrowserRouter, Route } from "react-router-dom";
 import { getProxy, getCDNImage } from "./utils/PathUtil";
-import { ProfileType } from "./utils/global_type";
+import { ProfileType } from "./global_variable/global_type";
 import axios from "axios";
 
 const HomePage = lazy(() => import("./pages/general/newfeed/HomePage"));

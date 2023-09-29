@@ -15,9 +15,17 @@ export type ProfileType = {
 
 export type ReportJobType = {
   id_job: string;
+  title_job: string;
+  name_onwer: string;
+  id_reporter: string;
+};
+
+export type ReportType = {
   title: string;
   description: string;
-  id_reporter: string;
+  reportable_type: string;
+  reportable_id: string;
+  profile_id: string;
 };
 
 export interface IMainContainer {

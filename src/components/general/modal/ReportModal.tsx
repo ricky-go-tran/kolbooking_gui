@@ -1,15 +1,50 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { BookMarkIcon, WarningIcon } from "../../../icons";
 import { Label, Input, Textarea } from "@windmill/react-ui";
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext";
-import { ReportJobType } from "../../../utils/global_type";
+import {
+  ReportJobType,
+  ReportType,
+} from "../../../global_variable/global_type";
 import { useContext } from "react";
-import { type } from "os";
+import axios from "axios";
+import { getProxy } from "../../../utils/PathUtil";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 const ReportModal = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
     ReportJobGeneralContext
   );
+  const { state: auth_state, dispatch: auth_dispatch } =
+    useContext(AuthContext);
+  const [reported, setReported] = useState<ReportType>({
+    title: "",
+    description: "",
+    reportable_type: "Job",
+    reportable_id: report_job_state.id_job,
+    profile_id: report_job_state.id_reporter,
+  });
+
+  const submitReport = () => {
+    const data = {
+      report: {
+        ...reported,
+      },
+    };
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    };
+    axios
+      .post(getProxy("/api/v1/reports"), data, config)
+      .then((response) => {
+        report_job_dispatch({ type: "CLEAR" });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <>
@@ -37,8 +72,9 @@ const ReportModal = () => {
                     Report This Job
                   </h6>
                   <p className="text-sm text-gray-500">
-                    Are you sure you will denounce the job "Testing 123" by
-                    "Atrr"?
+                    Are you sure you will denounce the job "
+                    {report_job_state.title_job}" by "
+                    {report_job_state.name_onwer}"?
                   </p>
                 </div>
                 <div className="w-9/12">
@@ -51,6 +87,13 @@ const ReportModal = () => {
                       type="text"
                       placeholder="Title Report"
                       required
+                      onChange={(event) =>
+                        setReported({
+                          ...reported,
+                          title: event.target.value,
+                        })
+                      }
+                      value={reported.title}
                     />
                   </Label>
                   <Label className="mt-4">
@@ -61,6 +104,13 @@ const ReportModal = () => {
                       rows={3}
                       placeholder="Enter some description..."
                       style={{ resize: "none" }}
+                      onChange={(event) =>
+                        setReported({
+                          ...reported,
+                          description: event.target.value,
+                        })
+                      }
+                      value={reported.description}
                     />
                   </Label>
                 </div>
@@ -80,6 +130,9 @@ const ReportModal = () => {
               <button
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={() => {
+                  submitReport();
+                }}
               >
                 Report
               </button>

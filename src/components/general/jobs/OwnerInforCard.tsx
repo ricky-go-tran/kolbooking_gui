@@ -1,5 +1,5 @@
 import { getCDNImage, getProxy } from "../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../utils/global_constant";
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant";
 
 const OwnerInfoCard = ({ owner }: { owner: any }) => {
   return (

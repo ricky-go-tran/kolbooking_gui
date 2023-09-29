@@ -24,7 +24,7 @@ import {
   InformationIcon,
   PlayIcon,
 } from "../../icons";
-import { ITableReport } from "../../utils/global_table_admin";
+import { ITableReport } from "../../global_variable/global_table_admin";
 import { getProxy } from "../../utils/PathUtil";
 import axios from "axios";
 import { fetchToITableReport } from "../../utils/FetchData";

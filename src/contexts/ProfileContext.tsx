@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer, ReactNode } from "react";
-import { ProfileType } from "../utils/global_type";
-import { PROFILE_INIT_STATE } from "../utils/global_constant";
+import { ProfileType } from "../global_variable/global_type";
+import { PROFILE_INIT_STATE } from "../global_variable/global_constant";
 import { ProfileReducer } from "../reducers/ProfileReducer";
 
 export const ProfileContext = createContext<{
@@ -8,10 +8,14 @@ export const ProfileContext = createContext<{
   dispatch: React.Dispatch<any>;
 }>({
   state: PROFILE_INIT_STATE,
-  dispatch: () => null
+  dispatch: () => null,
 });
 
-export const ProfileContextProvider = ({ children }: { children: ReactNode }) => {
+export const ProfileContextProvider = ({
+  children,
+}: {
+  children: ReactNode;
+}) => {
   const [state, dispatch] = useReducer(ProfileReducer, PROFILE_INIT_STATE);
 
   useEffect(() => {
@@ -19,10 +23,8 @@ export const ProfileContextProvider = ({ children }: { children: ReactNode }) =>
   }, [state]);
 
   return (
-    <ProfileContext.Provider
-      value={{ state, dispatch }} >
+    <ProfileContext.Provider value={{ state, dispatch }}>
       {children}
     </ProfileContext.Provider>
   );
 };
-

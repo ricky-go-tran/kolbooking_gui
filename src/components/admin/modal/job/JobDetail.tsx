@@ -1,8 +1,8 @@
-import { ITableJob } from "../../../../utils/global_table_admin";
+import { ITableJob } from "../../../../global_variable/global_table_admin";
 import "../../../../assets/css/component/job_modal.css";
 import React, { SetStateAction, useState, useEffect, useContext } from "react";
 import { getCDNImage } from "../../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../../utils/global_constant";
+import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant";
 import {
   LikeIcon,
   UnlikeIcon,

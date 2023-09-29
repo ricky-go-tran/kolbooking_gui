@@ -1,6 +1,9 @@
 import { getCDNImage, getProxy } from "../../../utils/PathUtil";
 import { Link } from "react-router-dom";
-import { DEFAULT_IMAGE, DEFAULT_AVATAR } from "../../../utils/global_constant";
+import {
+  DEFAULT_IMAGE,
+  DEFAULT_AVATAR,
+} from "../../../global_variable/global_constant";
 import { limitString } from "../../../utils/StringUtil";
 import { formatDate } from "../../../utils/DateUtil";
 import { AuthContext } from "../../../contexts/AuthContext";

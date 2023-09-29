@@ -1,5 +1,5 @@
 import { ProfileStorage } from "../utils/LocalStorageUtil";
-import { ProfileType } from "../utils/global_type";
+import { ProfileType } from "../global_variable/global_type";
 
 export const ProfileReducer = (state: ProfileType, action: any) => {
   switch (action.type) {

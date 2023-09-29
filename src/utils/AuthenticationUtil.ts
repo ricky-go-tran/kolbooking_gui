@@ -2,7 +2,7 @@ import {
   MIN_PASSWORD_LENGTH,
   MAX_PASSWORD_LENGTH,
   EMAIL_PATTERN,
-} from "./global_constant";
+} from "../global_variable/global_constant";
 
 const AuthenticationUtil = {
   isValidPasswordLength: (password: string) => {

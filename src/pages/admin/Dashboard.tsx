@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import InfoCard from '../../components/admin/cart/InfoCart';
-import ChartCard from '../../components/admin/chart/ChartCard';
-import { Doughnut, Line } from 'react-chartjs-2';
-import ChartLegend from '../../components/admin/chart/CardLegend';
-import PageTitle from '../../components/admin/typography/PageTitle';
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from '../../icons';
-import RoundIcon from '../../components/admin/RoundIcon';
-import response from "../../utils/global_table_admin";
-import { ITableData } from '../../utils/global_table_admin';
+import InfoCard from "../../components/admin/cart/InfoCart";
+import ChartCard from "../../components/admin/chart/ChartCard";
+import { Doughnut, Line } from "react-chartjs-2";
+import ChartLegend from "../../components/admin/chart/CardLegend";
+import PageTitle from "../../components/admin/typography/PageTitle";
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons";
+import RoundIcon from "../../components/admin/RoundIcon";
+import response from "../../global_variable/global_table_admin";
+import { ITableData } from "../../global_variable/global_table_admin";
 import {
   TableBody,
   TableContainer,
@@ -20,14 +20,14 @@ import {
   Avatar,
   Badge,
   Pagination,
-} from '@windmill/react-ui';
+} from "@windmill/react-ui";
 
 import {
   doughnutOptions,
   lineOptions,
   doughnutLegends,
   lineLegends,
-} from '../../utils/global_charts_admin';
+} from "../../global_variable/global_charts_admin";
 
 function Dashboard() {
   const [page, setPage] = useState(1);
@@ -36,10 +36,10 @@ function Dashboard() {
   const resultsPerPage = 10;
   const totalResults = response.length;
   function onPageChange(p: number) {
-    setPage(p)
-  };
+    setPage(p);
+  }
   useEffect(() => {
-    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage))
+    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
   }, [page]);
 
   return (
@@ -104,10 +104,16 @@ function Dashboard() {
               <TableRow key={i}>
                 <TableCell>
                   <div className="flex items-center text-sm">
-                    <Avatar className="hidden mr-3 md:block" src={user.avatar} alt="User image" />
+                    <Avatar
+                      className="hidden mr-3 md:block"
+                      src={user.avatar}
+                      alt="User image"
+                    />
                     <div>
                       <p className="font-semibold">{user.name}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">{user.job}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        {user.job}
+                      </p>
                     </div>
                   </div>
                 </TableCell>
@@ -118,7 +124,9 @@ function Dashboard() {
                   <Badge type={user.status}>{user.status}</Badge>
                 </TableCell>
                 <TableCell>
-                  <span className="text-sm">{new Date(user.date).toLocaleDateString()}</span>
+                  <span className="text-sm">
+                    {new Date(user.date).toLocaleDateString()}
+                  </span>
                 </TableCell>
               </TableRow>
             ))}
@@ -135,6 +143,6 @@ function Dashboard() {
       </TableContainer>
     </>
   );
-};
+}
 
 export default Dashboard;

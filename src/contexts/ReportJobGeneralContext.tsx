@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer, ReactNode } from "react";
-import { ReportJobType } from "../utils/global_type";
-import { REPORT_JOB_INIT_STATE } from "../utils/global_constant";
+import { ReportJobType } from "../global_variable/global_type";
+import { REPORT_JOB_INIT_STATE } from "../global_variable/global_constant";
 import { ReportJobGeneralReducer } from "../reducers/ReportJobGeneralReducer";
 
 export const ReportJobGeneralContext = createContext<{
