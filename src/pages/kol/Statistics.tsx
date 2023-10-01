@@ -8,7 +8,7 @@ import { Line, Chart as ChartJS } from "react-chartjs-2";
 import ChartLegend from "../../components/admin/chart/CardLegend";
 import ChartCard from "../../components/admin/chart/ChartCard";
 import { AuthContext } from "../../contexts/AuthContext";
-import { lineStatisticalLegends } from "../../utils/global_charts_admin";
+import { lineStatisticalLegends } from "../../global_variable/global_charts_admin";
 import { useEffect, useContext, useState } from "react";
 import { getProxy } from "../../utils/PathUtil";
 import {
@@ -16,6 +16,7 @@ import {
   fetchDataForLinechartStatistical,
 } from "../../utils/ChartUtil";
 import axios from "axios";
+import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend";
 Chart.register(...registerables);
 
 const Statistics = () => {
@@ -30,7 +31,7 @@ const Statistics = () => {
 
   useEffect(() => {
     axios
-      .get(getProxy("/api/v1/kol/statistical"), {
+      .get(getProxy(KOL_STATISTICALS_URL), {
         headers: {
           Authorization: auth_state.auth_token,
         },

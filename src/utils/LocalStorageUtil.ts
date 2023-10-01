@@ -1,4 +1,4 @@
-import { ProfileType } from "./global_type";
+import { ProfileType } from "../global_variable/global_type";
 
 export const TokenStorage = (): string => {
   let token = "";

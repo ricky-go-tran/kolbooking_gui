@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 
-import ChartCard from '../../components/admin/chart/ChartCard';
-import { Chart, registerables } from 'chart.js';
-import { Doughnut, Line, Chart as ChartJS } from 'react-chartjs-2';
-import ChartLegend from '../../components/admin/chart/CardLegend';
-import PageTitle from '../../components/admin/typography/PageTitle';
-import SectionTitle from '../../components/admin/typography/SectionTitle';
-import response from "../../utils/global_table_admin";
-import { ITableData } from '../../utils/global_table_admin';
-import axios from 'axios';
-import { getProxy } from '../../utils/PathUtil';
-import { AuthContext } from '../../contexts/AuthContext';
-import { fetchDataForLinechartCrontab, defaultDataForLinechartCrontab } from '../../utils/ChartUtil';
+import ChartCard from "../../components/admin/chart/ChartCard";
+import { Chart, registerables } from "chart.js";
+import { Doughnut, Line, Chart as ChartJS } from "react-chartjs-2";
+import ChartLegend from "../../components/admin/chart/CardLegend";
+import PageTitle from "../../components/admin/typography/PageTitle";
+import SectionTitle from "../../components/admin/typography/SectionTitle";
+import response from "../../global_variable/global_table_admin";
+import { ITableData } from "../../global_variable/global_table_admin";
+import axios from "axios";
+import { getProxy } from "../../utils/PathUtil";
+import { AuthContext } from "../../contexts/AuthContext";
+import {
+  fetchDataForLinechartCrontab,
+  defaultDataForLinechartCrontab,
+} from "../../utils/ChartUtil";
 import {
   TableBody,
   TableContainer,
@@ -23,60 +26,75 @@ import {
   Avatar,
   Badge,
   Pagination,
-} from '@windmill/react-ui';
+} from "@windmill/react-ui";
 import {
   doughnutOptions,
   lineOptions,
   doughnutLegends,
   lineLegends,
-} from '../../utils/global_charts_admin';
-
-
+} from "../../global_variable/global_charts_admin";
 
 Chart.register(...registerables);
 
 const Crontab = () => {
   const { state: auth_state } = useContext(AuthContext);
-  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
-  const [pageTable1, setPageTable1] = useState(1)
-  const [pageTable2, setPageTable2] = useState(1)
+  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab);
+  const [pageTable1, setPageTable1] = useState(1);
+  const [pageTable2, setPageTable2] = useState(1);
 
-  const [dataTable1, setDataTable1] = useState<ITableData[]>([])
-  const [dataTable2, setDataTable2] = useState<ITableData[]>([])
+  const [dataTable1, setDataTable1] = useState<ITableData[]>([]);
+  const [dataTable2, setDataTable2] = useState<ITableData[]>([]);
 
   const resultsPerPage = 10;
   const totalResults = response.length;
 
   function onPageChangeTable1(p: number) {
-    setPageTable1(p)
+    setPageTable1(p);
   }
 
   function onPageChangeTable2(p: number) {
-    setPageTable2(p)
+    setPageTable2(p);
   }
 
   useEffect(() => {
-    axios.get(getProxy('/api/v1/admin/sidekiq_views'), {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-    }).then((response) => {
-      let data = response.data;
-      console.log(data)
-      let handle_data = fetchDataForLinechartCrontab(data.labeled, data.proccessed, data.failed)
-      setDataChart(handle_data)
-    }).catch((error) => {
-      console.log(error)
-    })
-  }, [])
+    axios
+      .get(getProxy("/api/v1/admin/sidekiq_views"), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      })
+      .then((response) => {
+        let data = response.data;
+        console.log(data);
+        let handle_data = fetchDataForLinechartCrontab(
+          data.labeled,
+          data.proccessed,
+          data.failed
+        );
+        setDataChart(handle_data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   useEffect(() => {
-    setDataTable1(response.slice((pageTable1 - 1) * resultsPerPage, pageTable1 * resultsPerPage))
-  }, [pageTable1])
+    setDataTable1(
+      response.slice(
+        (pageTable1 - 1) * resultsPerPage,
+        pageTable1 * resultsPerPage
+      )
+    );
+  }, [pageTable1]);
 
   useEffect(() => {
-    setDataTable2(response.slice((pageTable2 - 1) * resultsPerPage, pageTable2 * resultsPerPage))
-  }, [pageTable2])
+    setDataTable2(
+      response.slice(
+        (pageTable2 - 1) * resultsPerPage,
+        pageTable2 * resultsPerPage
+      )
+    );
+  }, [pageTable2]);
 
   return (
     <>
@@ -179,9 +197,8 @@ const Crontab = () => {
           />
         </TableFooter>
       </TableContainer> */}
-
     </>
-  )
-}
+  );
+};
 
 export default Crontab;

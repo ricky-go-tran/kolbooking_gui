@@ -16,7 +16,7 @@ import {
 import PageTitle from "../../components/admin/typography/PageTitle";
 import SectionTitle from "../../components/admin/typography/SectionTitle";
 import { LockIcon, UnlockIcon, InformationIcon } from "../../icons";
-import { ITabelUser } from "../../utils/global_table_admin";
+import { ITabelUser } from "../../global_variable/global_table_admin";
 import { fetchToITableUser } from "../../utils/FetchData";
 import { getProxy } from "../../utils/PathUtil";
 import axios from "axios";

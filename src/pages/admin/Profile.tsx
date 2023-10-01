@@ -7,6 +7,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
 import "../../assets/css/component/avatar_input.css";
+import { PROFILE_URL } from "../../global_variable/global_uri_backend";
 
 export const Profile = () => {
   const { state: auth_state } = useContext(AuthContext);
@@ -26,7 +27,7 @@ export const Profile = () => {
 
   useEffect(() => {
     axios
-      .get(getProxy("/api/v1/profiles"), {
+      .get(getProxy(PROFILE_URL), {
         headers: {
           Authorization: auth_state.auth_token,
         },

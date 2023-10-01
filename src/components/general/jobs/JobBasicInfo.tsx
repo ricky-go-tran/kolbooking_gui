@@ -4,7 +4,7 @@ const JobBasicInfo = ({ job }: { job: any }) => {
   return (
     <div id="basic-info" className="max-w-xs w-4/5 mt-5">
       <div className="w-full">
-        <div className="bg-white shadow-xl rounded-lg py-3 max-w-xs">
+        <div className="bg-white shadow-xl rounded-lg py-3 max-w-xs dark:bg-gray-800">
           <div className="photo-wrapper p-2">
             <div className="text-center text-gray-400 text-base font-semibold mb-5">
               <p>About this job</p>
@@ -17,7 +17,7 @@ const JobBasicInfo = ({ job }: { job: any }) => {
                   <td className="px-2 py-2 text-gray-500 font-semibold">
                     Posted date
                   </td>
-                  <td className="px-2 py-2">
+                  <td className="px-2 py-2 dark:text-gray-100">
                     {job?.created_at === undefined
                       ? "Ụknown"
                       : formatDate(job.created_at)}
@@ -27,7 +27,9 @@ const JobBasicInfo = ({ job }: { job: any }) => {
                   <td className="px-2 py-2 text-gray-500 font-semibold">
                     Cost
                   </td>
-                  <td className="px-2 py-2">$ {job?.price}</td>
+                  <td className="px-2 py-2 dark:text-gray-100">
+                    $ {job?.price}
+                  </td>
                 </tr>
                 <tr>
                   <td className="px-2 py-2 text-gray-500 font-semibold">

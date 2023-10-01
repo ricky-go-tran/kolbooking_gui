@@ -1,6 +1,6 @@
 export default function OurPartner() {
   return (
-    <div className="bg-white py-24 sm:py-32">
+    <div className="relative isolate overflow-hidden bg-white px-6 py-24 sm:py-32 lg:px-8 dark:bg-gray-800">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <h1 className="text-center text-2xl font-semibold leading-8 text-gray-900">
           Our partners
@@ -44,5 +44,5 @@ export default function OurPartner() {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -3,9 +3,12 @@ import {
   ITableJob,
   ITableReport,
   ITableBookmark,
-} from "./global_table_admin";
+} from "../global_variable/global_table_admin";
 import { getProxy, getCDNImage } from "./PathUtil";
-import { DEFAULT_AVATAR, DEFAULT_IMAGE } from "./global_constant";
+import {
+  DEFAULT_AVATAR,
+  DEFAULT_IMAGE,
+} from "../global_variable/global_constant";
 import { formatDate } from "./DateUtil";
 
 type ColorType = "danger" | "warning" | "success" | undefined;

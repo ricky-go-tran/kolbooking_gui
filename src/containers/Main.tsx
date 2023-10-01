@@ -1,7 +1,5 @@
 import React from "react";
-import { IMainContainer } from "../utils/global_type";
-
-
+import { IMainContainer } from "../global_variable/global_type";
 
 const Main = ({ children }: IMainContainer) => {
   return (

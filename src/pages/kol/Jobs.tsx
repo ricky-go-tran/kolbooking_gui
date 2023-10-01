@@ -16,7 +16,7 @@ import {
 import PageTitle from "../../components/admin/typography/PageTitle";
 import SectionTitle from "../../components/admin/typography/SectionTitle";
 import { LockIcon } from "../../icons";
-import { ITableJob } from "../../utils/global_table_admin";
+import { ITableJob } from "../../global_variable/global_table_admin";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
 import { fetchToITableJob } from "../../utils/FetchData";

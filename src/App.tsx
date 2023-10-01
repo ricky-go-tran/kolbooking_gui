@@ -3,8 +3,10 @@ import { ProfileContext } from "./contexts/ProfileContext";
 import { AuthContext } from "./contexts/AuthContext";
 import { Routes, BrowserRouter, Route } from "react-router-dom";
 import { getProxy, getCDNImage } from "./utils/PathUtil";
-import { ProfileType } from "./utils/global_type";
+import { ProfileType } from "./global_variable/global_type";
 import axios from "axios";
+import { PROFILE_URL } from "./global_variable/global_uri_backend";
+import ToastPanel from "./components/general/message/ToastPanel";
 
 const HomePage = lazy(() => import("./pages/general/newfeed/HomePage"));
 const UnAuthRoutes = lazy(
@@ -51,7 +53,7 @@ function App() {
   useEffect(() => {
     if (auth_state.auth_token !== "null" && auth_state.auth_token !== "") {
       axios
-        .get(getProxy("/api/v1/profiles"), {
+        .get(getProxy(PROFILE_URL), {
           headers: {
             Authorization: auth_state.auth_token,
           },
@@ -240,6 +242,7 @@ function App() {
         <Route path="/network/error" element={<ErrorNetwork />} />
         <Route path="*" element={<Page404 />} />
       </Routes>
+      <ToastPanel />
     </BrowserRouter>
   );
 }
