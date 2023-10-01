@@ -17,6 +17,10 @@ import {
   GoogleLogin,
   useGoogleLogin,
 } from "@react-oauth/google";
+import {
+  LOGIN_URL,
+  PROFILE_URL,
+} from "../../../global_variable/global_uri_backend";
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -66,14 +70,14 @@ const Login = () => {
             password: credentials.password,
           },
         };
-        axios.post(getProxy("/login"), data).then((res) => {
+        axios.post(getProxy(LOGIN_URL), data).then((res) => {
           let response = {
             token: res.headers.authorization,
             profile: res.data.status.data.user,
           };
           dispatch({ type: "LOGIN_SUCCESS", payload: response });
           axios
-            .get(getProxy("/api/v1/profiles"), {
+            .get(getProxy(PROFILE_URL), {
               headers: {
                 Authorization: response.token,
               },

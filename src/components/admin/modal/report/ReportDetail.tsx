@@ -1,6 +1,6 @@
 import { getCDNImage } from "../../../../utils/PathUtil";
 import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant";
-import { Loading } from "../Loading";
+import { Loading } from "../../../general/loading/Loading";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { getProxy } from "../../../../utils/PathUtil";

@@ -51,7 +51,7 @@ const ReportModal = () => {
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div className="relative w-1/2 my-3 mx-auto max-w-7xl h-5/6">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col h-full w-full bg-white outline-none focus:outline-none">
+          <div className="border-0 rounded-lg shadow-lg relative flex flex-col h-full w-full bg-white outline-none focus:outline-none dark:bg-gray-600">
             {/*header*/}
             <div className="flex items-center justify-start px-5 py-2 border-b border-solid border-slate-200 rounded-t">
               <span className="w-5 h-5 text-orange-400">

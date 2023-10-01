@@ -16,6 +16,7 @@ import {
   fetchDataForLinechartStatistical,
 } from "../../utils/ChartUtil";
 import axios from "axios";
+import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend";
 Chart.register(...registerables);
 
 const Statistics = () => {
@@ -30,7 +31,7 @@ const Statistics = () => {
 
   useEffect(() => {
     axios
-      .get(getProxy("/api/v1/kol/statistical"), {
+      .get(getProxy(KOL_STATISTICALS_URL), {
         headers: {
           Authorization: auth_state.auth_token,
         },

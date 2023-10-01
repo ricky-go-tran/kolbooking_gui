@@ -11,11 +11,15 @@ import {
   WarningIcon,
   BookMarkIcon,
 } from "../../../../icons";
-import { Loading } from "../Loading";
+import { Loading } from "../../../general/loading/Loading";
 import axios from "axios";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { getProxy } from "../../../../utils/PathUtil";
 import { ProfileContext } from "../../../../contexts/ProfileContext";
+import {
+  ADMIN_JOB_DETAIL_URL,
+  KOL_JOB_DETAIL_URL,
+} from "../../../../global_variable/global_uri_backend";
 
 const JobDetail = ({
   job_id,
@@ -30,9 +34,9 @@ const JobDetail = ({
 
   useEffect(() => {
     const config = { headers: { Authorization: auth_state.auth_token } };
-    let url = "/api/v1/kol/jobs/";
+    let url = KOL_JOB_DETAIL_URL(job_id);
     if (profile_state.role === "admin") {
-      url = "/api/v1/admin/jobs/";
+      url = ADMIN_JOB_DETAIL_URL(job_id);
     }
 
     axios
