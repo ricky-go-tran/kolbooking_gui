@@ -6,23 +6,29 @@ import reportWebVitals from "./reportWebVitals";
 import GeneralLoading from "./pages/general/loading/GeneralLoading";
 import { AuthContextProvider } from "./contexts/AuthContext";
 import { ProfileContextProvider } from "./contexts/ProfileContext";
-import { Windmill } from '@windmill/react-ui'
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { Windmill } from "@windmill/react-ui";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ToastContextProvider } from "./contexts/ToastContext";
+import { SearchKolHomepageProvider } from "./contexts/SearchKolHomepageContext";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId="345818639852-npt2v8lmrrsj8vs4lovm5aou37i4pfji.apps.googleusercontent.com">
       <Suspense fallback={<GeneralLoading />}>
-        <AuthContextProvider>
-          <ProfileContextProvider>
-            <Windmill usePreferences>
-              <App />
-            </Windmill>
-          </ProfileContextProvider>
-        </AuthContextProvider>
+        <ToastContextProvider>
+          <AuthContextProvider>
+            <ProfileContextProvider>
+              <SearchKolHomepageProvider>
+                <Windmill usePreferences>
+                  <App />
+                </Windmill>
+              </SearchKolHomepageProvider>
+            </ProfileContextProvider>
+          </AuthContextProvider>
+        </ToastContextProvider>
       </Suspense>
     </GoogleOAuthProvider>
   </React.StrictMode>

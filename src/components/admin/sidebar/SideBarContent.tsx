@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { ProfileContext } from "../../../contexts/ProfileContext";
 import adminRoutes from "../../../routes/admin/sidebar";
 import kolRoutes from "../../../routes/kol/sidebar";
+import baseRoutes from "../../../routes/base/sidebar";
 import { NavLink } from "react-router-dom";
 import * as Icons from "../../../icons";
 import { Badge } from "@windmill/react-ui";
@@ -63,6 +64,7 @@ function SidebarContent() {
       <ul className="mt-6">
         {profile_state.role === "admin" && renderSideBar(adminRoutes)}
         {profile_state.role === "kol" && renderSideBar(kolRoutes)}
+        {profile_state.role === "base" && renderSideBar(baseRoutes)}
       </ul>
     </div>
   );

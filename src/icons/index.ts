@@ -44,6 +44,7 @@ import { ReactComponent as CalendarIcon } from "./calendar.svg";
 import { ReactComponent as PlayIcon } from "./play.svg";
 import { ReactComponent as IndustryIcon } from "./industry.svg";
 import { ReactComponent as LineChartIcon } from "./linechart.svg";
+import { ReactComponent as AddIcon } from "./add.svg";
 
 export {
   ButtonsIcon,
@@ -92,4 +93,5 @@ export {
   PlayIcon,
   IndustryIcon,
   LineChartIcon,
+  AddIcon,
 };

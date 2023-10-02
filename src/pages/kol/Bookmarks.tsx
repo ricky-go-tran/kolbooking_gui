@@ -18,7 +18,7 @@ import { LockIcon } from "../../icons";
 import { ITableBookmark } from "../../global_variable/global_table_admin";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
-import { fetchToITableBookmark } from "../../utils/FetchData";
+import { fetchToITableBookmark } from "../../utils/FetchDataTable";
 import { Alert } from "@windmill/react-ui";
 import { HandleResponseError } from "../../utils/ErrorHandleUtil";
 import { useNavigate } from "react-router-dom";

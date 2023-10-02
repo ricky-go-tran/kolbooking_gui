@@ -27,7 +27,7 @@ import {
 import { ITableReport } from "../../global_variable/global_table_admin";
 import { getProxy } from "../../utils/PathUtil";
 import axios from "axios";
-import { fetchToITableReport } from "../../utils/FetchData";
+import { fetchToITableReport } from "../../utils/FetchDataTable";
 import ReportDetail from "../../components/admin/modal/report/ReportDetail";
 
 const Report = () => {

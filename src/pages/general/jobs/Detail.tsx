@@ -9,14 +9,20 @@ import {
   UnlikeIcon,
   LikeOuletIcon,
   UnlikeOutletIcon,
-  WarningIcon,
+  WarningOutlineIcon,
   BookMarkIcon,
+  BookMarkOutlineIcon,
 } from "../../../icons";
 import axios, { AxiosResponse } from "axios";
 import { getProxy } from "../../../utils/PathUtil";
 import { useParams } from "react-router-dom";
 import { isAuth } from "../../../utils/AuthUtil";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { ProfileContext } from "../../../contexts/ProfileContext";
+import { ReportJobType } from "../../../global_variable/global_type";
+import { generalError } from "../../../utils/ToastUtil";
+import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext";
+import { ToastContext } from "../../../contexts/ToastContext";
 
 const Detail = () => {
   const [data, setData] = useState<any>(null);
@@ -24,7 +30,15 @@ const Detail = () => {
   const [unliked, setUnliked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [unlikeCount, setUnlikeCount] = useState(0);
+  const [bookmarked, setBookmarked] = useState(false);
   const { state: auth_state } = useContext(AuthContext);
+  const { state: profile_state } = useContext(ProfileContext);
+  const config = { headers: { Authorization: auth_state.auth_token } };
+  const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
+    ReportJobGeneralContext
+  );
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext);
   const params = useParams();
 
   function fetchData(response: AxiosResponse<any, any>): void {
@@ -57,6 +71,11 @@ const Detail = () => {
       config = {
         headers: { Authorization: auth_state.auth_token },
       };
+    } else {
+      generalError({
+        message: "To perform this action you need to log in",
+        toast_dispatch: toast_dispatch,
+      });
     }
     axios
       .get(getProxy(`/api/v1/jobs/${params.id}`), { ...config })
@@ -95,6 +114,11 @@ const Detail = () => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      generalError({
+        message: "To perform this action you need to log in",
+        toast_dispatch: toast_dispatch,
+      });
     }
   };
 
@@ -125,6 +149,59 @@ const Detail = () => {
         .catch((err) => {
           console.log(err);
         });
+    } else {
+      generalError({
+        message: "To perform this action you need to log in",
+        toast_dispatch: toast_dispatch,
+      });
+    }
+  };
+
+  const mark = (job: any) => {
+    const body = { bookmark: { job_id: job.id, status: "care" } };
+    axios
+      .post(getProxy(`/api/v1/kol/bookmarks/${job.id}/mark`), body, config)
+      .then((response) => {
+        setBookmarked(true);
+      })
+      .then((error) => {
+        console.log(error);
+      });
+  };
+  const unmark = (job: any) => {
+    axios
+      .delete(getProxy(`/api/v1/kol/bookmarks/${job.id}/unmark`), config)
+      .then((response) => {
+        setBookmarked(false);
+      })
+      .then((error) => {
+        console.log(error);
+      });
+  };
+
+  const bookmark = (job: any) => {
+    if (bookmarked === false) {
+      mark(job);
+    } else {
+      unmark(job);
+    }
+  };
+
+  const reported = (job: any) => {
+    if (isAuth(auth_state)) {
+      const payload: ReportJobType = {
+        id_job: job.id,
+        title_job: job.title,
+        name_onwer: job?.owner?.data?.attributes?.fullname || "Unknown",
+        id_reporter: profile_state.id,
+      };
+
+      report_job_dispatch({ type: "FETCH", payload: payload });
+    } else {
+      generalError({
+        message: "To perform this action you need to log in",
+        toast_dispatch: toast_dispatch,
+      });
     }
   };
 
@@ -132,11 +209,11 @@ const Detail = () => {
     <div>
       <JobDetailBanner />
       {data !== null && (
-        <div className="w-full min-h-full bg-gray-100 pt-3">
+        <div className="w-full min-h-full bg-gray-100 pt-3 dark:bg-gray-600">
           <div className="p-3">
             <div className="flex">
               <div className="w-3/4 flex flex-col items-center justify-start">
-                <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2">
+                <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
                   <div className="mx-5 my-7">
                     <div className=" py-5 flex justify-start items-center border-b-2 border-gray-300">
                       <img
@@ -169,11 +246,23 @@ const Detail = () => {
                       </div>
                       <ul className="flex-grow flex flex-row-reverse child">
                         <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
-                          <WarningIcon />
+                          <WarningOutlineIcon
+                            onClick={() => {
+                              reported(data);
+                            }}
+                          />
                         </li>
-                        <li className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400">
-                          <BookMarkIcon />
-                        </li>
+                        {profile_state.role === "kol" && (
+                          <li
+                            className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
+                            onClick={() => {
+                              bookmark(data);
+                            }}
+                          >
+                            {bookmarked === false && <BookMarkOutlineIcon />}
+                            {bookmarked === true && <BookMarkIcon />}
+                          </li>
+                        )}
 
                         <li
                           className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400"

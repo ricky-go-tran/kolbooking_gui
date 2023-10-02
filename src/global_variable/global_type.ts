@@ -49,3 +49,26 @@ export interface IComponent {
   uri: string;
   children: ReactNode | JSX.Element;
 }
+
+export type IndustryWithoutDescription = {
+  id: string;
+  name: string;
+};
+
+export type IndustryAssociation = {
+  id: string;
+  industry_id: string;
+  insdustry_associationable_type: string;
+  insdustry_associationable_id: string;
+};
+
+export type Job = {
+  id: string;
+  title: string;
+  description: string;
+  profile_id: string;
+  price: number;
+  requirement: string;
+  kol_id: string | undefined;
+  image: string | undefined;
+};

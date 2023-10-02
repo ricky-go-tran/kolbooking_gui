@@ -19,7 +19,7 @@ import { LockIcon, InformationIcon } from "../../icons";
 import { ITableJob } from "../../global_variable/global_table_admin";
 import axios from "axios";
 import { getProxy } from "../../utils/PathUtil";
-import { fetchToITableJob } from "../../utils/FetchData";
+import { fetchToITableJob } from "../../utils/FetchDataTable";
 import { Alert } from "@windmill/react-ui";
 import JobDetail from "../../components/admin/modal/job/JobDetail";
 

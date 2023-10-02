@@ -44,6 +44,7 @@ const KolStatistics = lazy(() => import("./pages/kol/Statistics"));
 const ErrorNetwork = lazy(() => import("./pages/general/error/NetworkError"));
 const KolDetail = lazy(() => import("./pages/general/kols/Detail"));
 const JobDetail = lazy(() => import("./pages/general/jobs/Detail"));
+const BaseJobs = lazy(() => import("./pages/base/Jobs"));
 
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } =
@@ -240,6 +241,14 @@ function App() {
         <Route path="/redirect/roles" element={<RedirectByRole />} />
         <Route path="/server/error" element={<Page500 />} />
         <Route path="/network/error" element={<ErrorNetwork />} />
+        <Route
+          path="/base/jobs"
+          element={
+            <AdminLayout>
+              <BaseJobs />
+            </AdminLayout>
+          }
+        />
         <Route path="*" element={<Page404 />} />
       </Routes>
       <ToastPanel />
