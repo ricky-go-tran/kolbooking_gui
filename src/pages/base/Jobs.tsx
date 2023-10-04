@@ -10,36 +10,43 @@ import {
   TableFooter,
   TableHeader,
   TableRow,
-} from "@windmill/react-ui";
-import PageTitle from "../../components/admin/typography/PageTitle";
-import { useContext, useEffect, useState } from "react";
+} from "@windmill/react-ui"
+import PageTitle from "../../components/admin/typography/PageTitle"
+import { useContext, useEffect, useState } from "react"
 import {
+  ISheetJob,
   ITableData,
   ITableJob,
-} from "../../global_variable/global_table_admin";
-import response from "../../global_variable/global_table_admin";
-import axios from "axios";
-import { getProxy } from "../../utils/PathUtil";
-import { AuthContext } from "../../contexts/AuthContext";
-import { fetchToITableJob } from "../../utils/FetchDataTable";
-import { LockIcon } from "../../icons";
-import JobCreateModal from "../../components/base/modal/JobCreateModal";
-import { ToastContext } from "../../contexts/ToastContext";
-import { generalMessage, generalWarning } from "../../utils/ToastUtil";
+} from "../../global_variable/global_table_admin"
+import response from "../../global_variable/global_table_admin"
+import axios from "axios"
+import { getProxy } from "../../utils/PathUtil"
+import { AuthContext } from "../../contexts/AuthContext"
+import { fetchToISheetJob, fetchToITableJob } from "../../utils/FetchDataTable"
+import { EditIcon, LockIcon } from "../../icons"
+import JobCreateModal from "../../components/base/modal/JobCreateModal"
+import { ToastContext } from "../../contexts/ToastContext"
+import { generalMessage, generalWarning } from "../../utils/ToastUtil"
+import JobDetail from "../../components/admin/modal/job/JobDetail"
+import { utils, writeFile } from "xlsx"
+import JobUpdateModal from "../../components/base/modal/JobUpdateModal"
 
 const Jobs = () => {
-  const { state: auth_state } = useContext(AuthContext);
-  const [page, setPage] = useState(1);
-  const [resultsPerPage, setResultPerPage] = useState(0);
-  const [totalResults, setTotalResults] = useState(0);
-  const [tab, setTab] = useState<string>("post");
-  const [pageTable, setPageTable] = useState(1);
-  const [dataTable, setDataTable] = useState<ITableJob[]>([]);
-  const [detail, setDetail] = useState<number | string>(-1);
-  const { dispatch: toast_dispatch } = useContext(ToastContext);
+  const { state: auth_state } = useContext(AuthContext)
+  const [page, setPage] = useState(1)
+  const [resultsPerPage, setResultPerPage] = useState(0)
+  const [totalResults, setTotalResults] = useState(0)
+  const [tab, setTab] = useState<string>("post")
+  const [pageTable, setPageTable] = useState(1)
+  const [dataTable, setDataTable] = useState<ITableJob[]>([])
+  const [created, setCreated] = useState<number | string>(-1)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const [sheetData, setSheetData] = useState<ISheetJob[]>([])
+  const [detail, setDetail] = useState<number | string>(-1)
+  const [edited, setEdited] = useState<number | string>(-1)
 
   function onPageChange(p: number) {
-    setPage(p);
+    setPageTable(p)
   }
 
   function cancle(job: ITableJob) {
@@ -52,32 +59,44 @@ const Jobs = () => {
       .then((response) => {
         if (tab !== "cancle") {
           let newData = dataTable.filter((item) => {
-            return item.id.toString() !== job.id.toString();
-          });
-          setDataTable([...newData]);
+            return item.id.toString() !== job.id.toString()
+          })
+          setDataTable([...newData])
           generalMessage({
             message: `Successfully canceled job with id is '${job.id}'`,
             toast_dispatch: toast_dispatch,
-          });
+          })
         }
       })
       .catch((error) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
   }
 
   function viewJob(job: string | number) {
-    setDetail(job);
+    setDetail(job)
   }
   function handleAction(job: ITableJob) {
     if (job.status === "post" || job.status === "booking") {
-      cancle(job);
+      cancle(job)
     } else {
       generalWarning({
         message: "You can only lock job posts and bookings",
         toast_dispatch: toast_dispatch,
-      });
+      })
     }
+  }
+
+  const handleExportSheet = () => {
+    const heading = [
+      ["Id", "Title", "Description", "Requirement", "Status", "Created at"],
+    ]
+    const wb = utils.book_new()
+    const ws = utils.json_to_sheet([])
+    utils.sheet_add_aoa(ws, heading)
+    utils.sheet_add_json(ws, sheetData, { origin: "A2", skipHeader: true })
+    utils.book_append_sheet(wb, ws, `Job with ${tab}`)
+    writeFile(wb, `Job-${Date.now()}.xlsx`)
   }
 
   useEffect(() => {
@@ -87,23 +106,32 @@ const Jobs = () => {
       },
       params: {
         tab: tab,
+        page: {
+          number: pageTable,
+        },
       },
-    };
+    }
     axios
       .get(getProxy("/api/v1/base/jobs"), config)
       .then((response) => {
-        console.log(response.data.data);
-        let handle_data = fetchToITableJob(response.data.data);
-        let meta = response.data.meta;
-        setResultPerPage(meta.items);
-        setTotalResults(meta.count);
-        setDataTable(handle_data);
+        console.log(response.data.data)
+        let handle_data = fetchToITableJob(response.data.data)
+        let sheet = fetchToISheetJob(response.data.data)
+        let meta = response.data.meta
+        setResultPerPage(meta.items)
+        setTotalResults(meta.count)
+        setDataTable(handle_data)
+        setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageTable, tab]);
+        console.log(error)
+      })
+  }, [pageTable, tab])
+
+  useEffect(() => {
+    setTab("post")
+  }, [created, edited])
+
   return (
     <>
       <PageTitle>Jobs</PageTitle>
@@ -176,6 +204,9 @@ const Jobs = () => {
             <button
               type="submit"
               className="inline-flex items-center justify-center space-x-2 py-1 px-6 border border-transparent text-sm font-medium rounded text-green-600 hover:text-green-700 bg-green-200 hover:bg-green-300 transition-colors"
+              onClick={() => {
+                handleExportSheet()
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -193,7 +224,7 @@ const Jobs = () => {
               type="submit"
               className="inline-flex items-center justify-center space-x-2 py-1 px-6 border border-transparent text-sm font-medium rounded text-blue-600 hover:text-blue-700 bg-blue-200 hover:bg-blue-300 transition-colors"
               onClick={() => {
-                setDetail(1);
+                setCreated(1)
               }}
             >
               <svg
@@ -213,7 +244,12 @@ const Jobs = () => {
           </li>
         </ul>
       </div>
-      {detail !== -1 && <JobCreateModal onClose={setDetail} />}
+      {created !== -1 && (
+        <JobCreateModal type="create" kol_id={undefined} onClose={setCreated} />
+      )}
+      {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
+      {edited !== -1 && <JobUpdateModal job_id={edited} onClose={setEdited} />}
+
       <TableContainer>
         <Table>
           <TableHeader>
@@ -251,7 +287,7 @@ const Jobs = () => {
                 <TableCell>
                   <Button
                     onClick={() => {
-                      viewJob(job.id);
+                      viewJob(job.id)
                     }}
                   >
                     View
@@ -259,16 +295,29 @@ const Jobs = () => {
                 </TableCell>
                 <TableCell>
                   {(job.status === "post" || job.status === "booking") && (
-                    <Button
-                      layout="link"
-                      size="small"
-                      aria-label="Edit"
-                      onClick={() => {
-                        handleAction(job);
-                      }}
-                    >
-                      <LockIcon />
-                    </Button>
+                    <>
+                      <Button
+                        layout="link"
+                        size="small"
+                        aria-label="Edit"
+                        onClick={() => {
+                          setEdited(job.id)
+                        }}
+                      >
+                        <EditIcon />
+                      </Button>
+
+                      <Button
+                        layout="link"
+                        size="small"
+                        aria-label="Edit"
+                        onClick={() => {
+                          handleAction(job)
+                        }}
+                      >
+                        <LockIcon />
+                      </Button>
+                    </>
                   )}
                 </TableCell>
               </TableRow>
@@ -285,7 +334,7 @@ const Jobs = () => {
         </TableFooter>
       </TableContainer>
     </>
-  );
-};
+  )
+}
 
-export default Jobs;
+export default Jobs

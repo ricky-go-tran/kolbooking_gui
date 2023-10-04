@@ -3,6 +3,7 @@ import {
   ITableJob,
   ITableReport,
   ITableBookmark,
+  ISheetJob,
 } from "../global_variable/global_table_admin";
 import { getProxy, getCDNImage } from "./PathUtil";
 import {
@@ -159,6 +160,22 @@ export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
       status: job.attributes.status,
       status_color: getColorOfStatusJob(job.attributes.status),
       create_at: job.attributes.created_at,
+    };
+    return item;
+  });
+  return results;
+};
+
+export const fetchToISheetJob = (jobs: any[]): ISheetJob[] => {
+  let results: ISheetJob[] = [];
+  results = jobs.map((job: any) => {
+    const item: ISheetJob = {
+      id: `${job.attributes.id}`,
+      title: job.attributes.title,
+      description: job.attributes.description,
+      requirement: job.attributes.requirement,
+      status: job.attributes.status,
+      created_at: job.attributes.created_at,
     };
     return item;
   });

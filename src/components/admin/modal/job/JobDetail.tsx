@@ -18,6 +18,7 @@ import { getProxy } from "../../../../utils/PathUtil";
 import { ProfileContext } from "../../../../contexts/ProfileContext";
 import {
   ADMIN_JOB_DETAIL_URL,
+  BASE_JOB_DETAIL_URL,
   KOL_JOB_DETAIL_URL,
 } from "../../../../global_variable/global_uri_backend";
 
@@ -37,10 +38,12 @@ const JobDetail = ({
     let url = KOL_JOB_DETAIL_URL(job_id);
     if (profile_state.role === "admin") {
       url = ADMIN_JOB_DETAIL_URL(job_id);
+    } else if (profile_state.role === "base") {
+      url = BASE_JOB_DETAIL_URL(job_id);
     }
 
     axios
-      .get(getProxy(url + job_id), config)
+      .get(getProxy(url), config)
       .then((response) => {
         setData(response.data.data.attributes);
       })

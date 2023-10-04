@@ -45,6 +45,15 @@ interface ITableJob {
   create_at: string;
 }
 
+interface ISheetJob {
+  id: string;
+  title: string;
+  description: string;
+  requirement: string;
+  status: string;
+  created_at: string;
+}
+
 interface ITableReport {
   id: string;
   avatar_reporter: string;
@@ -89,4 +98,11 @@ const tableData: ITableData[] = [
 ];
 
 export default tableData;
-export type { ITableData, ITabelUser, ITableJob, ITableReport, ITableBookmark };
+export type {
+  ITableData,
+  ITabelUser,
+  ITableJob,
+  ITableReport,
+  ITableBookmark,
+  ISheetJob,
+};

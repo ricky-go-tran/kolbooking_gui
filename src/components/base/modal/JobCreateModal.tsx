@@ -1,37 +1,42 @@
-import { Alert, Input, Label, Select, Textarea } from "@windmill/react-ui";
-import { AddIcon, WarningIcon } from "../../../icons";
-import { useContext, useEffect, useRef, useState } from "react";
+import { Alert, Input, Label, Select, Textarea } from "@windmill/react-ui"
+import { AddIcon, WarningIcon } from "../../../icons"
+import { useContext, useEffect, useRef, useState } from "react"
 import {
   IndustryWithoutDescription,
   Job,
-} from "../../../global_variable/global_type";
-import axios from "axios";
-import { fetchDataToIndustryWithoutDescription } from "../../../utils/FetchData";
-import { getCDNImage, getProxy } from "../../../utils/PathUtil";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { ProfileContext } from "../../../contexts/ProfileContext";
-import { DEFAULT_IMAGE } from "../../../global_variable/global_constant";
-import "../../../assets/css/component/avatar_input.css";
+} from "../../../global_variable/global_type"
+import axios from "axios"
+import { fetchDataToIndustryWithoutDescription } from "../../../utils/FetchData"
+import { getCDNImage, getProxy } from "../../../utils/PathUtil"
+import { AuthContext } from "../../../contexts/AuthContext"
+import { ProfileContext } from "../../../contexts/ProfileContext"
+import { DEFAULT_IMAGE } from "../../../global_variable/global_constant"
+import "../../../assets/css/component/avatar_input.css"
+import { checkValid } from "../../../validates/base/CreateJobValidate"
+import Toast from "../../general/message/toast_component/Toast"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 
 const JobCreateModal = ({
+  type,
+  kol_id,
   onClose,
 }: {
-  onClose: React.Dispatch<string | number>;
+  type: "create" | "booking"
+  kol_id: string | undefined
+  onClose: React.Dispatch<string | number>
 }) => {
-  const [message, setMessage] = useState("");
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const previewAvatar = useRef<HTMLImageElement>(null);
-
-  const { state: auth_state, dispatch: auth_dispatch } =
-    useContext(AuthContext);
+  const [message, setMessage] = useState("")
+  const [avatar, setAvatar] = useState<File | null>(null)
+  const previewAvatar = useRef<HTMLImageElement>(null)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext);
-  const [industries, setIndustries] = useState<IndustryWithoutDescription[]>(
-    []
-  );
+    useContext(ProfileContext)
+  const [industries, setIndustries] = useState<IndustryWithoutDescription[]>([])
   const [selectIndustries, setSelectIndustries] = useState<
     IndustryWithoutDescription[]
-  >([]);
+  >([])
   const [job, setJob] = useState<Job>({
     id: "",
     title: "",
@@ -41,117 +46,154 @@ const JobCreateModal = ({
     price: 0,
     kol_id: "",
     image: "",
-  });
+  })
 
   useEffect(() => {
     axios
       .get("/api/v1/industries")
       .then((response) => {
-        setIndustries(
-          fetchDataToIndustryWithoutDescription(response.data.data)
-        );
+        setIndustries(fetchDataToIndustryWithoutDescription(response.data.data))
       })
       .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+        console.log(err)
+      })
+  }, [])
 
   const addIndustry = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected: IndustryWithoutDescription | undefined =
       selectIndustries.find(
         (element) => element.id.toString() === event.target.value
-      );
+      )
     const item: IndustryWithoutDescription | undefined = industries.find(
       (element) => {
-        return element.id.toString() === event.target.value;
+        return element.id.toString() === event.target.value
       }
-    );
+    )
     if (selected === undefined && item !== undefined) {
-      setSelectIndustries([...selectIndustries, item]);
+      setSelectIndustries([...selectIndustries, item])
     }
-  };
+  }
 
   const removeIndustry = (id_industry: string) => {
     const oldIndustry = selectIndustries.filter(
       (item) => item.id.toString() !== id_industry.toString()
-    );
-    setSelectIndustries([...oldIndustry]);
-  };
+    )
+    setSelectIndustries([...oldIndustry])
+  }
 
   const submit = () => {
-    let count = 0;
-    let formData = new FormData();
+    let count = 0
+    let formData = new FormData()
     if (avatar !== null) {
-      formData.append("job[image]", avatar);
+      formData.append("job[image]", avatar)
     }
-    formData.append("job[title]", job.title);
-    formData.append("job[description]", job.description);
-    formData.append("job[requirement]", job.requirement);
-    formData.append("job[price]", job.price.toString());
-    formData.append("job[profile_id]", profile_state.id);
+    formData.append("job[title]", job.title)
+    formData.append("job[description]", job.description)
+    formData.append("job[requirement]", job.requirement)
+    formData.append("job[price]", job.price.toString())
+    formData.append("job[profile_id]", profile_state.id)
     let industries_association = selectIndustries.map((item) => {
-      return { industry_id: item.id };
-    });
-    const industries_association_json = JSON.stringify(industries_association);
+      return { industry_id: item.id }
+    })
+    const industries_association_json = JSON.stringify(industries_association)
     formData.append(
       "job[industry_associations_attributes]",
       industries_association_json
-    );
+    )
 
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
       },
-    };
+    }
 
-    axios
-      .post(getProxy("/api/v1/base/jobs"), formData, config)
-      .then((response) => {
-        console.log(response);
+    if (type === "create") {
+      axios
+        .post(getProxy("/api/v1/base/jobs"), formData, config)
+        .then((response) => {
+          generalMessage({
+            message: "Successfully created job",
+            toast_dispatch: toast_dispatch,
+          })
+          onClose(-1)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    } else if (type === "booking") {
+      if (kol_id !== undefined) {
+        formData.append("job[kol_id]", kol_id)
+      }
+      axios
+        .post(getProxy("/api/v1/base/jobs/booking"), formData, config)
+        .then((response) => {
+          generalMessage({
+            message:
+              "Successfully booking job. Your booking will send realtime to kol",
+            toast_dispatch: toast_dispatch,
+          })
+          onClose(-1)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
+  }
+
+  const createSubmit = () => {
+    const valid = checkValid({
+      job: job,
+      image: avatar,
+      industries: selectIndustries,
+    })
+    if (valid.status === true) {
+      submit()
+    } else {
+      generalWarning({
+        message: valid.message,
+        toast_dispatch: toast_dispatch,
       })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+    }
+  }
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files) {
-      setMessage("Image not found");
-      return;
+      setMessage("Image not found")
+      return
     }
-    const file = event.target.files[0];
-    const type = file.type.split("/")[1];
-    const max_size_support = 1000000; // 1mb
-    const supportFile = ["jpeg", "png"];
-    const reader = new FileReader();
+    const file = event.target.files[0]
+    const type = file.type.split("/")[1]
+    const max_size_support = 1000000 // 1mb
+    const supportFile = ["jpeg", "png"]
+    const reader = new FileReader()
     if (supportFile.includes(type)) {
       if (file.size <= max_size_support) {
-        setAvatar(file);
-        setMessage("");
+        setAvatar(file)
+        setMessage("")
         reader.onload = (event) => {
-          const fileContent = event?.target?.result;
+          const fileContent = event?.target?.result
           if (previewAvatar.current !== null) {
-            previewAvatar.current.src = `${fileContent}`;
+            previewAvatar.current.src = `${fileContent}`
           }
-        };
-        reader.readAsDataURL(file);
+        }
+        reader.readAsDataURL(file)
       } else {
         if (previewAvatar.current !== null) {
-          previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`;
+          previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
         }
-        setAvatar(null);
-        setMessage("Upload file under 1mb");
+        setAvatar(null)
+        setMessage("Upload file under 1mb")
       }
     } else {
       if (previewAvatar.current !== null) {
-        previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`;
+        previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
       }
-      setAvatar(null);
-      setMessage("Support type png, jpg and jpeg only");
+      setAvatar(null)
+      setMessage("Support type png, jpg and jpeg only")
     }
-  };
+  }
 
   return (
     <>
@@ -164,7 +206,9 @@ const JobCreateModal = ({
               <span className="w-5 h-5 text-green-400">
                 <AddIcon />
               </span>
-              <h3 className="text-lg font-semibold ml-3">Crete Job</h3>
+              <h3 className="text-lg font-semibold ml-3">
+                {type === "create" ? "Crete Job" : "Booking job"}
+              </h3>
             </div>
             {/*body*/}
             <div className="relative p-3 flex-auto  h-10/12 overflow-y-scroll">
@@ -176,7 +220,7 @@ const JobCreateModal = ({
                     </svg>
                   </div>
                   <h6 className="font-semibold text-base mt-2">
-                    Form Create New Job
+                    {type === "create" ? "Crete Job Form" : "Booking job form"}
                   </h6>
                   <div className="w-9/12">
                     {message !== "" && (
@@ -184,7 +228,7 @@ const JobCreateModal = ({
                         type="danger"
                         className="my-5"
                         onClose={() => {
-                          setMessage("");
+                          setMessage("")
                         }}
                       >
                         {message}
@@ -198,7 +242,7 @@ const JobCreateModal = ({
                             type="file"
                             accept="image/*"
                             onChange={(e) => {
-                              handleFileInputChange(e);
+                              handleFileInputChange(e)
                             }}
                           />
                           <figure className="personal-figure">
@@ -286,7 +330,7 @@ const JobCreateModal = ({
                         css=""
                         className="mt-1"
                         onChange={(event) => {
-                          addIndustry(event);
+                          addIndustry(event)
                         }}
                       >
                         <option disabled selected>
@@ -295,7 +339,7 @@ const JobCreateModal = ({
                         {industries.map((industry) => {
                           return (
                             <option value={industry.id}>{industry.name}</option>
-                          );
+                          )
                         })}
                       </Select>
                     </Label>
@@ -305,12 +349,12 @@ const JobCreateModal = ({
                           <span
                             className="inline-block m-2 bg-blue-100 text-blue-800 cursor-pointer text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
                             onClick={() => {
-                              removeIndustry(industry.id);
+                              removeIndustry(industry.id)
                             }}
                           >
                             {industry.name}
                           </span>
-                        );
+                        )
                       })}
                     </div>
                   </div>
@@ -330,7 +374,7 @@ const JobCreateModal = ({
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                  submit();
+                  createSubmit()
                 }}
               >
                 Create
@@ -341,7 +385,7 @@ const JobCreateModal = ({
       </div>
       <div className="fixed inset-0 z-40 bg-black bg-opacity-60 backdrop-blur-sm"></div>
     </>
-  );
-};
+  )
+}
 
-export default JobCreateModal;
+export default JobCreateModal

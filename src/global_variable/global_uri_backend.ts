@@ -17,6 +17,12 @@ export const ADMIN_JOB_DETAIL_URL = (job_id: string | number) => {
   return "/api/v1/admin/jobs/" + job_id;
 };
 
+/*Base Job*/
+
+export const BASE_JOB_DETAIL_URL = (job_id: string | number) => {
+  return "/api/v1/base/jobs/" + job_id;
+};
+
 /*Industry*/
 
 export const INDUSTRY_URL = "/api/v1/industries";

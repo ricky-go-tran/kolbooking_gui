@@ -1,39 +1,49 @@
-import axios from "axios";
-import { useState, useEffect, useContext } from "react";
+import axios from "axios"
+import { useState, useEffect, useContext } from "react"
 import {
   PeopleIcon,
   IndustryIcon,
   CalendarIcon,
   LineChartIcon,
-} from "../../../icons";
-import { getProxy, getCDNImage } from "../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../global_variable/global_constant";
-import { useParams } from "react-router-dom";
-import { isAuth } from "../../../utils/AuthUtil";
-import { AuthContext } from "../../../contexts/AuthContext";
+  LikeIcon,
+  UnlikeIcon,
+  FollowIcon,
+  CalendarOutlineIcon,
+  LikeOuletIcon,
+  UnlikeOutletIcon,
+  FollowOutlineIcon,
+} from "../../../icons"
+import { getProxy, getCDNImage } from "../../../utils/PathUtil"
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
+import { useParams } from "react-router-dom"
+import { isAuth } from "../../../utils/AuthUtil"
+import { AuthContext } from "../../../contexts/AuthContext"
+import { Loading } from "../../../components/general/loading/Loading"
+import JobCreateModal from "../../../components/base/modal/JobCreateModal"
 
 const Detail = () => {
-  const [data, setData] = useState<any>(null);
-  const { state: auth_state } = useContext(AuthContext);
-  const params = useParams();
+  const [data, setData] = useState<any>(null)
+  const { state: auth_state } = useContext(AuthContext)
+  const params = useParams()
+  const [booking, setBooking] = useState<string | number>(-1)
 
   useEffect(() => {
-    let config = {};
+    let config = {}
     if (isAuth(auth_state)) {
       config = {
         headers: { Authorization: auth_state.auth_token },
-      };
+      }
     }
     axios
       .get(getProxy(`/api/v1/kols/${params.id}`), { ...config })
       .then((response) => {
-        console.log(response);
-        setData(response.data.data.attributes);
+        console.log(response)
+        setData(response.data.data.attributes)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        console.log(error)
+      })
+  }, [])
 
   return (
     <>
@@ -91,6 +101,36 @@ const Detail = () => {
               </div>
             </div>
 
+            <div id="interact" className="max-w-xs w-4/5 mt-5">
+              <div className="w-full">
+                <div className="bg-white shadow-xl rounded-lg py-3 max-w-sx dark:bg-gray-800">
+                  <div className="p-2">
+                    <h3 className="text-center text-xl text-gray-400 font-medium leading-8">
+                      Interact
+                    </h3>
+                    <ul className="flex-grow flex flex-row w-full justify-around px-5 child my-5">
+                      <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
+                        <LikeOuletIcon />
+                      </li>
+                      <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
+                        <UnlikeOutletIcon />
+                      </li>
+                      <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
+                        <FollowOutlineIcon />
+                      </li>
+                      <li
+                        className="flex text-gray-500 cursor-pointer hover:text-gray-400"
+                        onClick={() => {
+                          setBooking(1)
+                        }}
+                      >
+                        <CalendarOutlineIcon />
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div id="socical-media" className="max-w-xs w-4/5 mt-5">
               <div className="w-full">
                 <div className="bg-white shadow-xl rounded-lg py-3 max-w-sx dark:bg-gray-800">
@@ -191,7 +231,13 @@ const Detail = () => {
               </div>
             </div>
           </div>
-
+          {booking !== -1 && (
+            <JobCreateModal
+              type="booking"
+              kol_id={params.id}
+              onClose={setBooking}
+            />
+          )}
           <div className="w-3/4 flex flex-col items-start justify-start">
             <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
               <div className="mx-5 my-7">
@@ -261,7 +307,7 @@ const Detail = () => {
                         <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                           {industry.attributes.name}
                         </span>
-                      );
+                      )
                     }
                   )}
                 </div>
@@ -282,8 +328,9 @@ const Detail = () => {
           </div>
         </div>
       )}
+      {data === null && <Loading />}
     </>
-  );
-};
+  )
+}
 
-export default Detail;
+export default Detail

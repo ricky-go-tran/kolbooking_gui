@@ -9,7 +9,7 @@ export const ToastPanel = () => {
   return (
     <>
       {toast_state.length !== 0 && (
-        <div className="justify-center items-end flex flex-col overflow-x-hidden overflow-y-auto fixed max-w-7xl w-1/2 max-h-xl outline-none focus:outline-none bottom-4 right-4">
+        <div className="justify-center items-end flex flex-col overflow-x-hidden overflow-y-auto fixed max-w-7xl w-1/2 max-h-xl outline-none focus:outline-none bottom-4 right-4 z-50">
           {toast_state.map((toast) => {
             return <Toast toast={toast} key={toast.id} />;
           })}
