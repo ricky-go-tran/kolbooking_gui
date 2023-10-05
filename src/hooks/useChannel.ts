@@ -1,7 +1,6 @@
 import { Consumer, Subscription } from "@rails/actioncable"
 import { useState, useEffect, useRef, useCallback } from "react"
 
-let global: any
 global.addEventListener = () => {}
 global.removeEventListener = () => {}
 

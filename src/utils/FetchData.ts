@@ -2,6 +2,7 @@ import {
   IndustryWithoutDescription,
   Job,
   IndustryAssociation,
+  Notification,
 } from "../global_variable/global_type"
 import { IndustryIcon } from "../icons"
 
@@ -46,5 +47,21 @@ export const fetchDataToJob = (data: any): Job => {
     image: data?.image,
     price: data?.price,
   }
+  return rs
+}
+
+export const fetchDataToNotification = (data: any[]): Notification[] => {
+  let rs: Notification[] = []
+  rs = data.map((item) => {
+    return {
+      id: item.attributes.id,
+      title: item.attributes.title,
+      description: item.attributes.description,
+      type_notice: item.attributes.type_notice,
+      is_read: item.attributes.is_read,
+      sender_id: item.attributes.sender_id,
+      receiver_id: item.attributes.receiver_id,
+    }
+  })
   return rs
 }

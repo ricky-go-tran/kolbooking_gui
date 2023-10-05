@@ -1,48 +1,29 @@
-import axios, { AxiosResponse } from "axios"
-import { useState, useEffect, useContext } from "react"
+import { useContext, useEffect, useState } from "react"
+import { DEFAULT_AVATAR } from "../../global_variable/global_constant"
 import {
-  PeopleIcon,
-  IndustryIcon,
   CalendarIcon,
+  IndustryIcon,
   LineChartIcon,
-  LikeIcon,
-  UnlikeIcon,
-  FollowIcon,
-  CalendarOutlineIcon,
-  LikeOuletIcon,
-  UnlikeOutletIcon,
-  FollowOutlineIcon,
-  WarningOutlineIcon,
-} from "../../../icons"
-import { getProxy, getCDNImage } from "../../../utils/PathUtil"
-import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
-import { useParams } from "react-router-dom"
-import { isAuth } from "../../../utils/AuthUtil"
-import { AuthContext } from "../../../contexts/AuthContext"
-import { Loading } from "../../../components/general/loading/Loading"
-import JobCreateModal from "../../../components/base/modal/JobCreateModal"
-import { ToastContext } from "../../../contexts/ToastContext"
-import { generalError } from "../../../utils/ToastUtil"
-import { ProfileContext } from "../../../contexts/ProfileContext"
-import { ReportProfileGeneralContext } from "../../../contexts/ReportProfileGeneralContext"
-import { ReportProfileType } from "../../../global_variable/global_type"
+  PeopleIcon,
+} from "../../icons"
+import { getCDNImage, getProxy } from "../../utils/PathUtil"
+import { AuthContext } from "../../contexts/AuthContext"
+import { ProfileContext } from "../../contexts/ProfileContext"
+import { Loading } from "../../components/general/loading/Loading"
+import { ToastContext } from "../../contexts/ToastContext"
+import { isAuth } from "../../utils/AuthUtil"
+import axios, { AxiosResponse } from "axios"
+import { PROFILE_URL } from "../../global_variable/global_uri_backend"
 
-const Detail = () => {
+const KolProfile = () => {
   const [data, setData] = useState<any>(null)
-  const [liked, setLiked] = useState(false)
-  const [unliked, setUnliked] = useState(false)
-  const [follower, setFollower] = useState(false)
   const [likeCount, setLikeCount] = useState(0)
   const [unlikeCount, setUnlikeCount] = useState(0)
   const [followerCount, setFollowerCount] = useState(0)
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
-  const params = useParams()
-  const [booking, setBooking] = useState<string | number>(-1)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
-  const { state: report_profile_state, dispatch: report_profile_dispatch } =
-    useContext(ReportProfileGeneralContext)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -50,31 +31,6 @@ const Detail = () => {
     setLikeCount(raw_data.like_num)
     setUnlikeCount(raw_data.unlike_num)
     setFollowerCount(raw_data.follow_num)
-    if (
-      raw_data?.current_user_like === undefined ||
-      raw_data?.current_user_like === null
-    ) {
-      setLiked(false)
-    } else {
-      setLiked(true)
-    }
-
-    if (
-      raw_data?.current_user_unlike === undefined ||
-      raw_data?.current_user_unlike === null
-    ) {
-      setUnliked(false)
-    } else {
-      setUnliked(true)
-    }
-    if (
-      raw_data?.current_user_follow === undefined ||
-      raw_data?.current_user_follow === null
-    ) {
-      setFollower(false)
-    } else {
-      setFollower(true)
-    }
   }
 
   useEffect(() => {
@@ -85,7 +41,7 @@ const Detail = () => {
       }
     }
     axios
-      .get(getProxy(`/api/v1/kols/${params.id}`), { ...config })
+      .get(getProxy(PROFILE_URL), { ...config })
       .then((response) => {
         fetchData(response)
       })
@@ -93,157 +49,6 @@ const Detail = () => {
         console.log(error)
       })
   }, [])
-
-  const like = (profile: any) => {
-    if (isAuth(auth_state)) {
-      axios
-        .post(
-          getProxy(`/api/v1/emoji_profiles/${profile.id}/like`),
-          {},
-          {
-            headers: {
-              Authorization: auth_state.auth_token,
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status !== 204) {
-            setLiked(true)
-            setUnliked(false)
-            if (response.status === 200) {
-              setLikeCount(likeCount + 1)
-              setUnlikeCount(unlikeCount - 1)
-            } else if (response.status === 201) {
-              setLikeCount(likeCount + 1)
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    } else {
-      generalError({
-        message: "To perform this action you need to log in",
-        toast_dispatch: toast_dispatch,
-      })
-    }
-  }
-
-  const unlike = (profile: any) => {
-    if (isAuth(auth_state)) {
-      axios
-        .post(
-          getProxy(`/api/v1/emoji_profiles/${profile.id}/unlike`),
-          {},
-          {
-            headers: {
-              Authorization: auth_state.auth_token,
-            },
-          }
-        )
-        .then((response) => {
-          if (response.status !== 204) {
-            setLiked(false)
-            setUnliked(true)
-            if (response.status === 200) {
-              setLikeCount(likeCount - 1)
-              setUnlikeCount(unlikeCount + 1)
-            } else if (response.status === 201) {
-              setUnlikeCount(unlikeCount + 1)
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    } else {
-      generalError({
-        message: "To perform this action you need to log in",
-        toast_dispatch: toast_dispatch,
-      })
-    }
-  }
-
-  const follow = () => {
-    const param = {
-      follower: {
-        follower_id: profile_state.id,
-        followed_id: params.id,
-      },
-    }
-    const config = {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-    }
-    if (isAuth(auth_state)) {
-      axios
-        .post(getProxy("/api/v1/base/followers/follow"), param, config)
-        .then((res) => {
-          setFollower(true)
-          setFollowerCount(followerCount + 1)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
-  }
-
-  const unfollow = () => {
-    const param = {
-      follower: {
-        follower_id: profile_state.id,
-        followed_id: params.id,
-      },
-    }
-    const config = {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-    }
-    if (isAuth(auth_state)) {
-      axios
-        .delete(
-          getProxy(`/api/v1/base/followers/${params.id}/unfollow`),
-          config
-        )
-        .then((res) => {
-          setFollower(false)
-          setFollowerCount(followerCount - 1)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-    }
-  }
-
-  const followOrUnfollow = () => {
-    if (follower === false) {
-      follow()
-    } else {
-      unfollow()
-    }
-  }
-
-  const bookJob = () => {
-    if (isAuth(auth_state)) {
-      setBooking(1)
-    } else {
-      generalError({
-        message: "This action need login to execute",
-        toast_dispatch: toast_dispatch,
-      })
-    }
-  }
-
-  const reported = (profile: any) => {
-    const rs: ReportProfileType = {
-      id_profile: profile?.id,
-      name_profile: profile?.fullname,
-      id_reporter: profile_state.id,
-    }
-    report_profile_dispatch({ type: "FETCH", dispatch: rs })
-  }
 
   return (
     <>
@@ -301,67 +106,6 @@ const Detail = () => {
               </div>
             </div>
 
-            <div id="interact" className="max-w-xs w-4/5 mt-5">
-              <div className="w-full">
-                <div className="bg-white shadow-xl rounded-lg py-3 max-w-sx dark:bg-gray-800">
-                  <div className="p-2">
-                    <h3 className="text-center text-xl text-gray-400 font-medium leading-8">
-                      Interact
-                    </h3>
-                    <ul className="flex-grow flex flex-row w-full justify-around px-5 child my-5">
-                      <li
-                        className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                        onClick={() => {
-                          like(data)
-                        }}
-                      >
-                        {liked === false && <LikeOuletIcon />}
-                        {liked === true && <LikeIcon />}
-                      </li>
-                      <li
-                        className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                        onClick={() => {
-                          unlike(data)
-                        }}
-                      >
-                        {unliked === false && <UnlikeOutletIcon />}
-                        {unliked === true && <UnlikeIcon />}
-                      </li>
-                      <li
-                        className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                        onClick={() => {
-                          reported(data)
-                        }}
-                      >
-                        <WarningOutlineIcon />
-                      </li>
-
-                      {profile_state.role === "base" && (
-                        <>
-                          <li
-                            className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                            onClick={() => {
-                              followOrUnfollow()
-                            }}
-                          >
-                            {follower === false && <FollowOutlineIcon />}
-                            {follower === true && <FollowIcon />}
-                          </li>
-                          <li
-                            className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                            onClick={() => {
-                              bookJob()
-                            }}
-                          >
-                            <CalendarOutlineIcon />
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div id="socical-media" className="max-w-xs w-4/5 mt-5">
               <div className="w-full">
                 <div className="bg-white shadow-xl rounded-lg py-3 max-w-sx dark:bg-gray-800">
@@ -462,13 +206,7 @@ const Detail = () => {
               </div>
             </div>
           </div>
-          {booking !== -1 && (
-            <JobCreateModal
-              type="booking"
-              kol_id={params.id}
-              onClose={setBooking}
-            />
-          )}
+
           <div className="w-3/4 flex flex-col items-start justify-start">
             <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
               <div className="mx-5 my-7">
@@ -567,4 +305,4 @@ const Detail = () => {
   )
 }
 
-export default Detail
+export default KolProfile

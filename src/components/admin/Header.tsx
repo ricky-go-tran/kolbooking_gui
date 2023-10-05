@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { ProfileContext } from "../../contexts/ProfileContext";
-import { AuthContext } from "../../contexts/AuthContext";
-import axios from "axios";
-import { getProxy } from "../../utils/PathUtil";
+import { useContext, useEffect, useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { ProfileContext } from "../../contexts/ProfileContext"
+import { AuthContext } from "../../contexts/AuthContext"
+import axios from "axios"
+import { getProxy } from "../../utils/PathUtil"
 import {
   SearchIcon,
   MoonIcon,
@@ -13,7 +13,7 @@ import {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
-} from "../../icons";
+} from "../../icons"
 import {
   Avatar,
   Badge,
@@ -21,25 +21,32 @@ import {
   Dropdown,
   DropdownItem,
   WindmillContext,
-} from "@windmill/react-ui";
-import { LOGOUT_URL } from "../../global_variable/global_uri_backend";
+} from "@windmill/react-ui"
+import { LOGOUT_URL } from "../../global_variable/global_uri_backend"
+import NotificationPanel from "../general/notifications/NotificationPanel"
+import { Notification as NotificationType } from "../../global_variable/global_type"
+import { fetchDataToNotification } from "../../utils/FetchData"
+import useActionCable from "../../hooks/useActionCable"
+import useChannel from "../../hooks/useChannel"
 
 const Header = () => {
-  const { mode, toggleMode } = useContext(WindmillContext);
-  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const { state: auth_state, dispatch: auth_dispatch } =
-    useContext(AuthContext);
+  const { mode, toggleMode } = useContext(WindmillContext)
+  const [isNotificationsMenuOpen, setIsNotificationsMenuOpen] = useState(false)
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext);
-  const navigate = useNavigate();
+    useContext(ProfileContext)
+  const navigate = useNavigate()
+  const { actionCable } = useActionCable("ws://localhost:3000/cable")
+  const { subscribe, unsubscribe, send } = useChannel(actionCable)
+  const [data, setData] = useState(null)
 
   function handleNotificationsClick() {
-    setIsNotificationsMenuOpen(!isNotificationsMenuOpen);
+    setIsNotificationsMenuOpen(!isNotificationsMenuOpen)
   }
 
   function handleProfileClick() {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
+    setIsProfileMenuOpen(!isProfileMenuOpen)
   }
 
   function logout() {
@@ -52,17 +59,17 @@ const Header = () => {
       .then((response) => {
         auth_dispatch({
           type: "LOGOUT",
-        });
-        profile_dispatch({ type: "CLEAR" });
-        navigate("/login");
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
       })
       .catch((error) => {
         auth_dispatch({
           type: "LOGOUT",
-        });
-        profile_dispatch({ type: "CLEAR" });
-        navigate("/login");
-      });
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
+      })
   }
 
   return (
@@ -120,34 +127,15 @@ const Header = () => {
                 className="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"
               ></span>
             </button>
-
-            <Dropdown
-              align="right"
-              isOpen={isNotificationsMenuOpen}
-              onClose={() => setIsNotificationsMenuOpen(false)}
-            >
-              <DropdownItem
-                tag="a"
-                href="/admin/profile"
-                className="justify-between"
-              >
-                <span>Messages</span>
-                <Badge type="danger">13</Badge>
-              </DropdownItem>
-              <DropdownItem tag="a" href="#" className="justify-between">
-                <span>Sales</span>
-                <Badge type="danger">2</Badge>
-              </DropdownItem>
-              <DropdownItem onClick={() => alert("Alerts!")}>
-                <span>Alerts</span>
-              </DropdownItem>
-            </Dropdown>
+            {isNotificationsMenuOpen === true && (
+              <NotificationPanel onClose={setIsNotificationsMenuOpen} />
+            )}
           </li>
 
           <li className="relative">
             <button
               className="rounded-full focus:shadow-outline-purple focus:outline-none"
-              onClick={handleProfileClick}
+              onClick={() => setIsProfileMenuOpen(true)}
               aria-label="Account"
               aria-haspopup="true"
             >
@@ -158,36 +146,49 @@ const Header = () => {
                 aria-hidden="true"
               />
             </button>
-            <Dropdown
-              align="right"
-              isOpen={isProfileMenuOpen}
-              onClose={() => setIsProfileMenuOpen(false)}
-              className="z-50"
-            >
-              <DropdownItem tag="a" href="/profile">
-                <OutlinePersonIcon
-                  className="w-4 h-4 mr-3"
-                  aria-hidden="true"
-                />
-                <span>Profile</span>
-              </DropdownItem>
-              <DropdownItem tag="a" href="/profile/password/edit">
-                <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                <span>Change password</span>
-              </DropdownItem>
-              <DropdownItem onClick={() => logout()}>
-                <OutlineLogoutIcon
-                  className="w-4 h-4 mr-3"
-                  aria-hidden="true"
-                />
-                <span>Log out</span>
-              </DropdownItem>
-            </Dropdown>
+            {isProfileMenuOpen === true && (
+              <Dropdown
+                align="right"
+                isOpen={true}
+                onClose={() => setIsProfileMenuOpen(false)}
+                className="z-50"
+              >
+                {profile_state.role !== "kol" && (
+                  <DropdownItem tag="a" href="/profile">
+                    <OutlinePersonIcon
+                      className="w-4 h-4 mr-3"
+                      aria-hidden="true"
+                    />
+                    <span>Profile</span>
+                  </DropdownItem>
+                )}
+                {profile_state.role === "kol" && (
+                  <DropdownItem tag="a" href="/kol/profile">
+                    <OutlinePersonIcon
+                      className="w-4 h-4 mr-3"
+                      aria-hidden="true"
+                    />
+                    <span>Profile</span>
+                  </DropdownItem>
+                )}
+                <DropdownItem tag="a" href="/profile/password/edit">
+                  <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
+                  <span>Change password</span>
+                </DropdownItem>
+                <DropdownItem onClick={() => logout()}>
+                  <OutlineLogoutIcon
+                    className="w-4 h-4 mr-3"
+                    aria-hidden="true"
+                  />
+                  <span>Log out</span>
+                </DropdownItem>
+              </Dropdown>
+            )}
           </li>
         </ul>
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

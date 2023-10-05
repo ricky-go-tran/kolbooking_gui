@@ -1,28 +1,28 @@
-import React, { useContext } from "react";
-import { ProfileContext } from "../../../contexts/ProfileContext";
-import adminRoutes from "../../../routes/admin/sidebar";
-import kolRoutes from "../../../routes/kol/sidebar";
-import baseRoutes from "../../../routes/base/sidebar";
-import { NavLink } from "react-router-dom";
-import * as Icons from "../../../icons";
-import { Badge } from "@windmill/react-ui";
-import { MatchUri } from "../../general/MatchUri";
-import { IIcon } from "../../../global_variable/global_type";
-import { IRoute } from "../../../global_variable/global_type";
+import React, { useContext } from "react"
+import { ProfileContext } from "../../../contexts/ProfileContext"
+import adminRoutes from "../../../routes/admin/sidebar"
+import kolRoutes from "../../../routes/kol/sidebar"
+import baseRoutes from "../../../routes/base/sidebar"
+import { Link } from "react-router-dom"
+import * as Icons from "../../../icons"
+import { Badge } from "@windmill/react-ui"
+import { MatchUri } from "../../general/MatchUri"
+import { IIcon } from "../../../global_variable/global_type"
+import { IRoute } from "../../../global_variable/global_type"
 
 function Icon({ icon, ...props }: IIcon) {
   // @ts-ignore
-  const Icon = Icons[icon];
-  return <Icon {...props} />;
+  const Icon = Icons[icon]
+  return <Icon {...props} />
 }
 
 function SidebarContent() {
-  const { state: profile_state } = useContext(ProfileContext);
+  const { state: profile_state } = useContext(ProfileContext)
 
   const renderSideBar = (routes: IRoute[]) => {
     return routes.map((route) => (
       <li className="relative px-6 py-3" key={route.name}>
-        <NavLink
+        <Link
           className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
           to={route.path}
         >
@@ -39,10 +39,10 @@ function SidebarContent() {
             icon={route.icon || ""}
           />
           <span className="ml-4">{route.name}</span>
-        </NavLink>
+        </Link>
       </li>
-    ));
-  };
+    ))
+  }
 
   return (
     <div className="py-4 text-gray-500 dark:text-gray-400">
@@ -67,7 +67,7 @@ function SidebarContent() {
         {profile_state.role === "base" && renderSideBar(baseRoutes)}
       </ul>
     </div>
-  );
+  )
 }
 
-export default SidebarContent;
+export default SidebarContent

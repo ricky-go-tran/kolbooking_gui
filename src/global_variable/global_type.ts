@@ -25,6 +25,12 @@ export type ReportJobType = {
   id_reporter: string
 }
 
+export type ReportProfileType = {
+  id_profile: string
+  name_profile: string
+  id_reporter: string
+}
+
 export type ReportType = {
   title: string
   description: string
@@ -82,4 +88,14 @@ export type Job = {
   requirement: string
   kol_id: string | undefined
   image: string
+}
+
+export type Notification = {
+  id: string
+  title: string
+  description: string
+  is_read: boolean
+  type_notice: string
+  sender_id: string
+  receiver_id: string
 }

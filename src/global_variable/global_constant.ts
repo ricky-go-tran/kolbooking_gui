@@ -1,5 +1,10 @@
 import { TokenStorage, ProfileStorage } from "../utils/LocalStorageUtil"
-import { AuthType, ProfileType, ReportJobType } from "./global_type"
+import {
+  AuthType,
+  ProfileType,
+  ReportJobType,
+  ReportProfileType,
+} from "./global_type"
 
 export const MIN_PASSWORD_LENGTH = 6
 export const MAX_PASSWORD_LENGTH = 64
@@ -21,6 +26,12 @@ export const REPORT_JOB_INIT_STATE: ReportJobType = {
   id_job: "",
   title_job: "",
   name_onwer: "",
+  id_reporter: "",
+}
+
+export const REPORT_PROFILE_INIT_STATE: ReportProfileType = {
+  id_profile: "",
+  name_profile: "",
   id_reporter: "",
 }
 export const APP_URL = "http://localhost:3000"

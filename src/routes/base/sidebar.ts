@@ -1,4 +1,4 @@
-import { IRoute } from "../../global_variable/global_type";
+import { IRoute } from "../../global_variable/global_type"
 
 const externalRoutes: IRoute[] = [
   {
@@ -8,18 +8,13 @@ const externalRoutes: IRoute[] = [
   },
   {
     path: "/base/jobs",
-    icon: "CalendarIcon",
+    icon: "FormsIcon",
     name: "Jobs",
   },
   {
-    path: "/base/invoice",
-    icon: "FormsIcon",
-    name: "Invoice",
-  },
-  {
-    path: "/base/emojis",
+    path: "/profile/emojis",
     icon: "LikeOuletIcon",
     name: "Emojis",
   },
-];
-export default externalRoutes;
+]
+export default externalRoutes

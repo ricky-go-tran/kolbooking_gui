@@ -1,4 +1,4 @@
-import { IRoute } from "../../global_variable/global_type";
+import { IRoute } from "../../global_variable/global_type"
 
 const externalRoutes: IRoute[] = [
   {
@@ -24,7 +24,12 @@ const externalRoutes: IRoute[] = [
   {
     path: "/admin/crontab",
     icon: "ChartsIcon",
-    name: "Crontab",
+    name: "System Health",
   },
-];
-export default externalRoutes;
+  {
+    path: "/profile/emojis",
+    icon: "LikeOuletIcon",
+    name: "Emojis",
+  },
+]
+export default externalRoutes

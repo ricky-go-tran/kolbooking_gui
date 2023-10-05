@@ -114,7 +114,6 @@ const Jobs = () => {
     axios
       .get(getProxy("/api/v1/base/jobs"), config)
       .then((response) => {
-        console.log(response.data.data)
         let handle_data = fetchToITableJob(response.data.data)
         let sheet = fetchToISheetJob(response.data.data)
         let meta = response.data.meta
@@ -137,6 +136,18 @@ const Jobs = () => {
       <PageTitle>Jobs</PageTitle>
       <div className="w-full flex justify-between py-5">
         <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+          <li>
+            <div
+              className={`flex justify-center py-2 cursor-pointer ${
+                tab === "all"
+                  ? "bg-white rounded-lg shadow text-indigo-900"
+                  : ""
+              }`}
+              onClick={() => setTab("all")}
+            >
+              All
+            </div>
+          </li>
           <li>
             <div
               className={`flex justify-center py-2 cursor-pointer ${
