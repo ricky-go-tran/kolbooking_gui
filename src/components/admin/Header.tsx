@@ -28,6 +28,9 @@ import { Notification as NotificationType } from "../../global_variable/global_t
 import { fetchDataToNotification } from "../../utils/FetchData"
 import useActionCable from "../../hooks/useActionCable"
 import useChannel from "../../hooks/useChannel"
+import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { SearchStorageAdminContext } from "../../contexts/SearchStorageAdminContext"
+import { AdminTabContext } from "../../contexts/AdminTab"
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext)
@@ -40,6 +43,17 @@ const Header = () => {
   const { actionCable } = useActionCable("ws://localhost:3000/cable")
   const { subscribe, unsubscribe, send } = useChannel(actionCable)
   const [data, setData] = useState(null)
+  const { setSearch } = useContext(SearchAdminContext)
+  const [inputField, setInputField] = useState("")
+  const { searchStorage, setSearchStorage } = useContext(
+    SearchStorageAdminContext
+  )
+  const { tab, setTab } = useContext(AdminTabContext)
+
+  useEffect(() => {
+    setSearch("")
+    setSearchStorage("")
+  }, [tab])
 
   function handleNotificationsClick() {
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen)
@@ -72,6 +86,12 @@ const Header = () => {
       })
   }
 
+  function typingSearch(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      setSearch(searchStorage)
+    }
+  }
+
   return (
     <header className="z-40 py-4 bg-white shadow-bottom dark:bg-gray-800">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
@@ -88,12 +108,20 @@ const Header = () => {
             <div className="absolute inset-y-0 flex items-center pl-2">
               <SearchIcon className="w-4 h-4" aria-hidden="true" />
             </div>
+
             <Input
               crossOrigin=""
               css=""
               className="pl-8 text-gray-700"
-              placeholder="Search for projects"
+              placeholder="Search..."
               aria-label="Search"
+              onChange={(e) => {
+                setSearchStorage(e.target.value)
+              }}
+              onKeyDown={(e) => {
+                typingSearch(e)
+              }}
+              value={searchStorage}
             />
           </div>
         </div>

@@ -1,66 +1,66 @@
-import axios from "axios";
-import AuthenticationUtil from "../../../utils/AuthenticationUtil";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import React, { useState, useContext } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
+import axios from "axios"
+import AuthenticationUtil from "../../../utils/AuthenticationUtil"
+import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import React, { useState, useContext } from "react"
+import { AuthContext } from "../../../contexts/AuthContext"
 
-import ImageLight from "../../../assets/images/login-office.jpeg";
-import ImageDark from "../../../assets/images/login-office-dark.jpeg";
-import { GithubIcon } from "../../../icons";
-import { Alert, Label, Input, Button } from "@windmill/react-ui";
-import { getProxy, getCDNImage } from "../../../utils/PathUtil";
-import { ProfileContext } from "../../../contexts/ProfileContext";
-import { ProfileType } from "../../../global_variable/global_type";
+import ImageLight from "../../../assets/images/login-office.jpeg"
+import ImageDark from "../../../assets/images/login-office-dark.jpeg"
+import { GithubIcon } from "../../../icons"
+import { Alert, Label, Input, Button } from "@windmill/react-ui"
+import { getProxy, getCDNImage } from "../../../utils/PathUtil"
+import { ProfileContext } from "../../../contexts/ProfileContext"
+import { ProfileType } from "../../../global_variable/global_type"
 import {
   CredentialResponse,
   GoogleLogin,
   useGoogleLogin,
-} from "@react-oauth/google";
+} from "@react-oauth/google"
 import {
   LOGIN_URL,
   PROFILE_URL,
-} from "../../../global_variable/global_uri_backend";
+} from "../../../global_variable/global_uri_backend"
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
-  });
+  })
 
   const [message, setMessage] = useState({
     success: "",
     message: "",
-  });
+  })
 
-  const { state, dispatch } = useContext(AuthContext);
-  const { dispatch: profile_dispatch } = useContext(ProfileContext);
-  const navigate = useNavigate();
+  const { state, dispatch } = useContext(AuthContext)
+  const { dispatch: profile_dispatch } = useContext(ProfileContext)
+  const navigate = useNavigate()
 
   const handleLoginGoogle = (responseGoogle: CredentialResponse) => {
-    console.log(responseGoogle);
+    console.log(responseGoogle)
     axios
       .post(getProxy("/auth/google_oauth2/callback"), responseGoogle)
       .then((res) => {
-        console.log(res);
+        console.log(res)
       })
       .catch((err) => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   const clickGoogleLogin = useGoogleLogin({
     onSuccess: (response) => {
-      console.log(response);
+      console.log(response)
     },
     onError: (err) => {
-      console.log(err);
+      console.log(err)
     },
-  });
+  })
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    dispatch({ type: "LOGIN_START" });
+    e.preventDefault()
+    dispatch({ type: "LOGIN_START" })
 
     try {
       if (AuthenticationUtil.emailFormat(credentials.email)) {
@@ -69,13 +69,13 @@ const Login = () => {
             email: credentials.email,
             password: credentials.password,
           },
-        };
+        }
         axios.post(getProxy(LOGIN_URL), data).then((res) => {
           let response = {
             token: res.headers.authorization,
             profile: res.data.status.data.user,
-          };
-          dispatch({ type: "LOGIN_SUCCESS", payload: response });
+          }
+          dispatch({ type: "LOGIN_SUCCESS", payload: response })
           axios
             .get(getProxy(PROFILE_URL), {
               headers: {
@@ -83,7 +83,7 @@ const Login = () => {
               },
             })
             .then((res) => {
-              let data = res.data.data.attributes;
+              let data = res.data.data.attributes
               let profileData: ProfileType = {
                 id: data.id,
                 fullname: data.fullname,
@@ -94,30 +94,30 @@ const Login = () => {
                       )
                     : getProxy(data.avatar),
                 role: data.role,
-              };
-              profile_dispatch({ type: "FETCH", payload: profileData });
+              }
+              profile_dispatch({ type: "FETCH", payload: profileData })
 
-              navigate("/redirect/roles");
+              navigate("/redirect/roles")
             })
             .catch((err) => {
-              dispatch({ type: "LOGOUT", payload: null });
-              profile_dispatch({ type: "CLEAR", payload: null });
-            });
-        });
+              dispatch({ type: "LOGOUT", payload: null })
+              profile_dispatch({ type: "CLEAR", payload: null })
+            })
+        })
       } else {
         setMessage({
           success: "Fail",
           message: "Invalid email format! Login fail",
-        });
+        })
       }
     } catch (error: any) {
-      dispatch({ type: "LOGIN_FAILURE", payload: error.response.data });
+      dispatch({ type: "LOGIN_FAILURE", payload: error.response.data })
       setMessage({
         success: "Fail",
         message: "Interval server error! Login fail",
-      });
+      })
     }
-  };
+  }
 
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
@@ -200,14 +200,9 @@ const Login = () => {
                 theme="filled_blue"
                 shape="circle"
                 onError={() => {
-                  console.log("Login Failed");
+                  console.log("Login Failed")
                 }}
               />
-
-              {/* <Button block layout="outline" disabled={state.loading} onClick={clickGoogleLogin}>
-                <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Google
-              </Button> */}
 
               <p className="mt-4">
                 <Link
@@ -230,7 +225,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

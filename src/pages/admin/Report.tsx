@@ -36,6 +36,7 @@ import {
 } from "../../utils/FetchDataTable"
 import ReportDetail from "../../components/admin/modal/report/ReportDetail"
 import { utils, writeFile } from "xlsx"
+import { SearchAdminContext } from "../../contexts/SearchAdminContext"
 
 const Report = () => {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
@@ -47,6 +48,7 @@ const Report = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetReport[]>([])
+  const { search } = useContext(SearchAdminContext)
 
   useEffect(() => {
     const config = {
@@ -55,6 +57,7 @@ const Report = () => {
       },
       params: {
         tab: tab,
+        search: search,
         page: {
           number: pageTable,
         },
@@ -74,7 +77,7 @@ const Report = () => {
       .catch((error) => {
         console.log(error)
       })
-  }, [pageTable, tab])
+  }, [pageTable, tab, search])
 
   function onPageChangeTable(p: number) {
     setPageTable(p)

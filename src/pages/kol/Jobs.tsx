@@ -23,6 +23,7 @@ import { fetchToISheetJob, fetchToITableJob } from "../../utils/FetchDataTable"
 import { Alert } from "@windmill/react-ui"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
+import { SearchAdminContext } from "../../contexts/SearchAdminContext"
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -34,6 +35,7 @@ const Job = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetJob[]>([])
+  const { search } = useContext(SearchAdminContext)
 
   useEffect(() => {
     const config = {
@@ -42,6 +44,7 @@ const Job = () => {
       },
       params: {
         tab: tab,
+        search: search,
         page: {
           number: pageTable,
         },
@@ -62,7 +65,7 @@ const Job = () => {
         console.log(error)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageTable, tab])
+  }, [pageTable, tab, search])
 
   function onPageChangeTable(p: number) {
     setPageTable(p)

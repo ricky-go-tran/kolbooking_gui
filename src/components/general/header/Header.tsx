@@ -1,8 +1,8 @@
-import Logo from "../../../assets/images/logoo.png";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { ProfileContext } from "../../../contexts/ProfileContext";
-import { Link, useNavigate } from "react-router-dom";
+import Logo from "../../../assets/images/logoo.png"
+import { useContext, useState } from "react"
+import { AuthContext } from "../../../contexts/AuthContext"
+import { ProfileContext } from "../../../contexts/ProfileContext"
+import { Link, useNavigate } from "react-router-dom"
 
 import {
   Avatar,
@@ -11,7 +11,7 @@ import {
   Dropdown,
   DropdownItem,
   WindmillContext,
-} from "@windmill/react-ui";
+} from "@windmill/react-ui"
 
 import {
   SearchIcon,
@@ -22,25 +22,24 @@ import {
   OutlinePersonIcon,
   OutlineCogIcon,
   OutlineLogoutIcon,
-} from "../../../icons";
-import axios from "axios";
-import { getProxy } from "../../../utils/PathUtil";
-import { LOGOUT_URL } from "../../../global_variable/global_uri_backend";
+} from "../../../icons"
+import axios from "axios"
+import { getProxy } from "../../../utils/PathUtil"
+import { LOGOUT_URL } from "../../../global_variable/global_uri_backend"
 
 const Header = () => {
-  const { state: auth_state, dispatch: auth_dispatch } =
-    useContext(AuthContext);
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext);
-  const navigate = useNavigate();
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+    useContext(ProfileContext)
+  const navigate = useNavigate()
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
 
   const isEmptyToken = () => {
-    return auth_state.auth_token === "" || auth_state.auth_token === "null";
-  };
+    return auth_state.auth_token === "" || auth_state.auth_token === "null"
+  }
 
   function handleProfileClick() {
-    setIsProfileMenuOpen(!isProfileMenuOpen);
+    setIsProfileMenuOpen(!isProfileMenuOpen)
   }
 
   function logout() {
@@ -53,17 +52,17 @@ const Header = () => {
       .then((response) => {
         auth_dispatch({
           type: "LOGOUT",
-        });
-        profile_dispatch({ type: "CLEAR" });
-        navigate("/login");
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
       })
       .catch((error) => {
         auth_dispatch({
           type: "LOGOUT",
-        });
-        profile_dispatch({ type: "CLEAR" });
-        navigate("/login");
-      });
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
+      })
   }
 
   return (
@@ -114,12 +113,21 @@ const Header = () => {
                     isOpen={isProfileMenuOpen}
                     onClose={() => setIsProfileMenuOpen(false)}
                   >
-                    <DropdownItem tag="a" href="/profile">
+                    <DropdownItem
+                      tag="a"
+                      href={
+                        profile_state.role === "admin"
+                          ? "/admin/dashboard"
+                          : profile_state.role === "kol"
+                          ? "/kol/statistics"
+                          : "/base/jobs"
+                      }
+                    >
                       <OutlinePersonIcon
                         className="w-4 h-4 mr-3"
                         aria-hidden="true"
                       />
-                      <span>Profile</span>
+                      <span>Dashboard</span>
                     </DropdownItem>
                     <DropdownItem tag="a" href="/profile/password/edit">
                       <OutlineCogIcon
@@ -216,7 +224,7 @@ const Header = () => {
         </div>
       </nav>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

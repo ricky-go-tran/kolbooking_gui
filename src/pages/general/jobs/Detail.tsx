@@ -12,6 +12,8 @@ import {
   WarningOutlineIcon,
   BookMarkIcon,
   BookMarkOutlineIcon,
+  ApplyIcon,
+  ApplyOutlineIcon,
 } from "../../../icons"
 import axios, { AxiosResponse } from "axios"
 import { getProxy } from "../../../utils/PathUtil"
@@ -20,10 +22,15 @@ import { isAuth } from "../../../utils/AuthUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { ReportJobType } from "../../../global_variable/global_type"
-import { generalError } from "../../../utils/ToastUtil"
+import {
+  generalError,
+  generalMessage,
+  generalWarning,
+} from "../../../utils/ToastUtil"
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
 import { ToastContext } from "../../../contexts/ToastContext"
 import ReportModal from "../../../components/general/modal/ReportModal"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -89,7 +96,7 @@ const Detail = () => {
         fetchData(response)
       })
       .catch((error) => {
-        console.log(error)
+        //HandleResponseError(error)
       })
   }, [])
 
@@ -126,6 +133,28 @@ const Detail = () => {
         toast_dispatch: toast_dispatch,
       })
     }
+  }
+
+  const apply = (job: any) => {
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }
+    axios
+      .put(getProxy(`/api/v1/kol/jobs/${params.id}/apply`), {}, config)
+      .then(() => {
+        generalMessage({
+          message: "Success apply",
+          toast_dispatch: toast_dispatch,
+        })
+      })
+      .catch((error) => {
+        generalWarning({
+          message: "This job has been apply ",
+          toast_dispatch: toast_dispatch,
+        })
+      })
   }
 
   const unlike = (job: any) => {
@@ -256,16 +285,26 @@ const Detail = () => {
                             }}
                           />
                         </li>
+
                         {profile_state.role === "kol" && (
-                          <li
-                            className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400"
-                            onClick={() => {
-                              bookmark(data)
-                            }}
-                          >
-                            {bookmarked === false && <BookMarkOutlineIcon />}
-                            {bookmarked === true && <BookMarkIcon />}
-                          </li>
+                          <>
+                            <li className="flex text-gray-500 mr-5 cursor-pointer hover:text-gray-400">
+                              <ApplyOutlineIcon
+                                onClick={() => {
+                                  apply(data)
+                                }}
+                              />
+                            </li>
+                            <li
+                              className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400"
+                              onClick={() => {
+                                bookmark(data)
+                              }}
+                            >
+                              {bookmarked === false && <BookMarkOutlineIcon />}
+                              {bookmarked === true && <BookMarkIcon />}
+                            </li>
+                          </>
                         )}
 
                         <li

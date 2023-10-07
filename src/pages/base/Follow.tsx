@@ -64,7 +64,7 @@ const Follow = () => {
     }
     axios
       .delete(
-        getProxy(`/api/v1/base/followers/${followed.id}/unfollow`),
+        getProxy(`/api/v1/base/followers/${followed.id_followed}/unfollow`),
         config
       )
       .then((res) => {

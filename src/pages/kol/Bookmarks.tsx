@@ -27,7 +27,7 @@ import {
 } from "../../utils/FetchDataTable"
 import { Alert } from "@windmill/react-ui"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { ToastContext } from "../../contexts/ToastContext"
@@ -72,7 +72,7 @@ const Bookmark = () => {
         console.log(error)
         // HandleResponseError(error, navigate)
       })
-  }, [pageTable, tab])
+  }, [pageTable, tab, resultsPerPage])
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
@@ -107,27 +107,45 @@ const Bookmark = () => {
     job: ITableBookmark
   ) {
     let action = event.target.value
-
-    axios
-      .post(
-        getProxy(`/api/v1/kol/bookmarks/${job.id}/mark`),
-        { bookmark: { job_id: job.id_job, status: action } },
-        {
+    if (action === "unmark") {
+      axios
+        .delete(getProxy(`/api/v1/kol/bookmarks/${job.id_job}/unmark`), {
           headers: {
             Authorization: auth_state.auth_token,
           },
-        }
-      )
-      .then((response) => {
-        generalMessage({
-          message: "Change status successfully",
-          toast_dispatch: toast_dispatch,
         })
-        setTab(action)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        .then((response) => {
+          generalMessage({
+            message: "Change status successfully",
+            toast_dispatch: toast_dispatch,
+          })
+          setResultPerPage(resultsPerPage - 1)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    } else {
+      axios
+        .post(
+          getProxy(`/api/v1/kol/bookmarks/${job.id_job}/mark`),
+          { bookmark: { job_id: job.id_job, status: action } },
+          {
+            headers: {
+              Authorization: auth_state.auth_token,
+            },
+          }
+        )
+        .then((response) => {
+          generalMessage({
+            message: "Change status successfully",
+            toast_dispatch: toast_dispatch,
+          })
+          setTab(action)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }
   }
 
   return (
@@ -255,7 +273,12 @@ const Bookmark = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  <Button>View</Button>
+                  <Link
+                    to={`/jobs/${bookmark.id_job}`}
+                    className="align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none px-3 py-1 rounded-md text-xs text-white bg-purple-600 border border-transparent active:bg-purple-600 hover:bg-purple-700 focus:ring focus:ring-purple-300"
+                  >
+                    View
+                  </Link>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
@@ -270,6 +293,7 @@ const Bookmark = () => {
                       <option value="care">Care</option>
                       <option value="attention">Attention</option>
                       <option value="extremely">Extremely</option>
+                      <option value="unmark">Unmark</option>
                     </select>
                   </div>
                 </TableCell>

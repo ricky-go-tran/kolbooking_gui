@@ -3,12 +3,13 @@ import { ProfileContext } from "../../../contexts/ProfileContext"
 import adminRoutes from "../../../routes/admin/sidebar"
 import kolRoutes from "../../../routes/kol/sidebar"
 import baseRoutes from "../../../routes/base/sidebar"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import * as Icons from "../../../icons"
 import { Badge } from "@windmill/react-ui"
 import { MatchUri } from "../../general/MatchUri"
 import { IIcon } from "../../../global_variable/global_type"
 import { IRoute } from "../../../global_variable/global_type"
+import { AdminTabContext } from "../../../contexts/AdminTab"
 
 function Icon({ icon, ...props }: IIcon) {
   // @ts-ignore
@@ -18,13 +19,22 @@ function Icon({ icon, ...props }: IIcon) {
 
 function SidebarContent() {
   const { state: profile_state } = useContext(ProfileContext)
+  const { setTab } = useContext(AdminTabContext)
+  const navigate = useNavigate()
+
+  const handle_redirect = (route: IRoute) => {
+    setTab(route.name)
+    navigate(route.path)
+  }
 
   const renderSideBar = (routes: IRoute[]) => {
     return routes.map((route) => (
       <li className="relative px-6 py-3" key={route.name}>
-        <Link
+        <button
           className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          to={route.path}
+          onClick={(e) => {
+            handle_redirect(route)
+          }}
         >
           <MatchUri uri={route.path}>
             <span
@@ -39,7 +49,7 @@ function SidebarContent() {
             icon={route.icon || ""}
           />
           <span className="ml-4">{route.name}</span>
-        </Link>
+        </button>
       </li>
     ))
   }

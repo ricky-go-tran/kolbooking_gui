@@ -1,25 +1,46 @@
-import React, { useContext, useEffect, useState } from "react";
-import SectionTitle from "../../admin/typography/SectionTitle";
-import { getProxy } from "../../../utils/PathUtil";
-import { INDUSTRY_URL } from "../../../global_variable/global_uri_backend";
-import axios from "axios";
-import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext";
+import React, { useContext, useEffect, useState } from "react"
+import SectionTitle from "../../admin/typography/SectionTitle"
+import { getProxy } from "../../../utils/PathUtil"
+import { INDUSTRY_URL } from "../../../global_variable/global_uri_backend"
+import axios from "axios"
+import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext"
+import { FilterJobGeneralContext } from "../../../contexts/FilterJobGeneralContext"
 
 const JobFilter = () => {
-  const [industries, setIndustries] = useState<any[]>([]);
-  const [tempSearch, setTempSearch] = useState<string>();
-  const { jobSearch, setJobSearch } = useContext(SearchJobHomepageContext);
+  const [industries, setIndustries] = useState<any[]>([])
+  const [tempSearch, setTempSearch] = useState<string>()
+  const [tempFilter, setTempFilter] = useState<string[]>([])
+  const { setJobSearch } = useContext(SearchJobHomepageContext)
+  const { setJobFilter } = useContext(FilterJobGeneralContext)
 
   useEffect(() => {
     axios
       .get(getProxy(INDUSTRY_URL))
       .then((response) => {
-        setIndustries(response.data.data);
+        setIndustries(response.data.data)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        console.log(error)
+      })
+  }, [])
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const id = event.target.value
+    if (event.target.checked) {
+      setTempFilter([...tempFilter, id])
+    } else {
+      setTempFilter(
+        tempFilter.filter((item) => {
+          item !== id
+        })
+      )
+    }
+  }
+
+  const submitFilter = () => {
+    setJobSearch(tempSearch)
+    setJobFilter(tempFilter)
+  }
 
   return (
     <div className="w-1/4 flex items-start justify-center mt-5">
@@ -59,7 +80,7 @@ const JobFilter = () => {
               type="submit"
               className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={() => {
-                setJobSearch(tempSearch);
+                submitFilter()
               }}
             >
               Search
@@ -75,13 +96,14 @@ const JobFilter = () => {
           >
             {industries.map((industry) => {
               return (
-                <li>
+                <li key={industry?.attributes?.id}>
                   <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
                     <input
                       id="checkbox-item-11"
                       type="checkbox"
-                      value=""
+                      value={industry?.attributes?.id}
                       className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                      onChange={handleCheckboxChange}
                     />
                     <label
                       htmlFor="checkbox-item-11"
@@ -91,16 +113,21 @@ const JobFilter = () => {
                     </label>
                   </div>
                 </li>
-              );
+              )
             })}
           </ul>
-          <button className="text-white bg-blue-600 px-10 rounded-md py-3 mt-5">
+          <button
+            className="text-white bg-blue-600 px-10 rounded-md py-3 mt-5"
+            onClick={() => {
+              submitFilter()
+            }}
+          >
             Apply
           </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default JobFilter;
+export default JobFilter

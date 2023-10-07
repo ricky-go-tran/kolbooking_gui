@@ -115,6 +115,7 @@ const JobCreateModal = ({
             message: "Successfully created job",
             toast_dispatch: toast_dispatch,
           })
+
           onClose(-1)
         })
         .catch((error) => {
@@ -127,6 +128,7 @@ const JobCreateModal = ({
       axios
         .post(getProxy("/api/v1/base/jobs/booking"), formData, config)
         .then((response) => {
+          generateNotification()
           generalMessage({
             message:
               "Successfully booking job. Your booking will send realtime to kol",
@@ -138,6 +140,32 @@ const JobCreateModal = ({
           console.log(error)
         })
     }
+  }
+
+  const generateNotification = () => {
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }
+    const param = {
+      notification: {
+        title: `${profile_state.fullname} has been booking you`,
+        description: `User ${
+          profile_state.fullname
+        } haved booking you to job name ${
+          job.title
+        } at ${new Date().toDateString()}`,
+        type_notice: "notification",
+        sender_id: profile_state.id,
+        receiver_id: kol_id,
+      },
+    }
+    axios
+      .post(getProxy("/api/v1/notifications"), param, config)
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const createSubmit = () => {

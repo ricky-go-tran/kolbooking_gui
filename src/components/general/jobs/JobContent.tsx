@@ -9,6 +9,7 @@ import ReportModal from "../modal/ReportModal"
 import { ReportJobGeneralContextProvider } from "../../../contexts/ReportJobGeneralContext"
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
 import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext"
+import { FilterJobGeneralContext } from "../../../contexts/FilterJobGeneralContext"
 
 const JobContent = () => {
   const [jobs, setJobs] = useState<any[]>([])
@@ -20,6 +21,7 @@ const JobContent = () => {
     ReportJobGeneralContext
   )
   const { jobSearch } = useContext(SearchJobHomepageContext)
+  const { jobFilter } = useContext(FilterJobGeneralContext)
 
   const fetchData = (response: AxiosResponse<any, any>) => {
     setJobs(response.data.data)
@@ -47,6 +49,7 @@ const JobContent = () => {
             number: pageTable,
           },
           search: jobSearch,
+          filter: jobFilter,
         },
       }
     }
@@ -59,7 +62,7 @@ const JobContent = () => {
       .catch((error) => {
         console.log(error)
       })
-  }, [auth_state, pageTable, jobSearch])
+  }, [auth_state, pageTable, jobSearch, jobFilter])
 
   return (
     <div className="w-full min-h-full flex bg-gray-100 pt-3 dark:bg-gray-600">

@@ -1,29 +1,33 @@
-import PageTitle from "../../components/admin/typography/PageTitle";
-import SectionTitle from "../../components/admin/typography/SectionTitle";
-import { Input, Label, Textarea, Button, Alert } from "@windmill/react-ui";
-import { useState, useContext, useEffect, useRef } from "react";
-import { ProfileContext } from "../../contexts/ProfileContext";
-import { AuthContext } from "../../contexts/AuthContext";
-import axios from "axios";
-import { getProxy } from "../../utils/PathUtil";
-import "../../assets/css/component/avatar_input.css";
-import { PROFILE_URL } from "../../global_variable/global_uri_backend";
+import PageTitle from "../../components/admin/typography/PageTitle"
+import SectionTitle from "../../components/admin/typography/SectionTitle"
+import { Input, Label, Textarea, Button, Alert } from "@windmill/react-ui"
+import { useState, useContext, useEffect, useRef } from "react"
+import { ProfileContext } from "../../contexts/ProfileContext"
+import { AuthContext } from "../../contexts/AuthContext"
+import axios from "axios"
+import { getProxy } from "../../utils/PathUtil"
+import "../../assets/css/component/avatar_input.css"
+import { PROFILE_URL } from "../../global_variable/global_uri_backend"
+import { generalMessage } from "../../utils/ToastUtil"
+import { ToastContext } from "../../contexts/ToastContext"
 
 export const Profile = () => {
-  const { state: auth_state } = useContext(AuthContext);
+  const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
-  const [avatar, setAvatar] = useState<File | null>(null);
+    useContext(ProfileContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState("")
+  const [avatar, setAvatar] = useState<File | null>(null)
   const [profileData, setProfileData] = useState({
     avatar: "",
     fullname: "",
     birthday: "",
     phone: "",
     address: "",
-  });
-  const previewAvatar = useRef<HTMLImageElement>(null);
+  })
+  const previewAvatar = useRef<HTMLImageElement>(null)
 
   useEffect(() => {
     axios
@@ -33,33 +37,33 @@ export const Profile = () => {
         },
       })
       .then((response) => {
-        let handle_data = response.data.data.attributes;
+        let handle_data = response.data.data.attributes
         setProfileData({
           avatar: handle_data.avatar,
           fullname: handle_data.fullname,
           birthday: handle_data.birthday,
           phone: handle_data.phone,
           address: handle_data.address,
-        });
-        setLoading(true);
+        })
+        setLoading(true)
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err)
         // navigate('/server/error')
-      });
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   const handleChangeProfile = () => {
-    let formData = new FormData();
+    let formData = new FormData()
     if (avatar !== null) {
-      formData.append("profile[avatar]", avatar);
+      formData.append("profile[avatar]", avatar)
     }
-    formData.append("profile[fullname]", profileData.fullname);
-    formData.append("profile[birthday]", profileData.birthday);
-    formData.append("profile[phone]", profileData.phone);
-    formData.append("profile[address]", profileData.address);
-    console.log(formData);
+    formData.append("profile[fullname]", profileData.fullname)
+    formData.append("profile[birthday]", profileData.birthday)
+    formData.append("profile[phone]", profileData.phone)
+    formData.append("profile[address]", profileData.address)
+    console.log(formData)
     axios
       .put(getProxy("/api/v1/profiles/change"), formData, {
         headers: {
@@ -68,58 +72,62 @@ export const Profile = () => {
         },
       })
       .then((response) => {
+        generalMessage({
+          message: "Profile change successfully",
+          toast_dispatch: toast_dispatch,
+        })
         let handle_data = {
           fullname: response.data.data.attributes.fullname,
           avatar: response.data.data.attributes.avatar,
           role: response.data.data.attributes.role,
-        };
-        profile_dispatch({ type: "FETCH", payload: handle_data });
+        }
+        profile_dispatch({ type: "FETCH", payload: handle_data })
       })
       .catch((err) => {
-        console.log(err);
-        // HandleResponseError(err)
-      });
-  };
+        console.log(err)
+        //HandleResponseError(err)
+      })
+  }
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files) {
-      setMessage("Image not found");
-      return;
+      setMessage("Image not found")
+      return
     }
-    const file = event.target.files[0];
-    const type = file.type.split("/")[1];
-    const max_size_support = 1000000; // 1mb
-    const supportFile = ["jpeg", "png"];
-    const reader = new FileReader();
+    const file = event.target.files[0]
+    const type = file.type.split("/")[1]
+    const max_size_support = 1000000 // 1mb
+    const supportFile = ["jpeg", "png"]
+    const reader = new FileReader()
     if (supportFile.includes(type)) {
       if (file.size <= max_size_support) {
-        setAvatar(file);
-        setMessage("");
+        setAvatar(file)
+        setMessage("")
         reader.onload = (event) => {
-          const fileContent = event?.target?.result;
+          const fileContent = event?.target?.result
           if (previewAvatar.current !== null) {
-            previewAvatar.current.src = `${fileContent}`;
+            previewAvatar.current.src = `${fileContent}`
           }
-        };
-        reader.readAsDataURL(file);
+        }
+        reader.readAsDataURL(file)
       } else {
         if (previewAvatar.current !== null) {
-          previewAvatar.current.src = `url(${profile_state.avatar})`;
+          previewAvatar.current.src = `url(${profile_state.avatar})`
         }
-        setAvatar(null);
-        setProfileData({ ...profileData, avatar: profile_state.avatar });
-        setMessage("Upload file under 1mb");
+        setAvatar(null)
+        setProfileData({ ...profileData, avatar: profile_state.avatar })
+        setMessage("Upload file under 1mb")
       }
     } else {
       if (previewAvatar.current !== null) {
-        previewAvatar.current.src = `${profile_state.avatar}`;
+        previewAvatar.current.src = `${profile_state.avatar}`
       }
-      setAvatar(null);
-      setMessage("Support type png, jpg and jpeg only");
+      setAvatar(null)
+      setMessage("Support type png, jpg and jpeg only")
     }
-  };
+  }
   return (
     <>
       <PageTitle>Profile</PageTitle>
@@ -130,7 +138,7 @@ export const Profile = () => {
           type="danger"
           className="my-5"
           onClose={() => {
-            setMessage("");
+            setMessage("")
           }}
         >
           {message}
@@ -156,7 +164,7 @@ export const Profile = () => {
                   type="file"
                   accept="image/*"
                   onChange={(e) => {
-                    handleFileInputChange(e);
+                    handleFileInputChange(e)
                   }}
                 />
                 <figure className="personal-figure">
@@ -237,7 +245,7 @@ export const Profile = () => {
             block
             className="mt-6"
             onClick={() => {
-              handleChangeProfile();
+              handleChangeProfile()
             }}
           >
             Update Profile
@@ -245,7 +253,7 @@ export const Profile = () => {
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile
