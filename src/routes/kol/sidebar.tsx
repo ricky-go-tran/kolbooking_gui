@@ -1,4 +1,4 @@
-import { IRoute } from "../../global_variable/global_type";
+import { IRoute } from "../../global_variable/global_type"
 
 const externalRoutes: IRoute[] = [
   {
@@ -21,5 +21,10 @@ const externalRoutes: IRoute[] = [
     icon: "BookMarkIcon",
     name: "Bookmarks",
   },
-];
-export default externalRoutes;
+  {
+    path: "/profile/emojis",
+    icon: "LikeOuletIcon",
+    name: "Emojis",
+  },
+]
+export default externalRoutes

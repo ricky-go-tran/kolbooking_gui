@@ -1,14 +1,68 @@
-import Logo from "../../../assets/images/logoo.png";
-import { useContext } from "react";
-import { AuthContext } from "../../../contexts/AuthContext";
-import { ProfileContext } from "../../../contexts/ProfileContext";
+import Logo from "../../../assets/images/logoo.png"
+import { useContext, useState } from "react"
+import { AuthContext } from "../../../contexts/AuthContext"
+import { ProfileContext } from "../../../contexts/ProfileContext"
+import { Link, useNavigate } from "react-router-dom"
+
+import {
+  Avatar,
+  Badge,
+  Input,
+  Dropdown,
+  DropdownItem,
+  WindmillContext,
+} from "@windmill/react-ui"
+
+import {
+  SearchIcon,
+  MoonIcon,
+  SunIcon,
+  BellIcon,
+  MenuIcon,
+  OutlinePersonIcon,
+  OutlineCogIcon,
+  OutlineLogoutIcon,
+} from "../../../icons"
+import axios from "axios"
+import { getProxy } from "../../../utils/PathUtil"
+import { LOGOUT_URL } from "../../../global_variable/global_uri_backend"
 
 const Header = () => {
-  const { state: auth_state } = useContext(AuthContext);
-  const { state: profile_state } = useContext(ProfileContext);
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: profile_state, dispatch: profile_dispatch } =
+    useContext(ProfileContext)
+  const navigate = useNavigate()
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
 
   const isEmptyToken = () => {
-    return auth_state.auth_token === "" || auth_state.auth_token === "null";
+    return auth_state.auth_token === "" || auth_state.auth_token === "null"
+  }
+
+  function handleProfileClick() {
+    setIsProfileMenuOpen(!isProfileMenuOpen)
+  }
+
+  function logout() {
+    axios
+      .delete(getProxy(LOGOUT_URL), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+      })
+      .then((response) => {
+        auth_dispatch({
+          type: "LOGOUT",
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
+      })
+      .catch((error) => {
+        auth_dispatch({
+          type: "LOGOUT",
+        })
+        profile_dispatch({ type: "CLEAR" })
+        navigate("/login")
+      })
   }
 
   return (
@@ -17,38 +71,160 @@ const Header = () => {
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <a href="/" className="flex items-center">
             <img src={Logo} className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">KolBooking</span>
+            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
+              KolBooking
+            </span>
           </a>
           <div className="flex items-center lg:order-2">
-            {isEmptyToken() === true && <><a href="/login" className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800">Log in</a>
-              <a href="/register" className="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get started</a></>}
-            {!isEmptyToken() && <a href="/" className="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{profile_state.fullname}</a>}
-            <button data-collapse-toggle="mobile-menu-2" type="button" className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mobile-menu-2" aria-expanded="false">
+            {isEmptyToken() === true && (
+              <>
+                <Link
+                  to="/login"
+                  className="text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/register"
+                  className="text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                >
+                  Get started
+                </Link>
+              </>
+            )}
+            {!isEmptyToken() && (
+              <ul className="flex items-center flex-shrink-0 space-x-6">
+                <li className="relative">
+                  <button
+                    className="rounded-full focus:shadow-outline-purple focus:outline-none"
+                    onClick={handleProfileClick}
+                    aria-label="Account"
+                    aria-haspopup="true"
+                  >
+                    <Avatar
+                      className="align-middle"
+                      src={profile_state.avatar}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                  </button>
+                  <Dropdown
+                    align="right"
+                    isOpen={isProfileMenuOpen}
+                    onClose={() => setIsProfileMenuOpen(false)}
+                  >
+                    <DropdownItem
+                      tag="a"
+                      href={
+                        profile_state.role === "admin"
+                          ? "/admin/dashboard"
+                          : profile_state.role === "kol"
+                          ? "/kol/statistics"
+                          : "/base/jobs"
+                      }
+                    >
+                      <OutlinePersonIcon
+                        className="w-4 h-4 mr-3"
+                        aria-hidden="true"
+                      />
+                      <span>Dashboard</span>
+                    </DropdownItem>
+                    <DropdownItem tag="a" href="/profile/password/edit">
+                      <OutlineCogIcon
+                        className="w-4 h-4 mr-3"
+                        aria-hidden="true"
+                      />
+                      <span>Change password</span>
+                    </DropdownItem>
+                    <DropdownItem onClick={() => logout()}>
+                      <OutlineLogoutIcon
+                        className="w-4 h-4 mr-3"
+                        aria-hidden="true"
+                      />
+                      <span>Log out</span>
+                    </DropdownItem>
+                  </Dropdown>
+                </li>
+              </ul>
+            )}
+            <button
+              data-collapse-toggle="mobile-menu-2"
+              type="button"
+              className="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              aria-controls="mobile-menu-2"
+              aria-expanded="false"
+            >
               <span className="sr-only">Open main menu</span>
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-              <svg className="hidden w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+              <svg
+                className="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              <svg
+                className="hidden w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
             </button>
           </div>
-          <div className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
+          <div
+            className="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1"
+            id="mobile-menu-2"
+          >
             <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
               <li>
-                <a href="/" className="block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white" aria-current="page">Home</a>
+                <Link
+                  to="/"
+                  className="block py-2 pr-4 pl-3 text-white rounded bg-blue-700 lg:bg-transparent lg:text-blue-700 lg:p-0 dark:text-white"
+                  aria-current="page"
+                >
+                  Home
+                </Link>
               </li>
               <li>
-                <a href="/jobs" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Jobs</a>
+                <Link
+                  to="/jobs"
+                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  Jobs
+                </Link>
               </li>
               <li>
-                <a href="/kols" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">KOLs</a>
+                <Link
+                  to="/kols"
+                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  KOLs
+                </Link>
               </li>
               <li>
-                <a href="/contact" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700">Contact</a>
+                <Link
+                  to="/contact"
+                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-gray-400 lg:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent dark:border-gray-700"
+                >
+                  Contact
+                </Link>
               </li>
             </ul>
           </div>
         </div>
       </nav>
     </header>
-  );
+  )
 }
 
-export default Header;
+export default Header

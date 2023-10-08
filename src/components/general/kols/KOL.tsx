@@ -10,10 +10,10 @@ import { AuthContext } from "../../../contexts/AuthContext";
 
 const KOL = ({ kol }: { kol: any }) => {
   return (
-    <div className="block rounded-lg bg-white shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] dark:bg-neutral-700">
-      <Link to={`/kols/${kol?.profile?.data?.id}`}>
+    <>
+      <div className="bg-white font-semibold text-center rounded-3xl border shadow-lg p-10 max-w-xs">
         <img
-          className="rounded-t-lg"
+          className="mb-3 w-32 h-32 rounded-full shadow-lg mx-auto"
           src={
             kol?.data?.attributes?.avatar === "null"
               ? getCDNImage(DEFAULT_AVATAR)
@@ -21,22 +21,43 @@ const KOL = ({ kol }: { kol: any }) => {
           }
           alt="Avatar"
         />
-      </Link>
-      <div className="p-6">
-        <h5 className="mb-2 text-xl font-medium leading-tight text-neutral-800 dark:text-neutral-50">
-          {kol?.profile?.data?.attributes?.fullname || "Unknow"}
-        </h5>
-        <p className="mb-4 text-base text-neutral-600 dark:text-neutral-200">
-          {kol?.profile?.data?.attributes?.address || "Unknown"}
+        <h1 className="text-lg text-gray-700">
+          {" "}
+          {kol?.profile?.data?.attributes?.fullname || "Unknow"}{" "}
+        </h1>
+        <div className="w-full px-4 text-center border-b-2">
+          <div className="flex justify-center py-1 lg:pt-4 ">
+            <div className="mr-4 p-3 text-center">
+              <span className="text-xl font-bold block uppercase tracking-wide text-gray-600">
+                {`${kol?.like_num}`}
+              </span>
+              <span className="text-sm text-gray-400">Like</span>
+            </div>
+            <div className="mr-4 p-3 text-center">
+              <span className="text-xl font-bold block uppercase tracking-wide text-gray-600">
+                {`${kol?.unlike_num}`}
+              </span>
+              <span className="text-sm text-gray-400">Unlike</span>
+            </div>
+            <div className="lg:mr-4 p-3 text-center">
+              <span className="text-xl font-bold block uppercase tracking-wide text-gray-600">
+                {`${kol?.follow_num}`}
+              </span>
+              <span className="text-sm text-gray-400">Follower</span>
+            </div>
+          </div>
+        </div>
+        <p className="text-xs text-gray-400 mt-4 h-16 overflow-y-hidden">
+          {kol?.kol?.data?.attributes?.about_me}
         </p>
         <Link
-          to={`/kols/${kol?.profile?.data?.id}`}
-          className="bg-blue-400 hover:bg-blue-300 text-white font-semibold py-2 px-4 border border-gray-400 rounded shadow"
+          to={`/kols/${kol?.profile?.data?.attributes?.id}`}
+          className="bg-indigo-600 px-8 py-2 mt-8 rounded-3xl text-gray-100 font-semibold uppercase tracking-wide"
         >
-          View Details
+          Hire Me
         </Link>
       </div>
-    </div>
+    </>
   );
 };
 export default KOL;

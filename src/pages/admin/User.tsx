@@ -17,7 +17,7 @@ import PageTitle from "../../components/admin/typography/PageTitle";
 import SectionTitle from "../../components/admin/typography/SectionTitle";
 import { LockIcon, UnlockIcon, InformationIcon } from "../../icons";
 import { ITabelUser } from "../../global_variable/global_table_admin";
-import { fetchToITableUser } from "../../utils/FetchData";
+import { fetchToITableUser } from "../../utils/FetchDataTable";
 import { getProxy } from "../../utils/PathUtil";
 import axios from "axios";
 import { Alert } from "@windmill/react-ui";

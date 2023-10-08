@@ -1,50 +1,54 @@
-import { SetStateAction, useEffect, useState } from "react";
-import { BookMarkIcon, WarningIcon } from "../../../icons";
-import { Label, Input, Textarea } from "@windmill/react-ui";
-import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext";
-import {
-  ReportJobType,
-  ReportType,
-} from "../../../global_variable/global_type";
-import { useContext } from "react";
-import axios from "axios";
-import { getProxy } from "../../../utils/PathUtil";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { SetStateAction, useEffect, useState } from "react"
+import { BookMarkIcon, WarningIcon } from "../../../icons"
+import { Label, Input, Textarea } from "@windmill/react-ui"
+import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
+import { ReportJobType, ReportType } from "../../../global_variable/global_type"
+import { useContext } from "react"
+import axios from "axios"
+import { getProxy } from "../../../utils/PathUtil"
+import { AuthContext } from "../../../contexts/AuthContext"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 
 const ReportModal = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
     ReportJobGeneralContext
-  );
-  const { state: auth_state, dispatch: auth_dispatch } =
-    useContext(AuthContext);
+  )
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
   const [reported, setReported] = useState<ReportType>({
     title: "",
     description: "",
     reportable_type: "Job",
     reportable_id: report_job_state.id_job,
     profile_id: report_job_state.id_reporter,
-  });
+  })
 
   const submitReport = () => {
     const data = {
       report: {
         ...reported,
       },
-    };
+    }
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
       },
-    };
+    }
     axios
       .post(getProxy("/api/v1/reports"), data, config)
       .then((response) => {
-        report_job_dispatch({ type: "CLEAR" });
+        generalMessage({
+          message: "Report successfully",
+          toast_dispatch: toast_dispatch,
+        })
+        report_job_dispatch({ type: "CLEAR" })
       })
       .catch((error) => {
-        console.log(error);
-      });
-  };
+        console.log(error)
+      })
+  }
 
   return (
     <>
@@ -122,7 +126,7 @@ const ReportModal = () => {
                 className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                  report_job_dispatch({ type: "CLEAR" });
+                  report_job_dispatch({ type: "CLEAR" })
                 }}
               >
                 Close
@@ -131,7 +135,7 @@ const ReportModal = () => {
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                  submitReport();
+                  submitReport()
                 }}
               >
                 Report
@@ -142,7 +146,7 @@ const ReportModal = () => {
       </div>
       <div className="fixed inset-0 z-40 bg-black bg-opacity-60 backdrop-blur-sm"></div>
     </>
-  );
-};
+  )
+}
 
-export default ReportModal;
+export default ReportModal
