@@ -90,6 +90,14 @@ export type Job = {
   image: string
 }
 
+export type KolProfile = {
+  facebook_path: string
+  youtube_path: string
+  instagram_path: string
+  tiktok_path: string
+  about_me: string
+}
+
 export type Notification = {
   id: string
   title: string

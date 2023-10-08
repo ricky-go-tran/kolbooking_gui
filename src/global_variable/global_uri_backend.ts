@@ -4,6 +4,7 @@ export const REGISTER_URL = "/signup"
 export const PROFILE_URL = "/api/v1/profiles"
 export const LOGOUT_URL = "/logout"
 export const KOL_PROFILE_URL = "/api/v1/kol/kol_profiles"
+export const KOL_PROFILE_EDIT_URL = "/api/v1/kol/kol_profiles/edit_kol_profile"
 
 /*Kol*/
 

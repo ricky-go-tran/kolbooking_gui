@@ -58,7 +58,7 @@ const KolProfile = () => {
       .catch((error) => {
         console.log(error)
       })
-  }, [])
+  }, [updateKolProfile, updateProfile])
 
   return (
     <>

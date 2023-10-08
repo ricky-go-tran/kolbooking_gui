@@ -34,7 +34,6 @@ const JobUpdateModal = ({
   const [avatar, setAvatar] = useState<File | null>(null)
   const previewAvatar = useRef<HTMLImageElement>(null)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)

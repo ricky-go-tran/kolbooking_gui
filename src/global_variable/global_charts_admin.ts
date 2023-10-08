@@ -1,28 +1,35 @@
 export interface ILegends {
-  title: string;
-  color: string;
+  title: string
+  color: string
 }
 
 export const doughnutLegends: ILegends[] = [
   { title: "Shirts", color: "bg-blue-500" },
   { title: "Shoes", color: "bg-teal-600" },
   { title: "Bags", color: "bg-purple-600" },
-];
+]
 
 export const lineLegends: ILegends[] = [
   { title: "Failed", color: "bg-teal-600" },
   { title: "Processed", color: "bg-purple-600" },
-];
+]
 
 export const lineStatisticalLegends: ILegends[] = [
   { title: "Failed", color: "bg-teal-600" },
   { title: "Processed", color: "bg-purple-600" },
-];
+]
+
+export const lineDashboardlLegends: ILegends[] = [
+  { title: "Job", color: "bg-teal-600" },
+  { title: "Base User", color: "bg-purple-600" },
+  { title: "Kol", color: "bg-blue-600" },
+  { title: "Report", color: "bg-red-600" },
+]
 
 export const barLegends: ILegends[] = [
   { title: "Shoes", color: "bg-teal-600" },
   { title: "Bags", color: "bg-purple-600" },
-];
+]
 
 export const doughnutOptions = {
   data: {
@@ -42,7 +49,7 @@ export const doughnutOptions = {
   legend: {
     display: false,
   },
-};
+}
 
 export const lineOptions = {
   data: {
@@ -77,7 +84,7 @@ export const lineOptions = {
   legend: {
     display: false,
   },
-};
+}
 
 export const barOptions = {
   data: {
@@ -105,4 +112,4 @@ export const barOptions = {
   legend: {
     display: false,
   },
-};
+}

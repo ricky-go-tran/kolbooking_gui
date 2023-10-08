@@ -115,6 +115,7 @@ export const UpdateProfileModal = ({
         },
       })
       .then((response) => {
+        onClose(-1)
         generalMessage({
           message: "Profile change successfully",
           toast_dispatch: toast_dispatch,

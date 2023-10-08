@@ -1,23 +1,23 @@
-import SectionTitle from "../../components/admin/typography/SectionTitle";
-import PageTitle from "../../components/admin/typography/PageTitle";
-import InfoCard from "../../components/admin/cart/InfoCart";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons";
-import RoundIcon from "../../components/admin/RoundIcon";
-import { Chart, registerables } from "chart.js";
-import { Line, Chart as ChartJS } from "react-chartjs-2";
-import ChartLegend from "../../components/admin/chart/CardLegend";
-import ChartCard from "../../components/admin/chart/ChartCard";
-import { AuthContext } from "../../contexts/AuthContext";
-import { lineStatisticalLegends } from "../../global_variable/global_charts_admin";
-import { useEffect, useContext, useState } from "react";
-import { getProxy } from "../../utils/PathUtil";
+import SectionTitle from "../../components/admin/typography/SectionTitle"
+import PageTitle from "../../components/admin/typography/PageTitle"
+import InfoCard from "../../components/admin/cart/InfoCart"
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
+import RoundIcon from "../../components/admin/RoundIcon"
+import { Chart, registerables } from "chart.js"
+import { Line, Chart as ChartJS } from "react-chartjs-2"
+import ChartLegend from "../../components/admin/chart/CardLegend"
+import ChartCard from "../../components/admin/chart/ChartCard"
+import { AuthContext } from "../../contexts/AuthContext"
+import { lineStatisticalLegends } from "../../global_variable/global_charts_admin"
+import { useEffect, useContext, useState } from "react"
+import { getProxy } from "../../utils/PathUtil"
 import {
   defaultDataForLinechartCrontab,
   fetchDataForLinechartStatistical,
-} from "../../utils/ChartUtil";
-import axios from "axios";
-import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend";
-Chart.register(...registerables);
+} from "../../utils/ChartUtil"
+import axios from "axios"
+import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend"
+Chart.register(...registerables)
 
 const Statistics = () => {
   const [data, setData] = useState({
@@ -25,9 +25,9 @@ const Statistics = () => {
     finish: 0,
     cancel: 0,
     profit: 0,
-  });
-  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab);
-  const { state: auth_state } = useContext(AuthContext);
+  })
+  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
+  const { state: auth_state } = useContext(AuthContext)
 
   useEffect(() => {
     axios
@@ -42,16 +42,16 @@ const Statistics = () => {
           finish: response.data.finish_job,
           cancel: response.data.cancle_job,
           profit: response.data.profit,
-        });
+        })
         const handle_data = fetchDataForLinechartStatistical(
           response.data.label,
           response.data.finish_detail,
           response.data.cancle_detail
-        );
-        setDataChart(handle_data);
+        )
+        setDataChart(handle_data)
       })
-      .catch((error) => console.log(error));
-  }, []);
+      .catch((error) => console.log(error))
+  }, [])
   return (
     <>
       <PageTitle>Statistics</PageTitle>
@@ -108,7 +108,7 @@ const Statistics = () => {
         </ChartCard>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Statistics;
+export default Statistics
