@@ -50,6 +50,7 @@ import { ReactComponent as FollowOutlineIcon } from "./follow_outline.svg"
 import { ReactComponent as CalendarOutlineIcon } from "./calendar_outline.svg"
 import { ReactComponent as ApplyIcon } from "./apply.svg"
 import { ReactComponent as ApplyOutlineIcon } from "./apply_outline.svg"
+import { ReactComponent as CardOutlineIcon } from "./card_outline.svg"
 
 export {
   ButtonsIcon,
@@ -104,4 +105,5 @@ export {
   CalendarOutlineIcon,
   ApplyIcon,
   ApplyOutlineIcon,
+  CardOutlineIcon,
 }

@@ -1,17 +1,17 @@
-import KOLSearch from "../../../components/general/kols/KOLSearch";
-import KOLs from "../../../components/general/kols/KOLs";
-import axios from "axios";
-import { useContext, useEffect, useState } from "react";
-import { getProxy } from "../../../utils/PathUtil";
-import { SearchKolHomepageContext } from "../../../contexts/SearchKolHomepageContext";
+import KOLSearch from "../../../components/general/kols/KOLSearch"
+import KOLs from "../../../components/general/kols/KOLs"
+import axios from "axios"
+import { useContext, useEffect, useState } from "react"
+import { getProxy } from "../../../utils/PathUtil"
+import { SearchKolHomepageContext } from "../../../contexts/SearchKolHomepageContext"
 
 const KOL = () => {
-  const [kols, setKols] = useState([]);
-  const [meta, setMeta] = useState({});
-  const [totalResults, setTotalResults] = useState(0);
-  const [resultsPerPage, setResultPerPage] = useState(0);
-  const [pageTable, setPageTable] = useState(1);
-  const { kolSearch, setKolSearch } = useContext(SearchKolHomepageContext);
+  const [kols, setKols] = useState([])
+  const [meta, setMeta] = useState({})
+  const [totalResults, setTotalResults] = useState(0)
+  const [resultsPerPage, setResultPerPage] = useState(0)
+  const [pageTable, setPageTable] = useState(1)
+  const { kolSearch, setKolSearch } = useContext(SearchKolHomepageContext)
 
   useEffect(() => {
     let config: any = {
@@ -21,19 +21,19 @@ const KOL = () => {
         },
         search: kolSearch,
       },
-    };
+    }
     axios
       .get(getProxy("/api/v1/kols"), config)
       .then((response) => {
-        setKols(response.data.data);
-        let meta = response.data.meta;
-        setResultPerPage(meta.items);
-        setTotalResults(meta.count);
+        setKols(response.data.data)
+        let meta = response.data.meta
+        setResultPerPage(meta.items)
+        setTotalResults(meta.count)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, [pageTable, kolSearch]);
+        console.log(error)
+      })
+  }, [pageTable, kolSearch])
 
   return (
     <>
@@ -45,7 +45,7 @@ const KOL = () => {
         setPageTable={setPageTable}
       />
     </>
-  );
-};
+  )
+}
 
-export default KOL;
+export default KOL

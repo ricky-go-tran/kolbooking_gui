@@ -161,7 +161,61 @@ export const fetchDataForLinechartDashboard = (
         },
         title: {
           display: true,
-          text: "Compare background jobs faild and succeed",
+          text: "System Index",
+        },
+      },
+    },
+    legend: {
+      display: false,
+    },
+  }
+}
+
+export const fetchDataForLinechartStatisticalKol = (
+  raw_label: any[],
+  raw_data_total: any[],
+  raw_data_cancel: any[],
+  raw_data_finish: any[]
+) => {
+  return {
+    data: {
+      labels: raw_label,
+      datasets: [
+        {
+          label: "Job",
+          backgroundColor: "#7e3af2",
+          borderColor: "#7e3af2",
+          data: raw_data_total,
+        },
+        {
+          label: "Finish",
+          backgroundColor: "#80F1B6",
+          borderColor: "#80F1B6",
+          data: raw_data_finish,
+        },
+        {
+          label: "Cancel",
+          backgroundColor: "#E59E1C",
+          borderColor: "#E59E1C",
+          data: raw_data_cancel,
+        },
+        // {
+        //   label: "Report",
+        //   borderColor: "rgb(255, 99, 132)",
+        //   backgroundColor: "rgba(255, 99, 132, 0.5)",
+        //   data: raw_data_report,
+        // },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top" as const,
+        },
+        title: {
+          display: true,
+          text: "System Index",
         },
       },
     },

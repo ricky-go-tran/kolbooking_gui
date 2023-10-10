@@ -52,6 +52,11 @@ const BaseJobs = lazy(() => import("./pages/base/Jobs"))
 const Follow = lazy(() => import("./pages/base/Follow"))
 const Emoji = lazy(() => import("./pages/general/emojis/Emojis"))
 const KolProfile = lazy(() => import("./pages/kol/KolProfile"))
+const Invoices = lazy(() => import("./pages/base/Invoices"))
+const InvoicePdf = lazy(() => import("./pages/base/InvoicePdf"))
+const Payment = lazy(() => import("./pages/base/Payment"))
+const PaymentComplete = lazy(() => import("./pages/base/PaymentComplete"))
+
 function App() {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
@@ -169,6 +174,7 @@ function App() {
             </UnAuthRoutes>
           }
         />
+        <Route path="/paymentComplete" element={<PaymentComplete />} />
         <Route
           path="/register"
           element={
@@ -242,6 +248,7 @@ function App() {
             </AdminLayout>
           }
         />
+        <Route path="/base/payment/:id" element={<Payment />} />
         <Route
           path="/kol/bookmarks"
           element={
@@ -289,6 +296,14 @@ function App() {
           element={
             <AdminLayout>
               <Emoji />
+            </AdminLayout>
+          }
+        />
+        <Route
+          path="/base/invoices"
+          element={
+            <AdminLayout>
+              <Invoices />
             </AdminLayout>
           }
         />

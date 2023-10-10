@@ -56,7 +56,6 @@ const JobContent = () => {
     axios
       .get(getProxy("/api/v1/jobs"), config)
       .then((response) => {
-        console.log(response)
         fetchData(response)
       })
       .catch((error) => {

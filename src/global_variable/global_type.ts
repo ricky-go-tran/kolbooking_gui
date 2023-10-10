@@ -107,3 +107,12 @@ export type Notification = {
   sender_id: string
   receiver_id: string
 }
+export type TaskType = {
+  id: string
+  title: string
+  description: string
+  start_time: string | Date
+  end_time: string | Date
+  status: string
+  category: string
+}
