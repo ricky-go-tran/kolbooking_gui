@@ -7,11 +7,14 @@ import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
-import { fetchDataToTask } from "../../../utils/FetchData"
+import {
+  fetchDataToEventDetail,
+  fetchDataToTask,
+} from "../../../utils/FetchData"
 import { TaskType } from "../../../global_variable/global_type"
 import { formatDateWithInputStringOrDate } from "../../../utils/DateUtil"
 
-const UpdateTaskModal = ({
+const UpdateEventGoogleCalendar = ({
   task_id,
   onClose,
 }: {
@@ -37,9 +40,10 @@ const UpdateTaskModal = ({
 
   useEffect(() => {
     axios
-      .get(getProxy(`/api/v1/kol/tasks/${task_id}`), config)
+      .get(getProxy(`/api/v1/kol/google_calendar/${task_id}`), config)
       .then((res) => {
-        setTask(fetchDataToTask(res))
+        console.log(res)
+        setTask(fetchDataToEventDetail(res))
       })
       .catch((error) => {
         console.log(error)
@@ -48,13 +52,13 @@ const UpdateTaskModal = ({
 
   const submit = () => {
     const param = {
-      task: {
+      event: {
         ...task,
       },
     }
 
     axios
-      .put(getProxy(`/api/v1/kol/tasks/${task_id}`), param, config)
+      .put(getProxy(`/api/v1/kol/google_calendar/${task_id}`), param, config)
       .then(() => {
         generalMessage({
           message: "Successfully update job",
@@ -83,7 +87,7 @@ const UpdateTaskModal = ({
 
   const destroy = () => {
     axios
-      .delete(getProxy(`/api/v1/kol/tasks/${task_id}`), config)
+      .delete(getProxy(`/api/v1/kol/google_calendar/${task_id}`), config)
       .then(() => {
         generalMessage({
           message: "Successfully update job",
@@ -187,40 +191,14 @@ const UpdateTaskModal = ({
                     </Label>
                     <Label className="mt-3">
                       <span>Category</span>
-                      <Select
+                      <Input
+                        crossOrigin=""
                         css=""
-                        className="mt-1"
-                        onChange={(e) => {
-                          setTask({ ...task, category: e.target.value })
-                        }}
-                        value={task.category}
-                      >
-                        <option value="personal">Personal</option>
-                        <option value="web_job">Web Job</option>
-                        <option value="facebook_job">Facebook Job</option>
-                        <option value="youtube_job">Youtube Job</option>
-                        <option value="tiktok_job">Tiktok Job</option>
-                        <option value="instagram_job">Instagram Job</option>
-                        <option value="entertainment">Entertainment</option>
-                        <option value="other">Other</option>
-                      </Select>
-                    </Label>
-
-                    <Label className="mt-3">
-                      <span>Status</span>
-                      <Select
-                        css=""
-                        className="mt-1"
-                        onChange={(e) => {
-                          setTask({ ...task, status: e.target.value })
-                        }}
-                        value={task.status}
-                      >
-                        <option value="planning">Planning</option>
-                        <option value="progress">Progress</option>
-                        <option value="complete">Complete</option>
-                        <option value="cancle">Cancle</option>
-                      </Select>
+                        type="text"
+                        disabled
+                        readOnly
+                        value="Google Calendar"
+                      />
                     </Label>
                   </div>
                 </div>
@@ -260,4 +238,4 @@ const UpdateTaskModal = ({
   )
 }
 
-export default UpdateTaskModal
+export default UpdateEventGoogleCalendar

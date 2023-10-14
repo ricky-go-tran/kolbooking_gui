@@ -93,7 +93,7 @@ const Header = () => {
               </>
             )}
             {!isEmptyToken() && (
-              <ul className="flex items-center flex-shrink-0 space-x-6">
+              <ul className="flex items-center flex-shrink-0 space-x-6 z-50">
                 <li className="relative">
                   <button
                     className="rounded-full focus:shadow-outline-purple focus:outline-none"
@@ -110,6 +110,7 @@ const Header = () => {
                   </button>
                   <Dropdown
                     align="right"
+                    className="z-50"
                     isOpen={isProfileMenuOpen}
                     onClose={() => setIsProfileMenuOpen(false)}
                   >

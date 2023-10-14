@@ -32,6 +32,7 @@ import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { ToastContext } from "../../contexts/ToastContext"
 import { generalMessage } from "../../utils/ToastUtil"
+import { ErrorContext } from "../../contexts/ErrorContext"
 
 const Bookmark = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -44,6 +45,7 @@ const Bookmark = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetBookmark[]>([])
   const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -69,7 +71,7 @@ const Bookmark = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
         // HandleResponseError(error, navigate)
       })
   }, [pageTable, tab, resultsPerPage])
@@ -122,7 +124,7 @@ const Bookmark = () => {
           setResultPerPage(resultsPerPage - 1)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       axios
@@ -143,7 +145,7 @@ const Bookmark = () => {
           setTab(action)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }

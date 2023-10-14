@@ -26,6 +26,8 @@ import { generalError } from "../../../utils/ToastUtil"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { ReportProfileGeneralContext } from "../../../contexts/ReportProfileGeneralContext"
 import { ReportProfileType } from "../../../global_variable/global_type"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -43,6 +45,7 @@ const Detail = () => {
     useContext(ToastContext)
   const { state: report_profile_state, dispatch: report_profile_dispatch } =
     useContext(ReportProfileGeneralContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -90,7 +93,7 @@ const Detail = () => {
         fetchData(response)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 
@@ -118,8 +121,8 @@ const Detail = () => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -153,8 +156,8 @@ const Detail = () => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -212,7 +215,7 @@ const Detail = () => {
           setFollowerCount(followerCount - 1)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }

@@ -9,8 +9,10 @@ import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
 
 const CreateTaskModal = ({
+  integrate,
   onClose,
 }: {
+  integrate: boolean
   onClose: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const [task, setTask] = useState({
@@ -31,18 +33,57 @@ const CreateTaskModal = ({
         ...task,
       },
     }
+    const event_param = {
+      event: {
+        title: task.title,
+        description: task.description,
+        start_time: task.start_time,
+        end_time: task.end_time,
+      },
+    }
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
       },
     }
-    axios
-      .post(getProxy("/api/v1/kol/tasks"), param, config)
-      .then(() => {
+    const rq_create_task = axios.post(
+      getProxy("/api/v1/kol/tasks"),
+      param,
+      config
+    )
+
+    const rq_create_event = axios.post(
+      getProxy("/api/v1/kol/google_calendar"),
+      event_param,
+      config
+    )
+
+    const rq = []
+    rq.push(rq_create_task)
+
+    if (integrate) {
+      rq.push(rq_create_event)
+    }
+
+    Promise.all(rq)
+      .then((res) => {
+        if (integrate) {
+          const task_id = res[0].data.data.attributes.id
+          const event_id = res[1].data.id
+          const param = {
+            google_event_id: event_id,
+          }
+          axios.put(
+            getProxy(`/api/v1/kol/tasks/${task_id}/add_google_event_id`),
+            param,
+            config
+          )
+        }
         generalMessage({
           message: "Successfully update job",
           toast_dispatch: toast_dispatch,
         })
+
         onClose(-1)
       })
       .catch((error) => {

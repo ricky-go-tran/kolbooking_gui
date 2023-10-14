@@ -28,6 +28,7 @@ import {
 } from "@windmill/react-ui"
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
 import InvoicePdf from "./InvoicePdf"
+import { useNavigate } from "react-router-dom"
 
 const Invoices = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -37,6 +38,8 @@ const Invoices = () => {
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [totalResults, setTotalResults] = useState(0)
   const [tab, setTab] = useState<string>("payment")
+  const navigate = useNavigate()
+
   function onPageChange(p: number) {
     setPageTable(p)
   }
@@ -143,7 +146,9 @@ const Invoices = () => {
                   </PDFDownloadLink>
                 </TableCell>
                 <TableCell>
-                  {job.status === "payment" && <Button>Payment</Button>}
+                  {job.status === "payment" && (
+                    <a href={`/base/payment/${job.id}`}>Payment</a>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

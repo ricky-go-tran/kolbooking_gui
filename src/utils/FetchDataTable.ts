@@ -131,10 +131,8 @@ export const fetchToITableUser = (users: any[]): ITabelUser[] => {
         birthday: user.attributes.profile?.data.attributes.birthday,
         role: user.attributes.role,
         role_color: getColorOfRole(user.attributes.role),
-        status: user.attributes.profile?.data.attributes.status,
-        status_color: getColorOfStatus(
-          user.attributes?.profile.data.attributes.status
-        ),
+        status: user.attributes?.status,
+        status_color: getColorOfStatus(user.attributes?.status),
       }
       return item
     } else {

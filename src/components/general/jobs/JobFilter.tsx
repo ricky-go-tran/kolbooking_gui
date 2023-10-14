@@ -5,6 +5,9 @@ import { INDUSTRY_URL } from "../../../global_variable/global_uri_backend"
 import axios from "axios"
 import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext"
 import { FilterJobGeneralContext } from "../../../contexts/FilterJobGeneralContext"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { ToastContext } from "../../../contexts/ToastContext"
 
 const JobFilter = () => {
   const [industries, setIndustries] = useState<any[]>([])
@@ -12,6 +15,9 @@ const JobFilter = () => {
   const [tempFilter, setTempFilter] = useState<string[]>([])
   const { setJobSearch } = useContext(SearchJobHomepageContext)
   const { setJobFilter } = useContext(FilterJobGeneralContext)
+  const { setErrorCode } = useContext(ErrorContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
 
   useEffect(() => {
     axios
@@ -20,7 +26,7 @@ const JobFilter = () => {
         setIndustries(response.data.data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 

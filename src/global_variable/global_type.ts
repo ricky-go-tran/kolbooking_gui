@@ -6,6 +6,10 @@ export type AuthType = {
   loading: boolean
 }
 
+export type StatusLoginType = {
+  status: string
+}
+
 export type ProfileType = {
   id: string
   fullname: string

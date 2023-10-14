@@ -8,6 +8,9 @@ import { useParams } from "react-router-dom"
 import { AuthContext } from "../../contexts/AuthContext"
 import { Job } from "../../global_variable/global_type"
 import { fetchDataToJob } from "../../utils/FetchData"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { ToastContext } from "../../contexts/ToastContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const stripePromise = loadStripe(
   "pk_test_51Ncgu3JD1fB4LR0qbOTp0PsHQTEg8Ut5aawu1SaxrRUcdT3HEN1FNc8175IF49X6nxymbktyk7bA2OsVB0gvOlqq00kowuH95h"
@@ -28,6 +31,9 @@ export default function Payment() {
     image: "",
   })
   const params = useParams()
+  const { setErrorCode } = useContext(ErrorContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
 
   const config = {
     headers: {
@@ -42,7 +48,7 @@ export default function Payment() {
         setData(fetchDataToJob(res.data.data.attributes))
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 
@@ -59,19 +65,19 @@ export default function Payment() {
           setClientSecret(res.data.client_secret)
           const body = {
             job_id: data.id,
-            stripe_payment_id: res.data.client_secret,
+            stripe_payment_id: res.data.id,
           }
           axios
             .put(getProxy("/api/v1/base/payment_intents/update_job"), body)
             .then((res) => {
               console.log(res)
             })
-            .catch((err) => {
-              console.log(err)
+            .catch((error) => {
+              HandleResponseError(error, setErrorCode, toast_dispatch)
             })
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else if (data.id !== "" && paymentId !== null) {
       console.log(paymentId === null)
@@ -81,7 +87,7 @@ export default function Payment() {
           setClientSecret(res.data.client_secret)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }, [data])

@@ -15,30 +15,34 @@ import {
   ReportProfileGeneralContext,
   ReportProfileGeneralContextProvider,
 } from "./contexts/ReportProfileGeneralContext"
+import { StatusLoginContextProvider } from "./contexts/StatusLoginContext"
+import { ErrorContextProvider } from "./contexts/ErrorContext"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
-  <React.StrictMode>
-    <GoogleOAuthProvider clientId="345818639852-npt2v8lmrrsj8vs4lovm5aou37i4pfji.apps.googleusercontent.com">
-      <Suspense fallback={<GeneralLoading />}>
+  <GoogleOAuthProvider clientId="345818639852-npt2v8lmrrsj8vs4lovm5aou37i4pfji.apps.googleusercontent.com">
+    <Suspense fallback={<GeneralLoading />}>
+      <ErrorContextProvider>
         <ReportJobGeneralContextProvider>
           <ReportProfileGeneralContextProvider>
             <ToastContextProvider>
               <AuthContextProvider>
                 <ProfileContextProvider>
-                  <SearchKolHomepageProvider>
-                    <Windmill usePreferences>
-                      <App />
-                    </Windmill>
-                  </SearchKolHomepageProvider>
+                  <StatusLoginContextProvider>
+                    <SearchKolHomepageProvider>
+                      <Windmill usePreferences>
+                        <App />
+                      </Windmill>
+                    </SearchKolHomepageProvider>
+                  </StatusLoginContextProvider>
                 </ProfileContextProvider>
               </AuthContextProvider>
             </ToastContextProvider>
           </ReportProfileGeneralContextProvider>
         </ReportJobGeneralContextProvider>
-      </Suspense>
-    </GoogleOAuthProvider>
-  </React.StrictMode>
+      </ErrorContextProvider>
+    </Suspense>
+  </GoogleOAuthProvider>
 )
 
 // If you want to start measuring performance in your app, pass a function

@@ -25,6 +25,8 @@ import { ReportJobType } from "../../../global_variable/global_type"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { ToastComponentType } from "../../../global_variable/global_component_type"
 import { generalError } from "../../../utils/ToastUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Job = ({ job }: { job: any }) => {
   const { state: auth_state } = useContext(AuthContext)
@@ -40,6 +42,7 @@ const Job = ({ job }: { job: any }) => {
   )
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     setLikeCount(job.like_num)
@@ -92,8 +95,8 @@ const Job = ({ job }: { job: any }) => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -127,8 +130,8 @@ const Job = ({ job }: { job: any }) => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -146,7 +149,7 @@ const Job = ({ job }: { job: any }) => {
         setBookmarked(true)
       })
       .then((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -157,7 +160,7 @@ const Job = ({ job }: { job: any }) => {
         setBookmarked(false)
       })
       .then((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 

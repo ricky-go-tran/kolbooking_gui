@@ -20,6 +20,9 @@ import { getProxy } from "../../../utils/PathUtil"
 import { fetchToITableEmoji } from "../../../utils/FetchDataTable"
 import { Link } from "react-router-dom"
 import { CancelIcon, LikeIcon, UnlikeIcon } from "../../../icons"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Emojis = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -29,6 +32,9 @@ const Emojis = () => {
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [detail, setDetail] = useState<number | string>(-1)
   const [tab, setTab] = useState<string>("job")
+  const { setErrorCode } = useContext(ErrorContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
@@ -58,7 +64,7 @@ const Emojis = () => {
         setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [pageTable, tab, resultsPerPage])
 
@@ -86,7 +92,7 @@ const Emojis = () => {
         )
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -114,7 +120,7 @@ const Emojis = () => {
         )
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -134,7 +140,7 @@ const Emojis = () => {
         setResultPerPage(resultsPerPage - 1)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 

@@ -10,6 +10,11 @@ import { ReportJobGeneralContextProvider } from "../../../contexts/ReportJobGene
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
 import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext"
 import { FilterJobGeneralContext } from "../../../contexts/FilterJobGeneralContext"
+import { Loading } from "../loading/Loading"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { useNavigate } from "react-router-dom"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { ToastContext } from "../../../contexts/ToastContext"
 
 const JobContent = () => {
   const [jobs, setJobs] = useState<any[]>([])
@@ -20,8 +25,13 @@ const JobContent = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
     ReportJobGeneralContext
   )
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
   const { jobSearch } = useContext(SearchJobHomepageContext)
   const { jobFilter } = useContext(FilterJobGeneralContext)
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
+  const { setErrorCode } = useContext(ErrorContext)
 
   const fetchData = (response: AxiosResponse<any, any>) => {
     setJobs(response.data.data)
@@ -57,9 +67,10 @@ const JobContent = () => {
       .get(getProxy("/api/v1/jobs"), config)
       .then((response) => {
         fetchData(response)
+        setLoading(true)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [auth_state, pageTable, jobSearch, jobFilter])
 
@@ -67,12 +78,19 @@ const JobContent = () => {
     <div className="w-full min-h-full flex bg-gray-100 pt-3 dark:bg-gray-600">
       <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
       <JobFilter />
-      <Jobs
-        jobs={jobs}
-        resultsPerPage={resultsPerPage}
-        totalResults={totalResults}
-        setPageTable={setPageTable}
-      />
+      {loading === false && (
+        <div className="w-9/12">
+          <Loading />
+        </div>
+      )}
+      {loading === true && (
+        <Jobs
+          jobs={jobs}
+          resultsPerPage={resultsPerPage}
+          totalResults={totalResults}
+          setPageTable={setPageTable}
+        />
+      )}
     </div>
   )
 }

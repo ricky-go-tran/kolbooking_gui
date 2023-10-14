@@ -21,6 +21,10 @@ import {
   LOGIN_URL,
   PROFILE_URL,
 } from "../../../global_variable/global_uri_backend"
+import { StatusLoginContext } from "../../../contexts/StatusLoginContext"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { generalError } from "../../../utils/ToastUtil"
 
 const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -34,20 +38,22 @@ const Login = () => {
   })
 
   const { state, dispatch } = useContext(AuthContext)
+  const { dispatch: status_login_dispatch } = useContext(StatusLoginContext)
   const { dispatch: profile_dispatch } = useContext(ProfileContext)
-  const navigate = useNavigate()
+  const { errorCode, setErrorCode } = useContext(ErrorContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
-  const handleLoginGoogle = (responseGoogle: CredentialResponse) => {
-    console.log(responseGoogle)
-    axios
-      .post(getProxy("/auth/google_oauth2/callback"), responseGoogle)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
+  const navigate = useNavigate()
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      console.log(codeResponse)
+    },
+    onError: (err) => {
+      console.log(err)
+    },
+    flow: "auth-code",
+    scope: "https://www.googleapis.com/auth/calendar",
+  })
 
   const clickGoogleLogin = useGoogleLogin({
     onSuccess: (response) => {
@@ -63,47 +69,49 @@ const Login = () => {
     dispatch({ type: "LOGIN_START" })
 
     try {
-      if (AuthenticationUtil.emailFormat(credentials.email)) {
+      if (
+        AuthenticationUtil.emailFormat(credentials.email) &&
+        credentials.password.length >= 6
+      ) {
         const data = {
           user: {
             email: credentials.email,
             password: credentials.password,
           },
         }
-        axios.post(getProxy(LOGIN_URL), data).then((res) => {
-          let response = {
-            token: res.headers.authorization,
-            profile: res.data.status.data.user,
-          }
-          dispatch({ type: "LOGIN_SUCCESS", payload: response })
-          axios
-            .get(getProxy(PROFILE_URL), {
-              headers: {
-                Authorization: response.token,
-              },
-            })
-            .then((res) => {
-              let data = res.data.data.attributes
-              let profileData: ProfileType = {
-                id: data.id,
-                fullname: data.fullname,
-                avatar:
-                  data.avatar === "null"
-                    ? getCDNImage(
-                        "/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"
-                      )
-                    : getProxy(data.avatar),
-                role: data.role,
-              }
-              profile_dispatch({ type: "FETCH", payload: profileData })
+        axios
+          .post(getProxy(LOGIN_URL), data)
+          .then((res) => {
+            let response = {
+              token: res.headers.authorization,
+              profile: res.data.status.data.user,
+            }
 
-              navigate("/redirect/roles")
-            })
-            .catch((err) => {
-              dispatch({ type: "LOGOUT", payload: null })
-              profile_dispatch({ type: "CLEAR", payload: null })
-            })
-        })
+            dispatch({ type: "LOGIN_SUCCESS", payload: response })
+            if (response.profile.status === "invalid") {
+              status_login_dispatch({ type: "INVALID" })
+              navigate("/setup")
+            } else if (response.profile.status === "valid") {
+              status_login_dispatch({ type: "VALID" })
+              fetchProfile(response)
+            } else if (response.profile.status === "lock") {
+              status_login_dispatch({ type: "LOCK" })
+            }
+          })
+          .catch((error) => {
+            const error_status = error?.response?.status
+            console.log(error_status)
+            if (error_status === null || error_status === undefined) {
+              setErrorCode("501")
+            } else if (error_status === 500) {
+              setErrorCode("500")
+            } else if (error_status === 401) {
+              generalError({
+                message: error.response.data,
+                toast_dispatch: toast_dispatch,
+              })
+            }
+          })
       } else {
         setMessage({
           success: "Fail",
@@ -117,6 +125,36 @@ const Login = () => {
         message: "Interval server error! Login fail",
       })
     }
+  }
+
+  const fetchProfile = (response: { token: string; profile: any }) => {
+    axios
+      .get(getProxy(PROFILE_URL), {
+        headers: {
+          Authorization: response.token,
+        },
+      })
+      .then((res) => {
+        let data = res.data.data.attributes
+        let profileData: ProfileType = {
+          id: data.id,
+          fullname: data.fullname,
+          avatar:
+            data.avatar === "null"
+              ? getCDNImage(
+                  "/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"
+                )
+              : getProxy(data.avatar),
+          role: data.role,
+        }
+        profile_dispatch({ type: "FETCH", payload: profileData })
+
+        navigate("/")
+      })
+      .catch((err) => {
+        dispatch({ type: "LOGOUT", payload: null })
+        profile_dispatch({ type: "CLEAR", payload: null })
+      })
   }
 
   return (
@@ -194,15 +232,6 @@ const Login = () => {
               </Button>
 
               <hr className="my-8" />
-
-              <GoogleLogin
-                onSuccess={handleLoginGoogle}
-                theme="filled_blue"
-                shape="circle"
-                onError={() => {
-                  console.log("Login Failed")
-                }}
-              />
 
               <p className="mt-4">
                 <Link

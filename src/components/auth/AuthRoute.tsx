@@ -1,8 +1,9 @@
 import { useContext } from "react"
-import { AuthContext } from "../../../contexts/AuthContext"
-import { Navigate } from "react-router-dom"
 
-const UnAuthRoutes = ({ children }: { children: React.ReactNode }) => {
+import { Navigate } from "react-router-dom"
+import { AuthContext } from "../../contexts/AuthContext"
+
+const AuthRoutes = ({ children }: { children: React.ReactNode }) => {
   const { state: auth_state } = useContext(AuthContext)
 
   if (
@@ -10,8 +11,8 @@ const UnAuthRoutes = ({ children }: { children: React.ReactNode }) => {
     auth_state.auth_token !== null &&
     auth_state.auth_token !== ""
   ) {
-    return <Navigate to="/" replace />
+    return <>{children}</>
   }
-  return <>{children}</>
+  return <Navigate to="/login" replace />
 }
-export default UnAuthRoutes
+export default AuthRoutes

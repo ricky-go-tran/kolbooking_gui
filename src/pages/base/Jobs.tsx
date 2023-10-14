@@ -31,6 +31,7 @@ import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import JobUpdateModal from "../../components/base/modal/JobUpdateModal"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
 
 const Jobs = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -46,6 +47,7 @@ const Jobs = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [edited, setEdited] = useState<number | string>(-1)
   const { search } = useContext(SearchAdminContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   function onPageChange(p: number) {
     setPageTable(p)

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../../contexts/AuthContext";
+import React, { useState, useEffect, useContext } from "react"
+import { AuthContext } from "../../contexts/AuthContext"
 import {
   Table,
   TableHeader,
@@ -12,25 +12,25 @@ import {
   Avatar,
   Button,
   Pagination,
-} from "@windmill/react-ui";
-import PageTitle from "../../components/admin/typography/PageTitle";
-import SectionTitle from "../../components/admin/typography/SectionTitle";
-import { LockIcon, UnlockIcon, InformationIcon } from "../../icons";
-import { ITabelUser } from "../../global_variable/global_table_admin";
-import { fetchToITableUser } from "../../utils/FetchDataTable";
-import { getProxy } from "../../utils/PathUtil";
-import axios from "axios";
-import { Alert } from "@windmill/react-ui";
-import UserDetail from "../../components/admin/modal/user/UserDetail";
+} from "@windmill/react-ui"
+import PageTitle from "../../components/admin/typography/PageTitle"
+import SectionTitle from "../../components/admin/typography/SectionTitle"
+import { LockIcon, UnlockIcon, InformationIcon } from "../../icons"
+import { ITabelUser } from "../../global_variable/global_table_admin"
+import { fetchToITableUser } from "../../utils/FetchDataTable"
+import { getProxy } from "../../utils/PathUtil"
+import axios from "axios"
+import { Alert } from "@windmill/react-ui"
+import UserDetail from "../../components/admin/modal/user/UserDetail"
 
 const User = () => {
-  const { state: auth_state } = useContext(AuthContext);
-  const [pageTable, setPageTable] = useState(1);
-  const [dataTable, setDataTable] = useState<ITabelUser[]>([]);
-  const [alert, setAlert] = useState("");
-  const [detail, setDetail] = useState<number | string>(-1);
-  const [totalResults, setTotalResults] = useState(0);
-  const [resultsPerPage, setResultPerPage] = useState(0);
+  const { state: auth_state } = useContext(AuthContext)
+  const [pageTable, setPageTable] = useState(1)
+  const [dataTable, setDataTable] = useState<ITabelUser[]>([])
+  const [alert, setAlert] = useState("")
+  const [detail, setDetail] = useState<number | string>(-1)
+  const [totalResults, setTotalResults] = useState(0)
+  const [resultsPerPage, setResultPerPage] = useState(0)
 
   useEffect(() => {
     axios
@@ -40,27 +40,28 @@ const User = () => {
         },
       })
       .then((response) => {
-        let handle_data = fetchToITableUser(response.data.data);
-        let meta = response.data.meta;
-        setResultPerPage(meta.items);
-        setTotalResults(meta.count);
-        setDataTable(handle_data);
+        console.log(response.data.data)
+        let handle_data = fetchToITableUser(response.data.data)
+        let meta = response.data.meta
+        setResultPerPage(meta.items)
+        setTotalResults(meta.count)
+        setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [])
 
   function onPageChangeTable(p: number) {
-    setPageTable(p);
+    setPageTable(p)
   }
   function viewUser(job: string | number) {
-    setDetail(job);
+    setDetail(job)
   }
   function unlock(user: ITabelUser) {
     if (user.status !== "lock") {
-      setAlert("User is already unlocked");
+      setAlert("User is already unlocked")
     } else {
       axios
         .put(
@@ -79,23 +80,23 @@ const User = () => {
                 ...item,
                 status: "valid",
                 status_color: "success",
-              };
-              return rs;
+              }
+              return rs
             } else {
-              return item;
+              return item
             }
-          });
-          setDataTable(handle_data);
+          })
+          setDataTable(handle_data)
         })
         .catch((error) => {
-          setAlert("Unlock is failed");
-        });
+          setAlert("Unlock is failed")
+        })
     }
   }
 
   function lock(user: ITabelUser) {
     if (user.status === "lock") {
-      setAlert("User is already unlocked");
+      setAlert("User is already unlocked")
     } else {
       axios
         .put(
@@ -114,17 +115,17 @@ const User = () => {
                 ...item,
                 status: "lock",
                 status_color: "danger",
-              };
-              return rs;
+              }
+              return rs
             } else {
-              return item;
+              return item
             }
-          });
-          setDataTable(handle_data);
+          })
+          setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     }
   }
 
@@ -141,17 +142,17 @@ const User = () => {
         },
       })
       .then((response) => {
-        let handle_data = fetchToITableUser(response.data.data);
-        let meta = response.data.meta;
-        setResultPerPage(meta.items);
-        setTotalResults(meta.count);
-        setDataTable(handle_data);
+        let handle_data = fetchToITableUser(response.data.data)
+        let meta = response.data.meta
+        setResultPerPage(meta.items)
+        setTotalResults(meta.count)
+        setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error);
-      });
+        console.log(error)
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageTable]);
+  }, [pageTable])
 
   return (
     <>
@@ -162,7 +163,7 @@ const User = () => {
           type="danger"
           className="my-5"
           onClose={() => {
-            setAlert("");
+            setAlert("")
           }}
         >
           {alert}
@@ -215,7 +216,7 @@ const User = () => {
                     size="small"
                     aria-label="Edit"
                     onClick={() => {
-                      viewUser(user.id);
+                      viewUser(user.id)
                     }}
                   >
                     <InformationIcon className="w-5 h-5" aria-hidden="true" />
@@ -227,7 +228,7 @@ const User = () => {
                         size="small"
                         aria-label="Edit"
                         onClick={(e) => {
-                          unlock(user);
+                          unlock(user)
                         }}
                       >
                         <UnlockIcon className="w-5 h-5" aria-hidden="true" />
@@ -237,7 +238,7 @@ const User = () => {
                         size="small"
                         aria-label="Edit"
                         onClick={() => {
-                          lock(user);
+                          lock(user)
                         }}
                       >
                         <LockIcon className="w-5 h-5" aria-hidden="true" />
@@ -259,7 +260,7 @@ const User = () => {
         </TableFooter>
       </TableContainer>
     </>
-  );
-};
+  )
+}
 
-export default User;
+export default User

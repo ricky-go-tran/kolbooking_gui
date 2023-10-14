@@ -19,6 +19,9 @@ import {
 import axios from "axios"
 import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend"
 import { getSumOfArray } from "../../utils/NumberUtil"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 Chart.register(...registerables)
 
 const Statistics = () => {
@@ -26,6 +29,9 @@ const Statistics = () => {
   const { state: auth_state } = useContext(AuthContext)
   const [dataCard, setDataCard] = useState([0, 0, 0, 0])
   const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     axios
@@ -39,6 +45,7 @@ const Statistics = () => {
       })
       .then((response) => {
         const data = response.data
+        console.log(data)
         setDataCard([
           getSumOfArray(data.total_job),
           getSumOfArray(data.finish_job),
@@ -55,7 +62,9 @@ const Statistics = () => {
           )
         )
       })
-      .catch((error) => console.log(error))
+      .catch((error) =>
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      )
   }, [tab])
   return (
     <>

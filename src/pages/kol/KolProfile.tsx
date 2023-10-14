@@ -21,6 +21,8 @@ import {
 import { UpdateProfileModal } from "../../components/kol/modal/UpdateProfileModal"
 import { Link } from "react-router-dom"
 import { UpdateKolProfileModal } from "../../components/kol/modal/UpdateKolProfileModal"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const KolProfile = () => {
   const [data, setData] = useState<any>(null)
@@ -33,6 +35,7 @@ const KolProfile = () => {
   const { state: profile_state } = useContext(ProfileContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -56,7 +59,7 @@ const KolProfile = () => {
         fetchData(response)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [updateKolProfile, updateProfile])
 

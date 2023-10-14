@@ -24,6 +24,10 @@ import { Alert } from "@windmill/react-ui"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { ProfileContext } from "../../contexts/ProfileContext"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -36,6 +40,11 @@ const Job = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetJob[]>([])
   const { search } = useContext(SearchAdminContext)
+  const { state: profile_state, dispatch: profile_dispatch } =
+    useContext(ProfileContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -62,7 +71,7 @@ const Job = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable, tab, search])
@@ -101,7 +110,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -136,7 +145,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -168,10 +177,11 @@ const Job = () => {
               return item
             }
           })
+
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -206,7 +216,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -241,7 +251,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }

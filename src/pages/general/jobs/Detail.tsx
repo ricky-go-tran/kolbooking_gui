@@ -31,6 +31,7 @@ import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralConte
 import { ToastContext } from "../../../contexts/ToastContext"
 import ReportModal from "../../../components/general/modal/ReportModal"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -48,10 +49,10 @@ const Detail = () => {
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
   const params = useParams()
+  const { setErrorCode } = useContext(ErrorContext)
 
   function fetchData(response: AxiosResponse<any, any>): void {
     const data = response.data.data.attributes
-    console.log(response)
     setData(data)
     setLikeCount(data.like_num)
     setUnlikeCount(data.unlike_num)
@@ -96,7 +97,7 @@ const Detail = () => {
         fetchData(response)
       })
       .catch((error) => {
-        //HandleResponseError(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 
@@ -124,8 +125,8 @@ const Detail = () => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -150,6 +151,7 @@ const Detail = () => {
         })
       })
       .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
         generalWarning({
           message: "This job has been apply ",
           toast_dispatch: toast_dispatch,
@@ -181,8 +183,8 @@ const Detail = () => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -199,8 +201,8 @@ const Detail = () => {
       .then((response) => {
         setBookmarked(true)
       })
-      .then((error) => {
-        console.log(error)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
   const unmark = (job: any) => {
@@ -209,8 +211,8 @@ const Detail = () => {
       .then((response) => {
         setBookmarked(false)
       })
-      .then((error) => {
-        console.log(error)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 

@@ -18,3 +18,9 @@ export type EventType = {
   start: Date
   end: Date
 }
+
+export type GoogleEventType = {
+  title: string
+  start: Date
+  end: Date
+}
