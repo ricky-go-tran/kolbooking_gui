@@ -102,7 +102,7 @@ const Schedule = () => {
   return (
     <>
       <div className="my-5">
-        <div className="mt-12 mb-10 flex justify-between">
+        <div className="mt-12 mb-10 flex flex-col lg:flex-row justify-between">
           {created !== -1 && (
             <CreateTaskModal integrate={integrate} onClose={setCreated} />
           )}
@@ -138,7 +138,7 @@ const Schedule = () => {
               </div>
             </li>
           </ul>
-          <ul className="flex">
+          <ul className="flex mt-5 lg:mt-0">
             {integrate === false && (
               <li className="mx-2">
                 <button

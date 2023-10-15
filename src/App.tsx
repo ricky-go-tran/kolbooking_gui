@@ -17,6 +17,7 @@ import AdminProtectRoute from "./components/auth/AdminProtectRoute"
 import { ErrorContext } from "./contexts/ErrorContext"
 import AuthRoutes from "./components/auth/AuthRoute"
 import HomePage from "./pages/general/newfeed/HomePage"
+import Logout from "./components/general/logout/Logout"
 const UnAuthRoutes = lazy(() => import("./pages/general/redirect/UnAuthRoutes"))
 const RedirectByRole = lazy(
   () => import("./pages/general/redirect/RedirectByRole")
@@ -153,6 +154,14 @@ function App() {
                 <NewfeedLayout>
                   <Jobs />
                 </NewfeedLayout>
+              }
+            />
+            <Route
+              path="/logout"
+              element={
+                <AuthRoutes>
+                  <Logout />
+                </AuthRoutes>
               }
             />
             <Route
@@ -364,7 +373,7 @@ function App() {
       {errorCode === "501" && <ErrorNetwork />}
       {errorCode === "500" && <Page500 />}
       {errorCode === "404" && <Page404 />}
-      {errorCode === "401" && <Navigate to="/login" replace />}
+      {errorCode === "401" && <Logout />}
     </>
   )
 }

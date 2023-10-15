@@ -22,7 +22,7 @@ function HandleResponseError(
   } else if (error_status === 500) {
     setErrorCode("500")
   } else if (error_status === 401) {
-    console.log(error)
+    setErrorCode("401")
   } else if (error_status === 422) {
     const data = error.response.data.errors
     if (Array.isArray(data)) {

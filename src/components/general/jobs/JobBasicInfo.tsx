@@ -1,8 +1,8 @@
-import { formatDate } from "../../../utils/DateUtil";
+import { formatDate } from "../../../utils/DateUtil"
 
 const JobBasicInfo = ({ job }: { job: any }) => {
   return (
-    <div id="basic-info" className="max-w-xs w-4/5 mt-5">
+    <div id="basic-info" className="max-w-xs w-full lg:w-4/5 mt-5">
       <div className="w-full">
         <div className="bg-white shadow-xl rounded-lg py-3 max-w-xs dark:bg-gray-800">
           <div className="photo-wrapper p-2">
@@ -47,7 +47,7 @@ const JobBasicInfo = ({ job }: { job: any }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default JobBasicInfo;
+export default JobBasicInfo

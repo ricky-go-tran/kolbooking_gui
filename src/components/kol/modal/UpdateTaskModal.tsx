@@ -10,6 +10,8 @@ import { getProxy } from "../../../utils/PathUtil"
 import { fetchDataToTask } from "../../../utils/FetchData"
 import { TaskType } from "../../../global_variable/global_type"
 import { formatDateWithInputStringOrDate } from "../../../utils/DateUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const UpdateTaskModal = ({
   task_id,
@@ -35,6 +37,8 @@ const UpdateTaskModal = ({
     },
   }
 
+  const { setErrorCode } = useContext(ErrorContext)
+
   useEffect(() => {
     axios
       .get(getProxy(`/api/v1/kol/tasks/${task_id}`), config)
@@ -42,7 +46,7 @@ const UpdateTaskModal = ({
         setTask(fetchDataToTask(res))
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 
@@ -63,7 +67,7 @@ const UpdateTaskModal = ({
         onClose(-1)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -92,14 +96,14 @@ const UpdateTaskModal = ({
         onClose(-1)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-1/2 my-3 mx-auto max-w-7xl h-5/6">
+        <div className="relative w-11/12 lg:w-1/2 my-3 mx-auto max-w-7xl h-5/6">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col h-full w-full bg-white outline-none focus:outline-none dark:bg-gray-600">
             {/*header*/}

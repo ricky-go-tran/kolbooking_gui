@@ -42,12 +42,18 @@ import {
   fetchDataForLinechartDashboard,
 } from "../../utils/ChartUtil"
 import { getSumOfArray } from "../../utils/NumberUtil"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 function Dashboard() {
   const [tab, setTab] = useState<string>("month")
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const [dataCard, setDataCard] = useState([0, 0, 0, 0])
   const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -79,7 +85,7 @@ function Dashboard() {
         )
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [tab])
 

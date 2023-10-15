@@ -37,6 +37,9 @@ import {
 import ReportDetail from "../../components/admin/modal/report/ReportDetail"
 import { utils, writeFile } from "xlsx"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Report = () => {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
@@ -49,6 +52,9 @@ const Report = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetReport[]>([])
   const { search } = useContext(SearchAdminContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -75,7 +81,7 @@ const Report = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [pageTable, tab, search])
 
@@ -114,6 +120,7 @@ const Report = () => {
         })
         .catch((error) => {
           setAlert("Proccess is failed")
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -149,6 +156,7 @@ const Report = () => {
         })
         .catch((error) => {
           setAlert("Proccess is failed")
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -184,6 +192,7 @@ const Report = () => {
         })
         .catch((error) => {
           setAlert("Proccess is failed")
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -216,8 +225,8 @@ const Report = () => {
           {alert}
         </Alert>
       )}
-      <div className="w-full flex justify-between py-5">
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-5">
+        <ul className="w-full lg:w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>
             <div
               className={`flex justify-center py-2 cursor-pointer ${
@@ -280,7 +289,7 @@ const Report = () => {
           </li>
         </ul>
 
-        <ul className="flex">
+        <ul className="flex mt-5 lg:mt-0">
           <li className="mx-2">
             <button
               type="submit"

@@ -29,6 +29,9 @@ import {
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
 import InvoicePdf from "./InvoicePdf"
 import { useNavigate } from "react-router-dom"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { ToastContext } from "../../contexts/ToastContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Invoices = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -39,6 +42,9 @@ const Invoices = () => {
   const [totalResults, setTotalResults] = useState(0)
   const [tab, setTab] = useState<string>("payment")
   const navigate = useNavigate()
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   function onPageChange(p: number) {
     setPageTable(p)
@@ -67,7 +73,7 @@ const Invoices = () => {
         setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [pageTable, search, tab])
   return (

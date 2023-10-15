@@ -6,6 +6,9 @@ import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
 import { fetchDataToNotification } from "../../../utils/FetchData"
 import { AuthContext } from "../../../contexts/AuthContext"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const NotificationPanel = ({
   onClose,
@@ -14,6 +17,9 @@ const NotificationPanel = ({
 }) => {
   const [notifications, setNotifications] = useState<NotificationType[]>([])
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -26,13 +32,13 @@ const NotificationPanel = ({
       .then((res) => {
         setNotifications(fetchDataToNotification(res.data.data))
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
   return (
     <>
-      <div className="absolute w-96 h-64  p-2 mt-2 text-gray-600 bg-gray-50 border border-gray-100 rounded-lg shadow-md min-w-max-content dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700 right-0 z-50 overflow-y-scroll">
+      <div className="absolute w-72 lg:w-96 h-64  p-2 mt-2 text-gray-600 bg-gray-50 border border-gray-100 rounded-lg shadow-md min-w-max-content dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700 right-0 z-50 overflow-y-scroll">
         {(notifications === undefined || notifications.length === 0) && (
           <div className="w-full h-full flex flex-col justify-start items-center py-10">
             <h4 className="text-blue-600 font-semibold mb-10">

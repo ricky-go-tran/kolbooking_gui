@@ -138,11 +138,11 @@ const Job = () => {
         </Alert>
       )}
       {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
-      <div className="w-full flex justify-between py-5">
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-5 flex-wrap">
+        <ul className="w-full lg:w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>
             <div
-              className={`flex justify-center py-2 cursor-pointer ${
+              className={`flex justify-center py-2 cursor-pointer  ${
                 tab === "all"
                   ? "bg-white rounded-lg shadow text-indigo-900"
                   : ""
@@ -185,7 +185,7 @@ const Job = () => {
               }`}
               onClick={() => setTab("complete")}
             >
-              Complete & Payment
+              Complete/Payment
             </div>
           </li>
           <li>
@@ -214,7 +214,7 @@ const Job = () => {
           </li>
         </ul>
 
-        <ul className="flex">
+        <ul className="flex mt-5 lg:mt-0">
           <li className="mx-2">
             <button
               type="submit"

@@ -10,6 +10,8 @@ import "../../assets/css/component/avatar_input.css"
 import { PROFILE_URL } from "../../global_variable/global_uri_backend"
 import { generalMessage } from "../../utils/ToastUtil"
 import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 export const Profile = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -28,6 +30,7 @@ export const Profile = () => {
     address: "",
   })
   const previewAvatar = useRef<HTMLImageElement>(null)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     axios
@@ -47,8 +50,8 @@ export const Profile = () => {
         })
         setLoading(true)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
         // navigate('/server/error')
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,9 +86,8 @@ export const Profile = () => {
         }
         profile_dispatch({ type: "FETCH", payload: handle_data })
       })
-      .catch((err) => {
-        console.log(err)
-        //HandleResponseError(err)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 

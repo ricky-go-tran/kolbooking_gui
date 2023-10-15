@@ -22,6 +22,8 @@ import { fetchToITableFollow } from "../../utils/FetchDataTable"
 import { useNavigate } from "react-router-dom"
 import { ToastContext } from "../../contexts/ToastContext"
 import { generalMessage } from "../../utils/ToastUtil"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Follow = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -31,6 +33,7 @@ const Follow = () => {
   const [pageTable, setPageTable] = useState(1)
   const navigate = useNavigate()
   const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   function onPageChange(p: number) {
     setPageTable(p)
@@ -51,8 +54,8 @@ const Follow = () => {
         setTotalResults(meta.count)
         setDataTable(handle_data)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [pageTable, resultsPerPage])
 
@@ -75,7 +78,7 @@ const Follow = () => {
         })
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 

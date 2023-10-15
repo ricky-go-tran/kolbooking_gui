@@ -9,6 +9,9 @@ import { getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { checkValid } from "../../../validates/general/ReportValidate"
 
 const ReportModal = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
@@ -17,6 +20,7 @@ const ReportModal = () => {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
   const [reported, setReported] = useState<ReportType>({
     title: "",
     description: "",
@@ -46,8 +50,22 @@ const ReportModal = () => {
         report_job_dispatch({ type: "CLEAR" })
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
+  }
+
+  const createSubmit = () => {
+    const valid = checkValid({
+      report: reported,
+    })
+    if (valid.status === true) {
+      submitReport()
+    } else {
+      generalWarning({
+        message: valid.message,
+        toast_dispatch: toast_dispatch,
+      })
+    }
   }
 
   return (
@@ -135,7 +153,7 @@ const ReportModal = () => {
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                  submitReport()
+                  createSubmit()
                 }}
               >
                 Report

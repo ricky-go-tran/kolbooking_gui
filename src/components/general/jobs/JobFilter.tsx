@@ -49,7 +49,7 @@ const JobFilter = () => {
   }
 
   return (
-    <div className="w-1/4 flex items-start justify-center mt-5">
+    <div className="hidden w-1/4 lg:flex items-start justify-center mt-5">
       <div className="w-11/12 rounded bg-white p-3 dark:bg-gray-700">
         <div className="py-5 px-3">
           <h6 className="text-lg text-gray-800 dark:text-gray-600 font-semibold mb-3">

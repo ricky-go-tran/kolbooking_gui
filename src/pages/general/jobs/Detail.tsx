@@ -246,11 +246,11 @@ const Detail = () => {
       {data !== null && (
         <div className="w-full min-h-full bg-gray-100 pt-3 dark:bg-gray-600">
           <div className="p-3">
-            <div className="flex">
-              <div className="w-3/4 flex flex-col items-center justify-start">
+            <div className="flex flex-col lg:flex-row">
+              <div className="lg:w-3/4 w-full flex flex-col items-center justify-start">
                 <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
                   <div className="mx-5 my-7">
-                    <div className=" py-5 flex justify-start items-center border-b-2 border-gray-300">
+                    <div className=" py-5 flex justify-start items-center border-b-2 border-gray-300 flex-wrap">
                       <img
                         className="w-24 h-24 rounded ring-1 ring-gray-300 dark:ring-gray-500 p-1"
                         src={
@@ -279,7 +279,7 @@ const Detail = () => {
                           )}
                         </div>
                       </div>
-                      <ul className="flex-grow flex flex-row-reverse child">
+                      <ul className="flex-grow flex flex-row-reverse child mt-10 lg:mt-0">
                         <li className="flex text-gray-500 cursor-pointer hover:text-gray-400">
                           <WarningOutlineIcon
                             onClick={() => {
@@ -349,7 +349,7 @@ const Detail = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-1/4 flex flex-col items-center justify-start">
+              <div className="lg:w-1/4 w-full flex flex-col items-center justify-start">
                 <OwnerInfoCard owner={data?.owner?.data?.attributes} />
                 <JobBasicInfo job={data} />
               </div>

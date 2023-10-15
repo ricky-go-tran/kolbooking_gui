@@ -22,6 +22,9 @@ import { getProxy } from "../../utils/PathUtil"
 import axios from "axios"
 import { Alert } from "@windmill/react-ui"
 import UserDetail from "../../components/admin/modal/user/UserDetail"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const User = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -31,6 +34,9 @@ const User = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     axios
@@ -48,7 +54,7 @@ const User = () => {
         setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -90,6 +96,7 @@ const User = () => {
         })
         .catch((error) => {
           setAlert("Unlock is failed")
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -124,7 +131,7 @@ const User = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -149,7 +156,7 @@ const User = () => {
         setDataTable(handle_data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable])

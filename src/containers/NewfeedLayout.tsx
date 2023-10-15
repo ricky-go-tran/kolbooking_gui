@@ -21,7 +21,8 @@ const NewfeedLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="flex flex-col flex-1 w-full bg-gray-50 dark:bg-gray-900 min-h-screen">
         <Header />
         {report_job_state.id_job !== "" && <ReportModal />}
-        {/* {report_profile_state.id_profile !== "" && <ReportProfileModal />} */}
+
+        {report_profile_state.id_profile !== "" && <ReportProfileModal />}
         <NewfeedMain>{children}</NewfeedMain>
         <Footer />
       </div>

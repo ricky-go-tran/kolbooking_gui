@@ -148,8 +148,8 @@ const KolProfile = () => {
                       <EditIcon />
                     </span>
                   </div>
-                  <div className="flex mt-10 w-full justify-around">
-                    <div>
+                  <div className="flex flex-col lg:flex-row mt-10 w-full justify-center items-center lg:justify-around">
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.instagram_path !==
                         "null" && (
                         <Link
@@ -172,7 +172,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.facebook_path !==
                         "null" && (
                         <Link
@@ -191,7 +191,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.youtube_path !== "null" && (
                         <Link
                           to={data?.kol?.data?.attributes?.youtube_path}
@@ -213,7 +213,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.tiktok_path !== "null" && (
                         <Link
                           to={data?.kol?.data?.attributes?.tiktok_path}

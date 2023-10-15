@@ -17,30 +17,33 @@ import {
 } from "./contexts/ReportProfileGeneralContext"
 import { StatusLoginContextProvider } from "./contexts/StatusLoginContext"
 import { ErrorContextProvider } from "./contexts/ErrorContext"
+import { SidebarProvider } from "./contexts/SidebarContext"
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 root.render(
   <GoogleOAuthProvider clientId="345818639852-npt2v8lmrrsj8vs4lovm5aou37i4pfji.apps.googleusercontent.com">
     <Suspense fallback={<GeneralLoading />}>
-      <ErrorContextProvider>
-        <ReportJobGeneralContextProvider>
-          <ReportProfileGeneralContextProvider>
-            <ToastContextProvider>
-              <AuthContextProvider>
-                <ProfileContextProvider>
-                  <StatusLoginContextProvider>
-                    <SearchKolHomepageProvider>
-                      <Windmill usePreferences>
-                        <App />
-                      </Windmill>
-                    </SearchKolHomepageProvider>
-                  </StatusLoginContextProvider>
-                </ProfileContextProvider>
-              </AuthContextProvider>
-            </ToastContextProvider>
-          </ReportProfileGeneralContextProvider>
-        </ReportJobGeneralContextProvider>
-      </ErrorContextProvider>
+      <SidebarProvider>
+        <ErrorContextProvider>
+          <ReportJobGeneralContextProvider>
+            <ReportProfileGeneralContextProvider>
+              <ToastContextProvider>
+                <AuthContextProvider>
+                  <ProfileContextProvider>
+                    <StatusLoginContextProvider>
+                      <SearchKolHomepageProvider>
+                        <Windmill usePreferences>
+                          <App />
+                        </Windmill>
+                      </SearchKolHomepageProvider>
+                    </StatusLoginContextProvider>
+                  </ProfileContextProvider>
+                </AuthContextProvider>
+              </ToastContextProvider>
+            </ReportProfileGeneralContextProvider>
+          </ReportJobGeneralContextProvider>
+        </ErrorContextProvider>
+      </SidebarProvider>
     </Suspense>
   </GoogleOAuthProvider>
 )

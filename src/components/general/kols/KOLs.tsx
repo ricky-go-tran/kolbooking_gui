@@ -21,9 +21,9 @@ const KOLs = ({
   return (
     <>
       {kols.length > 0 && (
-        <div className="container mx-auto relative">
+        <div className="container mx-auto pt-6">
           <>
-            <div className="container grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8 mx-auto pt-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-8">
               {kols.map((kol: any) => {
                 return <KOL key={kol.id} kol={kol.attributes} />
               })}

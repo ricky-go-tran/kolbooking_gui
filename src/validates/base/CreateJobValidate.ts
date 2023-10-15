@@ -14,12 +14,21 @@ export const checkValid = ({
   industries: IndustryWithoutDescription[]
 }): Validate => {
   const rs: Validate = { status: true, message: "" }
-  if (job.title.trim() === "") {
-    return { status: false, message: "Title cannot be empty" }
-  } else if (job.description.trim() === "") {
-    return { status: false, message: "Description cannot be empty" }
-  } else if (job.requirement.trim() === "") {
-    return { status: false, message: "Requirement cannot be empty" }
+  if (job.title.trim().length < 5) {
+    return {
+      status: false,
+      message: "Title length must more than 5 characters",
+    }
+  } else if (job.description.trim().length < 10) {
+    return {
+      status: false,
+      message: "Description length must more than 10 characters",
+    }
+  } else if (job.requirement.trim().length < 10) {
+    return {
+      status: false,
+      message: "Requirement length must more than 10 characters",
+    }
   } else if (job.price <= 0) {
     return { status: false, message: "Price must greater than zero" }
   } else if (job.image === null) {

@@ -1,22 +1,41 @@
-import { getCDNImage } from "../../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant";
-import { Loading } from "../../../general/loading/Loading";
-import axios from "axios";
-import { AuthContext } from "../../../../contexts/AuthContext";
-import { getProxy } from "../../../../utils/PathUtil";
-import { ProfileContext } from "../../../../contexts/ProfileContext";
-import React, { SetStateAction, useState, useEffect, useContext } from "react";
+import { getCDNImage } from "../../../../utils/PathUtil"
+import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant"
+import { Loading } from "../../../general/loading/Loading"
+import axios from "axios"
+import { AuthContext } from "../../../../contexts/AuthContext"
+import { getProxy } from "../../../../utils/PathUtil"
+import { ProfileContext } from "../../../../contexts/ProfileContext"
+import React, { SetStateAction, useState, useEffect, useContext } from "react"
+import { ToastContext } from "../../../../contexts/ToastContext"
+import { ErrorContext } from "../../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../../utils/ErrorHandleUtil"
 
 const UserDetail = ({
   user_id,
   onClose,
 }: {
-  user_id: string | number;
-  onClose: React.Dispatch<SetStateAction<string | number>>;
+  user_id: string | number
+  onClose: React.Dispatch<SetStateAction<string | number>>
 }) => {
-  const [data, setData] = useState<any>(null);
-  const { state: auth_state } = useContext(AuthContext);
-  const { state: profile_state } = useContext(ProfileContext);
+  const [data, setData] = useState<any>(null)
+  const { state: auth_state } = useContext(AuthContext)
+  const { state: profile_state } = useContext(ProfileContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
+
+  useEffect(() => {
+    const config = { headers: { Authorization: auth_state.auth_token } }
+    axios
+      .get(getProxy("/api/v1/admin/users/" + user_id), config)
+      .then((response) => {
+        console.log(response.data.data.attributes)
+        setData(response.data.data.attributes)
+      })
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }, [])
 
   return (
     <>
@@ -52,11 +71,16 @@ const UserDetail = ({
                     <div className="text-center text-gray-400 text-base font-semibold mb-5"></div>
                     <img
                       className="w-32 h-32 rounded-full mx-auto"
-                      src={getCDNImage(DEFAULT_AVATAR)}
+                      src={
+                        data?.profile?.data?.attributes?.avatar === "null" ||
+                        data?.profile?.data?.attributes?.avatar === undefined
+                          ? getCDNImage(DEFAULT_AVATAR)
+                          : getProxy(data?.profile?.data?.attributes?.avatar)
+                      }
                       alt="Avatar default"
                     />
                     <h3 className="text-center text-xl text-gray-900 font-medium leading-8">
-                      Jonh Due
+                      {data?.profile?.data?.attributes?.fullname}
                     </h3>
                   </div>
                   <div className="p-2">
@@ -66,7 +90,9 @@ const UserDetail = ({
                           <td className="px-2 py-2 text-gray-500 font-semibold">
                             Birthday
                           </td>
-                          <td className="px-2 py-2">2002-12-12</td>
+                          <td className="px-2 py-2">
+                            {data?.profile?.data?.attributes?.birthday}
+                          </td>
                         </tr>
                         <tr>
                           <td className="px-2 py-2 text-gray-500 font-semibold">
@@ -74,7 +100,7 @@ const UserDetail = ({
                           </td>
                           <td className="px-2 py-2">
                             <span className="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                              Valid
+                              {data?.profile?.data?.attributes?.status}
                             </span>
                           </td>
                         </tr>
@@ -94,26 +120,25 @@ const UserDetail = ({
                           <td className="px-2 py-2 text-gray-500 font-semibold">
                             Address
                           </td>
-                          <td className="px-2 py-2">Au Co HCMC</td>
+                          <td className="px-2 py-2">
+                            {data?.profile?.data?.attributes?.address}
+                          </td>
                         </tr>
                         <tr>
                           <td className="px-2 py-2 text-gray-500 font-semibold">
                             Phone
                           </td>
-                          <td className="px-2 py-2">{`+84 385475438976`}</td>
+                          <td className="px-2 py-2">{`+84 ${data?.profile?.data?.attributes?.phone}`}</td>
                         </tr>
                         <tr>
                           <td className="px-2 py-2 text-gray-500 font-semibold">
                             Email
                           </td>
-                          <td className="px-2 py-2">testing@kol.com</td>
+                          <td className="px-2 py-2">{data?.email}</td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                </div>
-                <div className="hover:red-yellow-500 w-full mb-2 select-none rounded-l-lg border-l-4 border-red-400 bg-red-100 p-4 font-medium">
-                  Kol Profile
                 </div>
               </div>
             </div>
@@ -122,6 +147,6 @@ const UserDetail = ({
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
-  );
-};
-export default UserDetail;
+  )
+}
+export default UserDetail

@@ -1,40 +1,46 @@
-import { getCDNImage } from "../../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant";
-import { Loading } from "../../../general/loading/Loading";
-import axios from "axios";
-import { AuthContext } from "../../../../contexts/AuthContext";
-import { getProxy } from "../../../../utils/PathUtil";
-import { ProfileContext } from "../../../../contexts/ProfileContext";
-import React, { SetStateAction, useState, useEffect, useContext } from "react";
+import { getCDNImage } from "../../../../utils/PathUtil"
+import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant"
+import { Loading } from "../../../general/loading/Loading"
+import axios from "axios"
+import { AuthContext } from "../../../../contexts/AuthContext"
+import { getProxy } from "../../../../utils/PathUtil"
+import { ProfileContext } from "../../../../contexts/ProfileContext"
+import React, { SetStateAction, useState, useEffect, useContext } from "react"
+import { ErrorContext } from "../../../../contexts/ErrorContext"
+import { ToastContext } from "../../../../contexts/ToastContext"
+import { HandleResponseError } from "../../../../utils/ErrorHandleUtil"
 
 const ReportDetail = ({
   report_id,
   onClose,
 }: {
-  report_id: string | number;
-  onClose: React.Dispatch<SetStateAction<string | number>>;
+  report_id: string | number
+  onClose: React.Dispatch<SetStateAction<string | number>>
 }) => {
-  const [data, setData] = useState<any>(null);
-  const { state: auth_state } = useContext(AuthContext);
-  const { state: profile_state } = useContext(ProfileContext);
+  const [data, setData] = useState<any>(null)
+  const { state: auth_state } = useContext(AuthContext)
+  const { state: profile_state } = useContext(ProfileContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
-    const config = { headers: { Authorization: auth_state.auth_token } };
-    let url = "/api/v1/kol/reports/";
+    const config = { headers: { Authorization: auth_state.auth_token } }
+    let url = "/api/v1/kol/reports/"
     if (profile_state.role === "admin") {
-      url = "/api/v1/admin/reports/";
+      url = "/api/v1/admin/reports/"
     }
 
     axios
       .get(getProxy(url + report_id), config)
       .then((response) => {
-        console.log(response);
-        setData(response.data.data.attributes);
+        console.log(response)
+        setData(response.data.data.attributes)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }, [])
 
   return (
     <>
@@ -48,7 +54,7 @@ const ReportDetail = ({
               <button
                 className="p-1 ml-auto border-0 text-red-300  float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => {
-                  onClose(-1);
+                  onClose(-1)
                 }}
               >
                 <svg
@@ -131,7 +137,7 @@ const ReportDetail = ({
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
-  );
-};
+  )
+}
 
-export default ReportDetail;
+export default ReportDetail

@@ -9,13 +9,17 @@ import { getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ReportProfileGeneralContext } from "../../../contexts/ReportProfileGeneralContext"
 import { ToastContext } from "../../../contexts/ToastContext"
-import { generalMessage } from "../../../utils/ToastUtil"
+import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { checkValid } from "../../../validates/general/ReportValidate"
 
 const ReportProfileModal = () => {
   const { state: report_profile_state, dispatch: report_profile_dispatch } =
     useContext(ReportProfileGeneralContext)
   const { state: auth_state } = useContext(AuthContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   const [reported, setReported] = useState<ReportType>({
     title: "",
@@ -46,8 +50,21 @@ const ReportProfileModal = () => {
         report_profile_dispatch({ type: "CLEAR" })
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
+  }
+  const createSubmit = () => {
+    const valid = checkValid({
+      report: reported,
+    })
+    if (valid.status === true) {
+      submitReport()
+    } else {
+      generalWarning({
+        message: valid.message,
+        toast_dispatch: toast_dispatch,
+      })
+    }
   }
 
   return (
@@ -134,7 +151,7 @@ const ReportProfileModal = () => {
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
                 onClick={() => {
-                  submitReport()
+                  createSubmit()
                 }}
               >
                 Report

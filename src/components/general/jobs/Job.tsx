@@ -234,7 +234,7 @@ const Job = ({ job }: { job: any }) => {
             </span>
           )}
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col lg:flex-row justify-between ">
           <div className="flex items-center">
             <img
               className="w-10 h-10 rounded-full mr-4"
@@ -255,7 +255,7 @@ const Job = ({ job }: { job: any }) => {
               </p>
             </div>
           </div>
-          <ul className="flex items-center w-1/4 justify-between">
+          <ul className="flex items-center w-full lg:w-1/4 justify-around mt-10 lg:mt-0 ">
             <>
               <li
                 className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
