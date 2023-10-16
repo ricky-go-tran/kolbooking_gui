@@ -4,7 +4,7 @@ import SectionTitle from "../../components/admin/typography/SectionTitle"
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { TaskType } from "../../global_variable/global_type"
 import axios, { AxiosResponse } from "axios"
-import { getProxy } from "../../utils/PathUtil"
+import { getFEHost, getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
 import {
   fetchDataToEvent,
@@ -24,6 +24,7 @@ import UpdateEventGoogleCalendar from "../../components/kol/modal/UpdateEventGoo
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import { generalError } from "../../utils/ToastUtil"
 
 const Schedule = () => {
   const localizer = momentLocalizer(moment)
@@ -52,7 +53,7 @@ const Schedule = () => {
     scope: "https://www.googleapis.com/auth/calendar",
     onNonOAuthError: (nonError) => console.log(nonError),
     ux_mode: "redirect",
-    redirect_uri: "http://localhost:9000/redirect",
+    redirect_uri: getFEHost("/redirect"),
   })
 
   const handleEventDoubleClick = (event: EventType) => {
@@ -99,6 +100,17 @@ const Schedule = () => {
     }
   }, [edited, created, tab])
 
+  const setSync = () => {
+    if (integrate === false) {
+      generalError({
+        message: "Not connected to google account",
+        toast_dispatch: toast_dispatch,
+      })
+    } else {
+      setTab("sync")
+    }
+  }
+
   return (
     <>
       <div className="my-5">
@@ -132,7 +144,7 @@ const Schedule = () => {
                     ? "bg-white rounded-lg shadow text-indigo-900"
                     : ""
                 }`}
-                onClick={() => setTab("sync")}
+                onClick={() => setSync()}
               >
                 Sync
               </div>

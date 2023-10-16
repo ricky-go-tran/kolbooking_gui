@@ -34,6 +34,7 @@ export default function Payment() {
   const { setErrorCode } = useContext(ErrorContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const price = 2000
 
   const config = {
     headers: {
@@ -55,7 +56,7 @@ export default function Payment() {
   useEffect(() => {
     if (data.id !== "" && paymentId === null) {
       const param = {
-        amount: 2000,
+        amount: price,
         currency: "usd",
         description: "Job invoice",
       }

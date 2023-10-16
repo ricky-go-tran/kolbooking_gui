@@ -151,7 +151,7 @@ const KolSetupProfile = () => {
 
   useEffect(() => {
     axios
-      .get("/api/v1/industries")
+      .get(getProxy("/api/v1/industries"))
       .then((response) => {
         setIndustries(fetchDataToIndustryWithoutDescription(response.data.data))
       })

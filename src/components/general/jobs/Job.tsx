@@ -148,7 +148,7 @@ const Job = ({ job }: { job: any }) => {
       .then((response) => {
         setBookmarked(true)
       })
-      .then((error) => {
+      .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
@@ -159,7 +159,7 @@ const Job = ({ job }: { job: any }) => {
       .then((response) => {
         setBookmarked(false)
       })
-      .then((error) => {
+      .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }

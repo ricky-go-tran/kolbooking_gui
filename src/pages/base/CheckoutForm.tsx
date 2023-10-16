@@ -7,7 +7,7 @@ import {
 import axios from "axios"
 import { get } from "http"
 import { useContext, useEffect, useState } from "react"
-import { getProxy } from "../../utils/PathUtil"
+import { getFEHost, getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
 import ImageOffice from "../../assets/images/create-account-office.jpeg"
 import { Job } from "../../global_variable/global_type"
@@ -65,7 +65,7 @@ const CheckoutForm = ({ job }: { job: Job }) => {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:9000/paymentComplete",
+        return_url: getFEHost("/paymentComplete"),
       },
     })
     if (error.type === "card_error" || error.type === "validation_error") {

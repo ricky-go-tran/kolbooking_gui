@@ -61,7 +61,7 @@ const CreateTaskModal = ({
     const rq = []
     rq.push(rq_create_task)
 
-    if (integrate) {
+    if (integrate === true) {
       rq.push(rq_create_event)
     }
 

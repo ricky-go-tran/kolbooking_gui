@@ -72,7 +72,7 @@ function App() {
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { state: status_state, dispatch: status_dispatch } =
     useContext(StatusLoginContext)
-  const cable = ActionCable.createConsumer(`ws://localhost:3000/cable`)
+  const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
   const { errorCode } = useContext(ErrorContext)
 
   useEffect(() => {
@@ -86,10 +86,12 @@ function App() {
           console.log("You've disconnected from the  Channel")
         },
         received: (message: string) => {
-          generalMessage({
-            message: "You have a new message. Please check your inbox",
-            toast_dispatch: toast_dispatch,
-          })
+          if (message) {
+            generalMessage({
+              message: "You have a new message. Please check your inbox",
+              toast_dispatch: toast_dispatch,
+            })
+          }
         },
       }
     )

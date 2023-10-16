@@ -81,7 +81,7 @@ export const Profile = () => {
         })
         let handle_data = {
           fullname: response.data.data.attributes.fullname,
-          avatar: response.data.data.attributes.avatar,
+          avatar: getProxy(response.data.data.attributes.avatar),
           role: response.data.data.attributes.role,
         }
         profile_dispatch({ type: "FETCH", payload: handle_data })
