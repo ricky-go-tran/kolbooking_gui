@@ -6,6 +6,10 @@ export type AuthType = {
   loading: boolean
 }
 
+export type StatusLoginType = {
+  status: string
+}
+
 export type ProfileType = {
   id: string
   fullname: string
@@ -90,6 +94,14 @@ export type Job = {
   image: string
 }
 
+export type KolProfile = {
+  facebook_path: string
+  youtube_path: string
+  instagram_path: string
+  tiktok_path: string
+  about_me: string
+}
+
 export type Notification = {
   id: string
   title: string
@@ -98,4 +110,13 @@ export type Notification = {
   type_notice: string
   sender_id: string
   receiver_id: string
+}
+export type TaskType = {
+  id: string
+  title: string
+  description: string
+  start_time: string | Date
+  end_time: string | Date
+  status: string
+  category: string
 }

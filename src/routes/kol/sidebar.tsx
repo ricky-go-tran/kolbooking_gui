@@ -8,7 +8,7 @@ const externalRoutes: IRoute[] = [
   },
   {
     path: "/kol/schedule",
-    icon: "CalendarIcon",
+    icon: "CalendarOutlineIcon",
     name: "Calendar",
   },
   {
@@ -18,7 +18,7 @@ const externalRoutes: IRoute[] = [
   },
   {
     path: "/kol/bookmarks",
-    icon: "BookMarkIcon",
+    icon: "BookMarkOutlineIcon",
     name: "Bookmarks",
   },
   {

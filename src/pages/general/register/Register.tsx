@@ -1,29 +1,29 @@
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import AuthenticationUtil from "../../../utils/AuthenticationUtil";
+import axios from "axios"
+import { Link } from "react-router-dom"
+import { useState } from "react"
+import AuthenticationUtil from "../../../utils/AuthenticationUtil"
 
-import ImageLight from "../../../assets/images/create-account-office.jpeg";
-import ImageDark from "../../../assets/images/create-account-office-dark.jpeg";
-import { GithubIcon, TwitterIcon } from "../../../icons";
-import { Alert, Input, Label, Button } from "@windmill/react-ui";
-import { getProxy } from "../../../utils/PathUtil";
-import { REGISTER_URL } from "../../../global_variable/global_uri_backend";
+import ImageLight from "../../../assets/images/create-account-office.jpeg"
+import ImageDark from "../../../assets/images/create-account-office-dark.jpeg"
+import { GithubIcon, TwitterIcon } from "../../../icons"
+import { Alert, Input, Label, Button } from "@windmill/react-ui"
+import { getProxy } from "../../../utils/PathUtil"
+import { REGISTER_URL } from "../../../global_variable/global_uri_backend"
 
 function Register() {
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
     repassword: "",
-  });
+  })
 
   const [message, setMessage] = useState({
     success: "",
     message: "",
-  });
+  })
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       if (
         AuthenticationUtil.confirmPassword(
@@ -36,23 +36,23 @@ function Register() {
             email: credentials.email,
             password: credentials.password,
           },
-        };
+        }
         axios.post(getProxy(REGISTER_URL), data).then((response) => {
-          setMessage({ success: "success", message: "Signup successly" });
-        });
+          setMessage({ success: "success", message: "Signup successly" })
+        })
       } else {
         setMessage({
           success: "fail",
           message: "Invalid password or re-password",
-        });
+        })
       }
     } catch (error: any) {
       setMessage({
         success: "fail",
         message: "Interval sever error! Can't signup",
-      });
+      })
     }
-  };
+  }
   return (
     <div className="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800">
@@ -148,11 +148,6 @@ function Register() {
 
               <hr className="my-8" />
 
-              <Button block layout="outline">
-                <GithubIcon className="w-4 h-4 mr-2" aria-hidden="true" />
-                Google
-              </Button>
-
               <p className="mt-4">
                 <Link
                   className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
@@ -166,7 +161,7 @@ function Register() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Register;
+export default Register

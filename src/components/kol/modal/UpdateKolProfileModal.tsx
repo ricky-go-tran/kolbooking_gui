@@ -3,8 +3,10 @@ import { EditIcon } from "../../../icons"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import {
+  IndustryAssocationNestd,
   IndustryAssociation,
   IndustryWithoutDescription,
+  KolProfile,
 } from "../../../global_variable/global_type"
 import { Input, Label, Select, Textarea } from "@windmill/react-ui"
 import axios, { AxiosResponse } from "axios"
@@ -13,7 +15,12 @@ import {
   fetchDataToIndustryAssocations,
   fetchDataToIndustryWithoutDescription,
 } from "../../../utils/FetchData"
-import { KOL_PROFILE_URL } from "../../../global_variable/global_uri_backend"
+import { KOL_PROFILE_EDIT_URL } from "../../../global_variable/global_uri_backend"
+import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
+import { ToastContext } from "../../../contexts/ToastContext"
+import { checkValid } from "../../../validates/kol/KolProfileValidate"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 export const UpdateKolProfileModal = ({
   profile_id,
@@ -25,7 +32,7 @@ export const UpdateKolProfileModal = ({
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
-  const [profileData, setProfileData] = useState({
+  const [profileData, setProfileData] = useState<KolProfile>({
     facebook_path: "",
     youtube_path: "",
     instagram_path: "",
@@ -40,9 +47,12 @@ export const UpdateKolProfileModal = ({
     IndustryWithoutDescription[]
   >([])
   const [loading, setLoading] = useState(false)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   const fetchData = (response: AxiosResponse<any, any>) => {
-    const data = response.data.data.attributes.kol.data.attributes
+    const data = response.data.data.attributes
+    console.log(data)
     setProfileData({
       facebook_path: data.facebook_path,
       youtube_path: data.youtube_path,
@@ -50,6 +60,9 @@ export const UpdateKolProfileModal = ({
       tiktok_path: data.tiktok_path,
       about_me: data.about_me,
     })
+    setIndustryAssociation(
+      fetchDataToIndustryAssocations(data.industry_associations.data)
+    )
   }
 
   useEffect(() => {
@@ -59,19 +72,33 @@ export const UpdateKolProfileModal = ({
       .then((response) => {
         setIndustries(fetchDataToIndustryWithoutDescription(response.data.data))
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
     axios
-      .get(getProxy(KOL_PROFILE_URL), config)
+      .put(getProxy(KOL_PROFILE_EDIT_URL), {}, config)
       .then((res) => {
+        console.log(res)
         fetchData(res)
         setLoading(true)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
+
+  useEffect(() => {
+    if (industryAssociation.length !== 0) {
+      setSelectIndustries(
+        industries.filter((item) => {
+          const rs = industryAssociation.find((association) => {
+            return association.industry_id === item.id
+          })
+          return rs !== undefined
+        })
+      )
+    }
+  }, [industryAssociation])
 
   const addIndustry = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selected: IndustryWithoutDescription | undefined =
@@ -95,10 +122,87 @@ export const UpdateKolProfileModal = ({
     setSelectIndustries([...oldIndustry])
   }
 
+  const handleUpdateIndustry = () => {
+    let new_industry: IndustryAssocationNestd[] = []
+    selectIndustries.forEach((item) => {
+      if (
+        industryAssociation.find((association) => {
+          return association.industry_id === item.id
+        }) === undefined
+      ) {
+        new_industry.push({
+          id: undefined,
+          industry_id: item.id,
+          _destroy: false,
+        })
+      }
+    })
+    industryAssociation.forEach((association) => {
+      if (
+        selectIndustries.find((item) => {
+          return association.industry_id === item.id
+        }) === undefined
+      ) {
+        new_industry.push({
+          id: association.id,
+          industry_id: association.industry_id,
+          _destroy: true,
+        })
+      }
+    })
+    return new_industry
+  }
+
+  const submit = () => {
+    const industries_association = handleUpdateIndustry()
+    const param = {
+      kol_profile: {
+        tiktok_path: profileData.tiktok_path,
+        youtube_path: profileData.youtube_path,
+        facebook_path: profileData.facebook_path,
+        instagram_path: profileData.instagram_path,
+        about_me: profileData.about_me,
+        industry_associations_attributes: industries_association,
+      },
+    }
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }
+    axios
+      .put(getProxy("/api/v1/kol/kol_profiles/change"), param, config)
+      .then((response) => {
+        generalMessage({
+          message: "Successfully update job",
+          toast_dispatch: toast_dispatch,
+        })
+        onClose(-1)
+      })
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }
+
+  const updateSubmit = () => {
+    const valid = checkValid({
+      kol: profileData,
+      industries: selectIndustries,
+    })
+    if (valid.status === true) {
+      submit()
+    } else {
+      generalWarning({
+        message: valid.message,
+        toast_dispatch: toast_dispatch,
+      })
+    }
+  }
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-1/2 my-3 mx-auto max-w-7xl h-5/6">
+        <div className="relative w-11/12 lg:w-1/2 my-3 mx-auto max-w-7xl h-5/6">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col h-full w-full bg-white outline-none focus:outline-none dark:bg-gray-600">
             {/*header*/}
@@ -257,6 +361,9 @@ export const UpdateKolProfileModal = ({
               <button
                 className="bg-blue-400 text-white hover:bg-blue-500 active:bg-blue-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={() => {
+                  updateSubmit()
+                }}
               >
                 Update
               </button>

@@ -1,9 +1,9 @@
-import { getCDNImage, getProxy } from "../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../global_variable/global_constant";
+import { getCDNImage, getProxy } from "../../../utils/PathUtil"
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
 
 const OwnerInfoCard = ({ owner }: { owner: any }) => {
   return (
-    <div id="owner-info" className="max-w-xs w-4/5">
+    <div id="owner-info" className="max-w-xs w-full lg:w-4/5">
       <div className="w-full">
         <div className="bg-white shadow-xl rounded-lg py-3 max-w-xs dark:bg-gray-800">
           <div className="photo-wrapper p-2">
@@ -46,7 +46,7 @@ const OwnerInfoCard = ({ owner }: { owner: any }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default OwnerInfoCard;
+export default OwnerInfoCard

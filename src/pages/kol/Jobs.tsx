@@ -24,6 +24,10 @@ import { Alert } from "@windmill/react-ui"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { ProfileContext } from "../../contexts/ProfileContext"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -36,6 +40,11 @@ const Job = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetJob[]>([])
   const { search } = useContext(SearchAdminContext)
+  const { state: profile_state, dispatch: profile_dispatch } =
+    useContext(ProfileContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -62,7 +71,7 @@ const Job = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable, tab, search])
@@ -101,7 +110,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -136,7 +145,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -168,10 +177,11 @@ const Job = () => {
               return item
             }
           })
+
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -206,7 +216,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -241,7 +251,7 @@ const Job = () => {
           setDataTable(handle_data)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -296,8 +306,8 @@ const Job = () => {
         </Alert>
       )}
       {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
-      <div className="w-full flex justify-between py-5">
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-5 flex-wrap">
+        <ul className="w-full lg:w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>
             <div
               className={`flex justify-center py-2 cursor-pointer ${
@@ -343,7 +353,7 @@ const Job = () => {
               }`}
               onClick={() => setTab("complete")}
             >
-              Complete & Payment
+              Complete/Payment
             </div>
           </li>
           <li>
@@ -372,7 +382,7 @@ const Job = () => {
           </li>
         </ul>
 
-        <ul className="flex">
+        <ul className="flex mt-5 lg:mt-0">
           <li className="mx-2">
             <button
               type="submit"

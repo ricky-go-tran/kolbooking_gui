@@ -45,6 +45,33 @@ interface ITableJob {
   create_at: string
 }
 
+interface IPaymentJob {
+  id: string
+  avatar_owner: string
+  fullname_owner: string
+  email_owner: string
+  job_image: string
+  job_title: string
+  status:
+    | "post"
+    | "booking"
+    | "apply"
+    | "complete"
+    | "payment"
+    | "finish"
+    | "cancle"
+    | undefined
+  status_color:
+    | "success"
+    | "danger"
+    | "warning"
+    | "neutral"
+    | "primary"
+    | undefined
+  create_at: string
+  price: string
+}
+
 interface ITableFollow {
   id: string
   id_followed: string
@@ -147,4 +174,5 @@ export type {
   ISheetReport,
   ITableFollow,
   ITableEmoji,
+  IPaymentJob,
 }

@@ -22,11 +22,6 @@ const externalRoutes: IRoute[] = [
     name: "Reports",
   },
   {
-    path: "/admin/crontab",
-    icon: "ChartsIcon",
-    name: "System Health",
-  },
-  {
     path: "/profile/emojis",
     icon: "LikeOuletIcon",
     name: "Emojis",

@@ -32,6 +32,7 @@ import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { ToastContext } from "../../contexts/ToastContext"
 import { generalMessage } from "../../utils/ToastUtil"
+import { ErrorContext } from "../../contexts/ErrorContext"
 
 const Bookmark = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -44,6 +45,7 @@ const Bookmark = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetBookmark[]>([])
   const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     const config = {
@@ -69,7 +71,7 @@ const Bookmark = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
         // HandleResponseError(error, navigate)
       })
   }, [pageTable, tab, resultsPerPage])
@@ -122,7 +124,7 @@ const Bookmark = () => {
           setResultPerPage(resultsPerPage - 1)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       axios
@@ -143,7 +145,7 @@ const Bookmark = () => {
           setTab(action)
         })
         .catch((error) => {
-          console.log(error)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -163,8 +165,8 @@ const Bookmark = () => {
         </Alert>
       )}
       {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
-      <div className="w-full flex justify-between py-5">
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+      <div className="w-full flex  flex-col lg:flex-row justify-between py-5">
+        <ul className="w-full lg:w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>
             <div
               className={`flex justify-center py-2 cursor-pointer ${
@@ -215,7 +217,7 @@ const Bookmark = () => {
           </li>
         </ul>
 
-        <ul className="flex">
+        <ul className="flex mt-5 lg:mt-0">
           <li className="mx-2">
             <button
               type="submit"

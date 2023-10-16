@@ -1,8 +1,8 @@
-import { ITableJob } from "../../../../global_variable/global_table_admin";
-import "../../../../assets/css/component/job_modal.css";
-import React, { SetStateAction, useState, useEffect, useContext } from "react";
-import { getCDNImage } from "../../../../utils/PathUtil";
-import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant";
+import { ITableJob } from "../../../../global_variable/global_table_admin"
+import "../../../../assets/css/component/job_modal.css"
+import React, { SetStateAction, useState, useEffect, useContext } from "react"
+import { getCDNImage } from "../../../../utils/PathUtil"
+import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant"
 import {
   LikeIcon,
   UnlikeIcon,
@@ -10,47 +10,53 @@ import {
   UnlikeOutletIcon,
   WarningIcon,
   BookMarkIcon,
-} from "../../../../icons";
-import { Loading } from "../../../general/loading/Loading";
-import axios from "axios";
-import { AuthContext } from "../../../../contexts/AuthContext";
-import { getProxy } from "../../../../utils/PathUtil";
-import { ProfileContext } from "../../../../contexts/ProfileContext";
+} from "../../../../icons"
+import { Loading } from "../../../general/loading/Loading"
+import axios from "axios"
+import { AuthContext } from "../../../../contexts/AuthContext"
+import { getProxy } from "../../../../utils/PathUtil"
+import { ProfileContext } from "../../../../contexts/ProfileContext"
 import {
   ADMIN_JOB_DETAIL_URL,
   BASE_JOB_DETAIL_URL,
   KOL_JOB_DETAIL_URL,
-} from "../../../../global_variable/global_uri_backend";
+} from "../../../../global_variable/global_uri_backend"
+import { ErrorContext } from "../../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../../utils/ErrorHandleUtil"
+import { ToastContext } from "../../../../contexts/ToastContext"
 
 const JobDetail = ({
   job_id,
   onClose,
 }: {
-  job_id: string | number;
-  onClose: React.Dispatch<SetStateAction<string | number>>;
+  job_id: string | number
+  onClose: React.Dispatch<SetStateAction<string | number>>
 }) => {
-  const [data, setData] = useState<any>(null);
-  const { state: auth_state } = useContext(AuthContext);
-  const { state: profile_state } = useContext(ProfileContext);
+  const [data, setData] = useState<any>(null)
+  const { state: auth_state } = useContext(AuthContext)
+  const { state: profile_state } = useContext(ProfileContext)
+  const { setErrorCode } = useContext(ErrorContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
 
   useEffect(() => {
-    const config = { headers: { Authorization: auth_state.auth_token } };
-    let url = KOL_JOB_DETAIL_URL(job_id);
+    const config = { headers: { Authorization: auth_state.auth_token } }
+    let url = KOL_JOB_DETAIL_URL(job_id)
     if (profile_state.role === "admin") {
-      url = ADMIN_JOB_DETAIL_URL(job_id);
+      url = ADMIN_JOB_DETAIL_URL(job_id)
     } else if (profile_state.role === "base") {
-      url = BASE_JOB_DETAIL_URL(job_id);
+      url = BASE_JOB_DETAIL_URL(job_id)
     }
 
     axios
       .get(getProxy(url), config)
       .then((response) => {
-        setData(response.data.data.attributes);
+        setData(response.data.data.attributes)
       })
       .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }, [])
 
   return (
     <>
@@ -101,7 +107,7 @@ const JobDetail = ({
                               <span className="inline-block m-2 bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                 {industry.attributes.name}
                               </span>
-                            );
+                            )
                           })}
                           {data?.industry?.data.length === 0 && (
                             <span className="inline-block m-2 bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
@@ -248,7 +254,7 @@ const JobDetail = ({
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
     </>
-  );
-};
+  )
+}
 
-export default JobDetail;
+export default JobDetail

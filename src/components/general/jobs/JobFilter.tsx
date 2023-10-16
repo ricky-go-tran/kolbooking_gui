@@ -5,6 +5,9 @@ import { INDUSTRY_URL } from "../../../global_variable/global_uri_backend"
 import axios from "axios"
 import { SearchJobHomepageContext } from "../../../contexts/SearchJobGeneralContext"
 import { FilterJobGeneralContext } from "../../../contexts/FilterJobGeneralContext"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { ToastContext } from "../../../contexts/ToastContext"
 
 const JobFilter = () => {
   const [industries, setIndustries] = useState<any[]>([])
@@ -12,6 +15,9 @@ const JobFilter = () => {
   const [tempFilter, setTempFilter] = useState<string[]>([])
   const { setJobSearch } = useContext(SearchJobHomepageContext)
   const { setJobFilter } = useContext(FilterJobGeneralContext)
+  const { setErrorCode } = useContext(ErrorContext)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
 
   useEffect(() => {
     axios
@@ -20,7 +26,7 @@ const JobFilter = () => {
         setIndustries(response.data.data)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
 
@@ -43,7 +49,7 @@ const JobFilter = () => {
   }
 
   return (
-    <div className="w-1/4 flex items-start justify-center mt-5">
+    <div className="hidden w-1/4 lg:flex items-start justify-center mt-5">
       <div className="w-11/12 rounded bg-white p-3 dark:bg-gray-700">
         <div className="py-5 px-3">
           <h6 className="text-lg text-gray-800 dark:text-gray-600 font-semibold mb-3">

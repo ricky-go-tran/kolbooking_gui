@@ -31,6 +31,7 @@ import useChannel from "../../hooks/useChannel"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
 import { SearchStorageAdminContext } from "../../contexts/SearchStorageAdminContext"
 import { AdminTabContext } from "../../contexts/AdminTab"
+import { SidebarContext } from "../../contexts/SidebarContext"
 
 const Header = () => {
   const { mode, toggleMode } = useContext(WindmillContext)
@@ -49,6 +50,7 @@ const Header = () => {
     SearchStorageAdminContext
   )
   const { tab, setTab } = useContext(AdminTabContext)
+  const { toggleSidebar } = useContext(SidebarContext)
 
   useEffect(() => {
     setSearch("")
@@ -99,6 +101,9 @@ const Header = () => {
         <button
           className="p-1 mr-5 -ml-1 rounded-md lg:hidden focus:outline-none focus:shadow-outline-purple"
           aria-label="Menu"
+          onClick={() => {
+            toggleSidebar()
+          }}
         >
           <MenuIcon className="w-6 h-6" aria-hidden="true" />
         </button>

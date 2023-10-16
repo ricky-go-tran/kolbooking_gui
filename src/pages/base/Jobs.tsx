@@ -31,6 +31,8 @@ import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import JobUpdateModal from "../../components/base/modal/JobUpdateModal"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Jobs = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -46,6 +48,7 @@ const Jobs = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [edited, setEdited] = useState<number | string>(-1)
   const { search } = useContext(SearchAdminContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   function onPageChange(p: number) {
     setPageTable(p)
@@ -71,7 +74,7 @@ const Jobs = () => {
         }
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -126,7 +129,7 @@ const Jobs = () => {
         setSheetData(sheet)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [pageTable, tab, edited, search])
 
@@ -137,8 +140,8 @@ const Jobs = () => {
   return (
     <>
       <PageTitle>Jobs</PageTitle>
-      <div className="w-full flex justify-between py-5">
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-5">
+        <ul className="w-full lg:w-1/2 grid grid-flow-col flex-wrap text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>
             <div
               className={`flex justify-center py-2 cursor-pointer ${
@@ -160,7 +163,7 @@ const Jobs = () => {
               }`}
               onClick={() => setTab("post")}
             >
-              Post & Booking
+              Post/Booking
             </div>
           </li>
           <li>
@@ -177,14 +180,14 @@ const Jobs = () => {
           </li>
           <li>
             <div
-              className={`flex justify-center py-2 cursor-pointer ${
+              className={`hidden lg:flex justify-center py-2 cursor-pointer ${
                 tab === "complete"
                   ? "bg-white rounded-lg shadow text-indigo-900"
                   : ""
               }`}
               onClick={() => setTab("complete")}
             >
-              Complete & Payment
+              Complete/Payment
             </div>
           </li>
           <li>
@@ -213,7 +216,7 @@ const Jobs = () => {
           </li>
         </ul>
 
-        <ul className="flex">
+        <ul className="flex mt-5 lg:mt-0">
           <li className="mx-2">
             <button
               type="submit"

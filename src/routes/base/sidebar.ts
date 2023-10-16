@@ -16,5 +16,10 @@ const externalRoutes: IRoute[] = [
     icon: "LikeOuletIcon",
     name: "Emojis",
   },
+  {
+    path: "/base/invoices",
+    icon: "CardOutlineIcon",
+    name: "Invoices",
+  },
 ]
 export default externalRoutes

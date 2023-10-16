@@ -21,6 +21,8 @@ import {
 import { UpdateProfileModal } from "../../components/kol/modal/UpdateProfileModal"
 import { Link } from "react-router-dom"
 import { UpdateKolProfileModal } from "../../components/kol/modal/UpdateKolProfileModal"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const KolProfile = () => {
   const [data, setData] = useState<any>(null)
@@ -33,6 +35,7 @@ const KolProfile = () => {
   const { state: profile_state } = useContext(ProfileContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -56,9 +59,9 @@ const KolProfile = () => {
         fetchData(response)
       })
       .catch((error) => {
-        console.log(error)
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-  }, [])
+  }, [updateKolProfile, updateProfile])
 
   return (
     <>
@@ -145,8 +148,8 @@ const KolProfile = () => {
                       <EditIcon />
                     </span>
                   </div>
-                  <div className="flex mt-10 w-full justify-around">
-                    <div>
+                  <div className="flex flex-col lg:flex-row mt-10 w-full justify-center items-center lg:justify-around">
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.instagram_path !==
                         "null" && (
                         <Link
@@ -169,7 +172,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.facebook_path !==
                         "null" && (
                         <Link
@@ -188,7 +191,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.youtube_path !== "null" && (
                         <Link
                           to={data?.kol?.data?.attributes?.youtube_path}
@@ -210,7 +213,7 @@ const KolProfile = () => {
                         </Link>
                       )}
                     </div>
-                    <div>
+                    <div className="my-2">
                       {data?.kol?.data?.attributes?.tiktok_path !== "null" && (
                         <Link
                           to={data?.kol?.data?.attributes?.tiktok_path}

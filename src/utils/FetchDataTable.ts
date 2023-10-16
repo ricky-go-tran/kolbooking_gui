@@ -8,6 +8,7 @@ import {
   ISheetReport,
   ITableFollow,
   ITableEmoji,
+  IPaymentJob,
 } from "../global_variable/global_table_admin"
 import { getProxy, getCDNImage } from "./PathUtil"
 import {
@@ -130,10 +131,8 @@ export const fetchToITableUser = (users: any[]): ITabelUser[] => {
         birthday: user.attributes.profile?.data.attributes.birthday,
         role: user.attributes.role,
         role_color: getColorOfRole(user.attributes.role),
-        status: user.attributes.profile?.data.attributes.status,
-        status_color: getColorOfStatus(
-          user.attributes?.profile.data.attributes.status
-        ),
+        status: user.attributes?.status,
+        status_color: getColorOfStatus(user.attributes?.status),
       }
       return item
     } else {
@@ -186,6 +185,44 @@ export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
       status: job.attributes.status,
       status_color: getColorOfStatusJob(job.attributes.status),
       create_at: job.attributes.created_at,
+    }
+    return item
+  })
+  return results
+}
+
+export const fetchToIPaymentJob = (jobs: any[]): IPaymentJob[] => {
+  let results: IPaymentJob[] = []
+  results = jobs.map((job: any) => {
+    const owner = {
+      avatar: getCDNImage(DEFAULT_AVATAR),
+      fullname: "Not setup",
+      email: "Not setup",
+    }
+
+    if (job.attributes.owner.data != null) {
+      owner.avatar =
+        job.attributes.owner.data.attributes.avatar == "null"
+          ? owner.avatar
+          : getProxy(job.attributes.owner.data.attributes.avatar)
+      owner.fullname = job.attributes.owner.data.attributes.fullname
+      owner.email = job.attributes.owner.data.attributes.email
+    }
+
+    const item: IPaymentJob = {
+      id: `${job.attributes.id}`,
+      avatar_owner: owner.avatar,
+      fullname_owner: owner.fullname,
+      email_owner: owner.email,
+      job_image:
+        job.attributes.image === "null"
+          ? getCDNImage(DEFAULT_IMAGE)
+          : job.attributes.image,
+      job_title: job.attributes.title,
+      status: job.attributes.status,
+      status_color: getColorOfStatusJob(job.attributes.status),
+      create_at: job.attributes.created_at,
+      price: job.attributes.price,
     }
     return item
   })

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react"
 
-import InfoCard from "../../components/admin/cart/InfoCart";
-import ChartCard from "../../components/admin/chart/ChartCard";
-import { Doughnut, Line } from "react-chartjs-2";
-import ChartLegend from "../../components/admin/chart/CardLegend";
-import PageTitle from "../../components/admin/typography/PageTitle";
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons";
-import RoundIcon from "../../components/admin/RoundIcon";
-import response from "../../global_variable/global_table_admin";
-import { ITableData } from "../../global_variable/global_table_admin";
+import InfoCard from "../../components/admin/cart/InfoCart"
+import ChartCard from "../../components/admin/chart/ChartCard"
+import { Doughnut, Line } from "react-chartjs-2"
+import ChartLegend from "../../components/admin/chart/CardLegend"
+import PageTitle from "../../components/admin/typography/PageTitle"
+import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
+import RoundIcon from "../../components/admin/RoundIcon"
+import response from "../../global_variable/global_table_admin"
+import { ITableData } from "../../global_variable/global_table_admin"
 import {
   TableBody,
   TableContainer,
@@ -20,35 +20,124 @@ import {
   Avatar,
   Badge,
   Pagination,
-} from "@windmill/react-ui";
+} from "@windmill/react-ui"
+import { Chart, registerables } from "chart.js"
+import {
+  lineDashboardlLegends,
+  lineStatisticalLegends,
+} from "../../global_variable/global_charts_admin"
+Chart.register(...registerables)
 
 import {
   doughnutOptions,
   lineOptions,
   doughnutLegends,
   lineLegends,
-} from "../../global_variable/global_charts_admin";
+} from "../../global_variable/global_charts_admin"
+import axios from "axios"
+import { getProxy } from "../../utils/PathUtil"
+import { AuthContext } from "../../contexts/AuthContext"
+import {
+  defaultDataForLinechartCrontab,
+  fetchDataForLinechartDashboard,
+} from "../../utils/ChartUtil"
+import { getSumOfArray } from "../../utils/NumberUtil"
+import { ToastContext } from "../../contexts/ToastContext"
+import { ErrorContext } from "../../contexts/ErrorContext"
+import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 function Dashboard() {
-  const [page, setPage] = useState(1);
-  const [data, setData] = useState<ITableData[]>([]);
+  const [tab, setTab] = useState<string>("month")
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const [dataCard, setDataCard] = useState([0, 0, 0, 0])
+  const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
+  const { state: toast_state, dispatch: toast_dispatch } =
+    useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
-  const resultsPerPage = 10;
-  const totalResults = response.length;
-  function onPageChange(p: number) {
-    setPage(p);
-  }
   useEffect(() => {
-    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }, [page]);
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+      params: {
+        tab: tab,
+      },
+    }
+    axios
+      .get(getProxy("/api/v1/admin/dashboard"), config)
+      .then((res) => {
+        const data = res.data.data
+        setDataCard([
+          getSumOfArray(data.total_job),
+          getSumOfArray(data.total_base_user),
+          getSumOfArray(data.total_kol),
+          getSumOfArray(data.total_report),
+        ])
+        setDataChart(
+          fetchDataForLinechartDashboard(
+            data.label,
+            data.total_job,
+            data.total_base_user,
+            data.total_kol,
+            data.total_report
+          )
+        )
+      })
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }, [tab])
 
   return (
     <>
-      <PageTitle>Dashboard</PageTitle>
+      <div className="w-full flex justify-between py-6">
+        <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+          Dashboard
+        </h1>
+        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
+          <li>
+            <div
+              className={`flex justify-center py-2 cursor-pointer ${
+                tab === "month"
+                  ? "bg-white rounded-lg shadow text-indigo-900"
+                  : ""
+              }`}
+              onClick={() => setTab("month")}
+            >
+              Month
+            </div>
+          </li>
+          <li>
+            <div
+              className={`flex justify-center py-2 cursor-pointer ${
+                tab === "half_year"
+                  ? "bg-white rounded-lg shadow text-indigo-900"
+                  : ""
+              }`}
+              onClick={() => setTab("half_year")}
+            >
+              6 Month
+            </div>
+          </li>
+          <li>
+            <div
+              className={`flex justify-center py-2  cursor-pointer ${
+                tab === "year"
+                  ? "bg-white rounded-lg shadow text-indigo-900"
+                  : ""
+              }`}
+              onClick={() => setTab("year")}
+            >
+              Year
+            </div>
+          </li>
+        </ul>
+      </div>
 
       {/* <!-- Cards --> */}
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total clients" value="6389">
+        <InfoCard title="Total Jobs" value={`${dataCard[0]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={PeopleIcon}
@@ -58,7 +147,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Account balance" value="$ 46,760.89">
+        <InfoCard title="Total Base User" value={`${dataCard[1]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={MoneyIcon}
@@ -67,8 +156,7 @@ function Dashboard() {
             className="mr-4"
           />
         </InfoCard>
-
-        <InfoCard title="New sales" value="376">
+        <InfoCard title="Total Kol" value={`${dataCard[2]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={CartIcon}
@@ -78,7 +166,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Pending contacts" value="35">
+        <InfoCard title="Total Report" value={`${dataCard[3]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={ChatIcon}
@@ -88,61 +176,13 @@ function Dashboard() {
           />
         </InfoCard>
       </div>
-
-      <TableContainer>
-        <Table>
-          <TableHeader>
-            <tr>
-              <TableCell>Client</TableCell>
-              <TableCell>Amount</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Date</TableCell>
-            </tr>
-          </TableHeader>
-          <TableBody>
-            {data.map((user, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <div className="flex items-center text-sm">
-                    <Avatar
-                      className="hidden mr-3 md:block"
-                      src={user.avatar}
-                      alt="User image"
-                    />
-                    <div>
-                      <p className="font-semibold">{user.name}</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        {user.job}
-                      </p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">$ {user.amount}</span>
-                </TableCell>
-                <TableCell>
-                  <Badge type={user.status}>{user.status}</Badge>
-                </TableCell>
-                <TableCell>
-                  <span className="text-sm">
-                    {new Date(user.date).toLocaleDateString()}
-                  </span>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <TableFooter>
-          <Pagination
-            totalResults={totalResults}
-            resultsPerPage={resultsPerPage}
-            label="Table navigation"
-            onChange={onPageChange}
-          />
-        </TableFooter>
-      </TableContainer>
+      <div className="grid gap-6 mb-8 md:grid-cols-1">
+        <ChartCard title="System chart">
+          <Line {...dataChart} />
+        </ChartCard>
+      </div>
     </>
-  );
+  )
 }
 
-export default Dashboard;
+export default Dashboard

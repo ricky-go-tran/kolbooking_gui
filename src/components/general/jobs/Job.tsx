@@ -25,6 +25,8 @@ import { ReportJobType } from "../../../global_variable/global_type"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { ToastComponentType } from "../../../global_variable/global_component_type"
 import { generalError } from "../../../utils/ToastUtil"
+import { ErrorContext } from "../../../contexts/ErrorContext"
+import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Job = ({ job }: { job: any }) => {
   const { state: auth_state } = useContext(AuthContext)
@@ -40,6 +42,7 @@ const Job = ({ job }: { job: any }) => {
   )
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
     setLikeCount(job.like_num)
@@ -92,8 +95,8 @@ const Job = ({ job }: { job: any }) => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -127,8 +130,8 @@ const Job = ({ job }: { job: any }) => {
             }
           }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else {
       generalError({
@@ -145,8 +148,8 @@ const Job = ({ job }: { job: any }) => {
       .then((response) => {
         setBookmarked(true)
       })
-      .then((error) => {
-        console.log(error)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -156,8 +159,8 @@ const Job = ({ job }: { job: any }) => {
       .then((response) => {
         setBookmarked(false)
       })
-      .then((error) => {
-        console.log(error)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
 
@@ -231,7 +234,7 @@ const Job = ({ job }: { job: any }) => {
             </span>
           )}
         </div>
-        <div className="flex justify-between">
+        <div className="flex flex-col lg:flex-row justify-between ">
           <div className="flex items-center">
             <img
               className="w-10 h-10 rounded-full mr-4"
@@ -252,7 +255,7 @@ const Job = ({ job }: { job: any }) => {
               </p>
             </div>
           </div>
-          <ul className="flex items-center w-1/4 justify-between">
+          <ul className="flex items-center w-full lg:w-1/4 justify-around mt-10 lg:mt-0 ">
             <>
               <li
                 className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
