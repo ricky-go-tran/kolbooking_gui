@@ -14,7 +14,7 @@ import {
 export const MIN_PASSWORD_LENGTH = 6
 export const MAX_PASSWORD_LENGTH = 64
 export const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-export const PROXY_SERVER = "https://4376-14-225-206-62.ngrok.io"
+export const PROXY_SERVER = "http://14.225.206.62"
 export const CDN_SERVER = "https://res.cloudinary.com/daipfonbx"
 export const DEFAULT_IMAGE =
   "/image/upload/v1695613812/mowxzej1idnfvuwuket3.jpg"

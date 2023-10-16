@@ -26,6 +26,7 @@ const KOL = () => {
       params: {
         page: {
           number: pageTable,
+          items: 8,
         },
         search: kolSearch,
       },

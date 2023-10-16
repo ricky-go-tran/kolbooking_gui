@@ -131,7 +131,7 @@ const Jobs = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-  }, [pageTable, tab, edited, search])
+  }, [pageTable, tab, edited, created, search])
 
   useEffect(() => {
     setTab("post")
