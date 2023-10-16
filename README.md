@@ -1,46 +1,79 @@
-# Getting Started with Create React App
+# KOLSBOOKING
+*KOLSBooking - Connecting User And KOLS*
+## Introduction
+The KOL Booking Website, a platform designed to facilitate the booking of Key Opinion Leaders (KOLs) for various advertising campaigns. This README provides an overview of the website's features and the roles involved.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Feature 
+- [x] Authentication (Google authentication)
+- [x] Admin: profile
+- [x] Admin: User management
+- [x] Admin: Job management
+- [x] KOL: profile
+- [x] KOL: statictiscal
+- [x] KOL: calendar (crud, google calendar sync)
+- [x] KOL: Job(apply, handle, finish)
+- [x] KOL: bookmark (mark/unmark)
+- [x] User: Job (new job, booking, cancel)
+- [x] User: payment 
+- [x] All: newfeed, search KOL
 
-## Available Scripts
+## Technologies 
+- Rails 7
+- Devise, Pundit, Rolify for Authentication and Authorization
+- Active Storage for file managent
+- Action cable for realtime BE
+- Background Job (Sidekiq)
 
-In the project directory, you can run:
+## File structure
+![image](https://github.com/ricky-go-tran/KOLSBOOKING_API/assets/136413699/6845044f-ad63-49ac-8837-ddc76b7869a6)
 
-### `npm start`
+| Dir/File    | Desc |
+| -------- | ------- |
+| app/controller  | Code handle BUS logic    |
+| app/models | Validation, association and DAL logic     |
+| app/serilizer    | Parse to Json    |
+| app/service    | Separate business logic from controllers and models   |
+| db/seed    | Sample data   |
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+##Architure Diagram 
+![Untitled](https://github.com/ricky-go-tran/KOLSBOOKING_API/assets/136413699/51fc2fe5-9520-43ac-8c3a-7c5e1622ed56)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Entity Relationship Diagram 
+![image](https://github.com/ricky-go-tran/KOLSBOOKING/assets/136413699/a52a1cc4-95c9-4bc7-8b8c-cfe82041e228)
 
-### `npm test`
+## How To Use? 
+- **Step 1:** Download source
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+  ![image](https://github.com/ricky-go-tran/BookingDoctor/assets/136413699/a782fe31-928c-44c6-a2c4-66a8b409a8df)
+  
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Step 2:** Install ruby ​​and rails environment. (Tutorial: https://www.tutorialspoint.com/ruby-on-rails/rails-installation.htm)
+- **Step 3:** Prepare a stripe account, webhook,key. (Stripe: https://stripe.com/)
+- **Step 4:** Prepare postgresql
+  
+  - With local: [https://www.postgresql.org/](https://www.postgresql.org/download/)https://www.postgresql.org/download/
+  - Or use host
+- **Step 5:** Run `bundle install` to install all denpendencies
+- **Step 6:**  With local database config can config in  config/database.yml
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  
+![image](https://github.com/ricky-go-tran/BookingDoctor/assets/136413699/34076b62-4334-4319-a147-23497d126bb2)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Step 7:** Delete old cretials and add new file with following content:
+   `secret_key_base: ((value))
+    postgres_host: ((value))
+    database_name: ((value))
+    postgres_user: ((value))
+    postgres_password: ((value))
+    stripe_publishable_key:((value))
+    stripe_secret_key: ((value))
+    email_password: ((value))`  
+-  **Step 8:** Create database `rails db:create`
+-  **Step 9:** Migrate database `rails db:migrate` but not following default. Use migrate up each file in order to avoid foreign key errors
+![BookingDoctor (1)](https://github.com/ricky-go-tran/BookingDoctor/assets/136413699/a7ac1aa1-a487-4137-ab31-5e94bf055e9f)
+ 
+- **Step 10:** Run seed file
+- **Step 11:** Run `rails server`
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
