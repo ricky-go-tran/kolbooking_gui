@@ -40,7 +40,7 @@ export const REPORT_PROFILE_INIT_STATE: ReportProfileType = {
   name_profile: "",
   id_reporter: "",
 }
-export const APP_URL = "http://localhost:3000"
+export const APP_URL = "http://14.225.206.62"
 export const FE_URL = "https://kolbooking-gui.vercel.app/"
 export const APP_CABLE_URL = "ws://localhost:3000/cable"
 

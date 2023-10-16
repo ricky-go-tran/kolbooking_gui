@@ -9,7 +9,7 @@ import ImageLight from "../../../assets/images/login-office.jpeg"
 import ImageDark from "../../../assets/images/login-office-dark.jpeg"
 import { GithubIcon } from "../../../icons"
 import { Alert, Label, Input, Button } from "@windmill/react-ui"
-import { getProxy, getCDNImage } from "../../../utils/PathUtil"
+import { getProxy, getCDNImage, getProxyPath } from "../../../utils/PathUtil"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { ProfileType } from "../../../global_variable/global_type"
 import {
@@ -80,7 +80,7 @@ const Login = () => {
           },
         }
         axios
-          .post(getProxy(LOGIN_URL), data)
+          .post(getProxyPath(LOGIN_URL), data)
           .then((res) => {
             let response = {
               token: res.headers.authorization,

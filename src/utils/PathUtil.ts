@@ -2,11 +2,16 @@ import {
   PROXY_SERVER,
   CDN_SERVER,
   FE_URL,
+  APP_URL,
 } from "../global_variable/global_constant"
 import { leftTrimChar, rightTrimChar } from "./StringUtil"
 
 export const getProxy = (path: string): string => {
   return rightTrimChar(PROXY_SERVER, "/") + "/" + leftTrimChar(path, "/")
+}
+
+export const getProxyPath = (path: string): string => {
+  return rightTrimChar(APP_URL, "/") + "/" + leftTrimChar(path, "/")
 }
 export const getFEHost = (path: string): string => {
   return rightTrimChar(FE_URL, "/") + "/" + leftTrimChar(path, "/")

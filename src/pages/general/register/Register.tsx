@@ -7,7 +7,7 @@ import ImageLight from "../../../assets/images/create-account-office.jpeg"
 import ImageDark from "../../../assets/images/create-account-office-dark.jpeg"
 import { GithubIcon, TwitterIcon } from "../../../icons"
 import { Alert, Input, Label, Button } from "@windmill/react-ui"
-import { getProxy } from "../../../utils/PathUtil"
+import { getProxy, getProxyPath } from "../../../utils/PathUtil"
 import { REGISTER_URL } from "../../../global_variable/global_uri_backend"
 
 function Register() {
@@ -37,7 +37,7 @@ function Register() {
             password: credentials.password,
           },
         }
-        axios.post(getProxy(REGISTER_URL), data).then((response) => {
+        axios.post(getProxyPath(REGISTER_URL), data).then((response) => {
           setMessage({ success: "success", message: "Signup successly" })
         })
       } else {
