@@ -24,6 +24,20 @@ The KOL Booking Website, a platform designed to facilitate the booking of Key Op
 - Action cable for realtime BE
 - Background Job (Sidekiq)
 
+## File structure
+![image](https://github.com/ricky-go-tran/KOLSBOOKING_API/assets/136413699/6845044f-ad63-49ac-8837-ddc76b7869a6)
+
+| Dir/File    | Desc |
+| -------- | ------- |
+| app/controller  | Code handle BUS logic    |
+| app/models | Validation, association and DAL logic     |
+| app/serilizer    | Parse to Json    |
+| app/service    | Separate business logic from controllers and models   |
+| db/seed    | Sample data   |
+
+##Architure Diagram 
+![Untitled](https://github.com/ricky-go-tran/KOLSBOOKING_API/assets/136413699/51fc2fe5-9520-43ac-8c3a-7c5e1622ed56)
+
 ## Entity Relationship Diagram 
 ![image](https://github.com/ricky-go-tran/KOLSBOOKING/assets/136413699/a52a1cc4-95c9-4bc7-8b8c-cfe82041e228)
 
