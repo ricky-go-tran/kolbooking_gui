@@ -72,30 +72,30 @@ function App() {
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { state: status_state, dispatch: status_dispatch } =
     useContext(StatusLoginContext)
-  const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
+  // const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
   const { errorCode } = useContext(ErrorContext)
 
-  useEffect(() => {
-    cable.subscriptions.create(
-      { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
-      {
-        connected: function () {
-          console.log("You've subscribed to the  Channel")
-        },
-        disconnected: function () {
-          console.log("You've disconnected from the  Channel")
-        },
-        received: (message: string) => {
-          if (message) {
-            generalMessage({
-              message: "You have a new message. Please check your inbox",
-              toast_dispatch: toast_dispatch,
-            })
-          }
-        },
-      }
-    )
-  }, [])
+  // useEffect(() => {
+  //   cable.subscriptions.create(
+  //     { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
+  //     {
+  //       connected: function () {
+  //         console.log("You've subscribed to the  Channel")
+  //       },
+  //       disconnected: function () {
+  //         console.log("You've disconnected from the  Channel")
+  //       },
+  //       received: (message: string) => {
+  //         if (message) {
+  //           generalMessage({
+  //             message: "You have a new message. Please check your inbox",
+  //             toast_dispatch: toast_dispatch,
+  //           })
+  //         }
+  //       },
+  //     }
+  //   )
+  // }, [])
 
   useEffect(() => {
     if (auth_state.auth_token !== "null" && auth_state.auth_token !== "") {
