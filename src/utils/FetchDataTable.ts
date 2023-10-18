@@ -180,7 +180,7 @@ export const fetchToITableJob = (jobs: any[]): ITableJob[] => {
       job_image:
         job.attributes.image === "null"
           ? getCDNImage(DEFAULT_IMAGE)
-          : job.attributes.image,
+          : getProxy(job.attributes.image),
       job_title: job.attributes.title,
       status: job.attributes.status,
       status_color: getColorOfStatusJob(job.attributes.status),
@@ -217,7 +217,7 @@ export const fetchToIPaymentJob = (jobs: any[]): IPaymentJob[] => {
       job_image:
         job.attributes.image === "null"
           ? getCDNImage(DEFAULT_IMAGE)
-          : job.attributes.image,
+          : getProxy(job.attributes.image),
       job_title: job.attributes.title,
       status: job.attributes.status,
       status_color: getColorOfStatusJob(job.attributes.status),
