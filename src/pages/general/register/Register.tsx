@@ -24,32 +24,33 @@ function Register() {
 
   const handleRegister = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    try {
-      if (
-        AuthenticationUtil.confirmPassword(
-          credentials.password,
-          credentials.repassword
-        )
-      ) {
-        const data = {
-          user: {
-            email: credentials.email,
-            password: credentials.password,
-          },
-        }
-        axios.post(getProxyPath(REGISTER_URL), data).then((response) => {
+    if (
+      AuthenticationUtil.confirmPassword(
+        credentials.password,
+        credentials.repassword
+      )
+    ) {
+      const data = {
+        user: {
+          email: credentials.email,
+          password: credentials.password,
+        },
+      }
+      axios
+        .post(getProxyPath(REGISTER_URL), data)
+        .then((response) => {
           setMessage({ success: "success", message: "Signup successly" })
         })
-      } else {
-        setMessage({
-          success: "fail",
-          message: "Invalid password or re-password",
+        .catch((error) => {
+          setMessage({
+            success: "fail",
+            message: "Register fails",
+          })
         })
-      }
-    } catch (error: any) {
+    } else {
       setMessage({
         success: "fail",
-        message: "Interval sever error! Can't signup",
+        message: "Invalid password or re-password",
       })
     }
   }

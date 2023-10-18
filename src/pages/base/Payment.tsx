@@ -78,6 +78,7 @@ export default function Payment() {
             })
         })
         .catch((error) => {
+          // console.log(error)
           HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     } else if (data.id !== "" && paymentId !== null) {
@@ -88,6 +89,7 @@ export default function Payment() {
           setClientSecret(res.data.client_secret)
         })
         .catch((error) => {
+          console.log(error)
           HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }

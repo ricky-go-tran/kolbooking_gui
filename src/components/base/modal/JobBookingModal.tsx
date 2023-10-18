@@ -19,7 +19,13 @@ import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
-const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
+const JobBookingModal = ({
+  kol_id,
+  onClose,
+}: {
+  kol_id: string
+  onClose: React.Dispatch<string>
+}) => {
   const [message, setMessage] = useState("")
   const [avatar, setAvatar] = useState<File | null>(null)
   const previewAvatar = useRef<HTMLImageElement>(null)
@@ -103,20 +109,52 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
         Authorization: auth_state.auth_token,
       },
     }
+
+    if (kol_id !== undefined) {
+      formData.append("job[kol_id]", kol_id)
+    }
     axios
-      .post(getProxy("/api/v1/base/jobs"), formData, config)
+      .post(getProxy("/api/v1/base/jobs/booking"), formData, config)
       .then((response) => {
+        generateNotification()
         generalMessage({
-          message: "Successfully created job",
+          message:
+            "Successfully booking job. Your booking will send realtime to kol",
           toast_dispatch: toast_dispatch,
         })
-
         onClose("-1")
       })
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }
+
+  const generateNotification = () => {
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+      },
+    }
+    const param = {
+      notification: {
+        title: `${profile_state.fullname} has been booking you`,
+        description: `User ${
+          profile_state.fullname
+        } haved booking you to job name ${
+          job.title
+        } at ${new Date().toDateString()}`,
+        type_notice: "notification",
+        sender_id: profile_state.id,
+        receiver_id: kol_id,
+      },
+    }
+    axios
+      .post(getProxy("/api/v1/notifications"), param, config)
+      .catch((error) => {
+        HandleResponseError(error, setErrorCode, toast_dispatch)
+      })
+  }
+
   const createSubmit = () => {
     const valid = checkValid({
       job: job,
@@ -183,7 +221,7 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
               <span className="w-5 h-5 text-green-400">
                 <AddIcon />
               </span>
-              <h3 className="text-lg font-semibold ml-3">Create Job</h3>
+              <h3 className="text-lg font-semibold ml-3">Booking job</h3>
             </div>
             {/*body*/}
             <div className="relative p-3 flex-auto  h-10/12 overflow-y-scroll">
@@ -195,7 +233,7 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
                     </svg>
                   </div>
                   <h6 className="font-semibold text-base mt-2">
-                    "Create Job Form"
+                    Booking job form
                   </h6>
                   <div className="w-9/12">
                     {message !== "" && (
@@ -363,4 +401,4 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
   )
 }
 
-export default JobCreateModal
+export default JobBookingModal

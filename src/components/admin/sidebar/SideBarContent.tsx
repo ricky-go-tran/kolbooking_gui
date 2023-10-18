@@ -30,11 +30,9 @@ function SidebarContent() {
   const renderSideBar = (routes: IRoute[]) => {
     return routes.map((route) => (
       <li className="relative px-6 py-3" key={route.name}>
-        <button
+        <Link
           className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-          onClick={(e) => {
-            handle_redirect(route)
-          }}
+          to={route.path}
         >
           <MatchUri uri={route.path}>
             <span
@@ -49,7 +47,7 @@ function SidebarContent() {
             icon={route.icon || ""}
           />
           <span className="ml-4">{route.name}</span>
-        </button>
+        </Link>
       </li>
     ))
   }

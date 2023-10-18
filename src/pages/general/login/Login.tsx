@@ -226,7 +226,6 @@ const Login = () => {
                 block
                 tag={"button"}
                 onClick={handleLogin}
-                disabled={state.loading}
               >
                 Log in
               </Button>

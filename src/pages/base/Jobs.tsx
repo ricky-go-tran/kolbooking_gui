@@ -42,7 +42,7 @@ const Jobs = () => {
   const [tab, setTab] = useState<string>("post")
   const [pageTable, setPageTable] = useState(1)
   const [dataTable, setDataTable] = useState<ITableJob[]>([])
-  const [created, setCreated] = useState<number | string>(-1)
+  const [created, setCreated] = useState<string>("-1")
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [sheetData, setSheetData] = useState<ISheetJob[]>([])
   const [detail, setDetail] = useState<number | string>(-1)
@@ -241,7 +241,7 @@ const Jobs = () => {
               type="submit"
               className="inline-flex items-center justify-center space-x-2 py-1 px-6 border border-transparent text-sm font-medium rounded text-blue-600 hover:text-blue-700 bg-blue-200 hover:bg-blue-300 transition-colors"
               onClick={() => {
-                setCreated(1)
+                setCreated("-2")
               }}
             >
               <svg
@@ -251,9 +251,9 @@ const Jobs = () => {
                 fill="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
               <div>Create Job</div>
@@ -261,11 +261,11 @@ const Jobs = () => {
           </li>
         </ul>
       </div>
-      {created !== -1 && (
-        <JobCreateModal type="create" kol_id={undefined} onClose={setCreated} />
-      )}
+      {created !== "-1" && <JobCreateModal onClose={setCreated} />}
       {detail !== -1 && <JobDetail job_id={detail} onClose={setDetail} />}
-      {edited !== -1 && <JobUpdateModal job_id={edited} onClose={setEdited} />}
+      {edited !== -1 && (
+        <JobUpdateModal key={edited} job_id={edited} onClose={setEdited} />
+      )}
 
       <TableContainer>
         <Table>

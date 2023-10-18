@@ -28,6 +28,7 @@ import { ReportProfileGeneralContext } from "../../../contexts/ReportProfileGene
 import { ReportProfileType } from "../../../global_variable/global_type"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import JobBookingModal from "../../../components/base/modal/JobBookingModal"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -40,7 +41,7 @@ const Detail = () => {
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
   const params = useParams()
-  const [booking, setBooking] = useState<string | number>(-1)
+  const [booking, setBooking] = useState<string>("-1")
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
   const { state: report_profile_state, dispatch: report_profile_dispatch } =
@@ -229,8 +230,8 @@ const Detail = () => {
   }
 
   const bookJob = () => {
-    if (isAuth(auth_state)) {
-      setBooking(1)
+    if (isAuth(auth_state) && params.id !== undefined) {
+      setBooking(params.id)
     } else {
       generalError({
         message: "This action need login to execute",
@@ -492,13 +493,6 @@ const Detail = () => {
                   </div>
                 </div>
               </div>
-              {booking !== -1 && (
-                <JobCreateModal
-                  type="booking"
-                  kol_id={params.id}
-                  onClose={setBooking}
-                />
-              )}
               <div className="lg:w-3/4 w-full flex flex-col items-center justify-start">
                 <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
                   <div className="mx-5 my-7">
@@ -582,6 +576,9 @@ const Detail = () => {
               </div>
             </div>
           </div>
+          {booking !== "-1" && (
+            <JobBookingModal kol_id={booking} onClose={setBooking} />
+          )}
         </div>
       )}
       {data === null && <Loading />}
