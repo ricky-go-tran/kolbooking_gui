@@ -155,13 +155,6 @@ const Header = () => {
                     />
                     <span>Dashboard</span>
                   </DropdownItem>
-                  <DropdownItem tag="a" href="/profile/password/edit">
-                    <OutlineCogIcon
-                      className="w-4 h-4 mr-3"
-                      aria-hidden="true"
-                    />
-                    <span>Change password</span>
-                  </DropdownItem>
                   <DropdownItem onClick={() => logout()}>
                     <OutlineLogoutIcon
                       className="w-4 h-4 mr-3"

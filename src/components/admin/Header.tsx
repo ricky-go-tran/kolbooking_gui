@@ -204,9 +204,9 @@ const Header = () => {
                     <span>Profile</span>
                   </DropdownItem>
                 )}
-                <DropdownItem tag="a" href="/profile/password/edit">
+                <DropdownItem tag="a" href="/">
                   <OutlineCogIcon className="w-4 h-4 mr-3" aria-hidden="true" />
-                  <span>Change password</span>
+                  <span>Go to Homepage</span>
                 </DropdownItem>
                 <DropdownItem onClick={() => logout()}>
                   <OutlineLogoutIcon
