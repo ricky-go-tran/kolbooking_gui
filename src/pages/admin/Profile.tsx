@@ -5,13 +5,14 @@ import { useState, useContext, useEffect, useRef } from "react"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { AuthContext } from "../../contexts/AuthContext"
 import axios from "axios"
-import { getProxy } from "../../utils/PathUtil"
+import { getCDNImage, getProxy } from "../../utils/PathUtil"
 import "../../assets/css/component/avatar_input.css"
 import { PROFILE_URL } from "../../global_variable/global_uri_backend"
 import { generalMessage } from "../../utils/ToastUtil"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import { DEFAULT_AVATAR } from "../../global_variable/global_constant"
 
 export const Profile = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -171,9 +172,9 @@ export const Profile = () => {
                 />
                 <figure className="personal-figure">
                   <img
-                    src={profileData.avatar}
+                    src={getProxy(profileData.avatar)}
                     className="personal-avatar"
-                    alt="avatar"
+                    alt={getCDNImage(DEFAULT_AVATAR)}
                     ref={previewAvatar}
                   />
                   <figcaption className="personal-figcaption">

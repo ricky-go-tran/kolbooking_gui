@@ -18,6 +18,8 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 const JobBookingModal = ({
   kol_id,
@@ -48,6 +50,8 @@ const JobBookingModal = ({
     price: 0,
     kol_id: "",
     image: "",
+    benefits: "",
+    time_work: "",
   })
 
   useEffect(() => {
@@ -95,6 +99,8 @@ const JobBookingModal = ({
     formData.append("job[requirement]", job.requirement)
     formData.append("job[price]", job.price.toString())
     formData.append("job[profile_id]", profile_state.id)
+    formData.append("job[benefits]", job.benefits)
+    formData.append("job[time_work]", job.time_work)
     let industries_association = selectIndustries.map((item) => {
       return { industry_id: item.id }
     })
@@ -210,6 +216,22 @@ const JobBookingModal = ({
     }
   }
 
+  const handleChangeDescription = (value: string) => {
+    setJob({ ...job, description: value })
+  }
+
+  const handleChangeRequirement = (value: string) => {
+    setJob({ ...job, requirement: value })
+  }
+
+  const handleChangeBenefit = (value: string) => {
+    setJob({ ...job, benefits: value })
+  }
+
+  const handleChangeTimework = (value: string) => {
+    setJob({ ...job, time_work: value })
+  }
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -226,7 +248,7 @@ const JobBookingModal = ({
             {/*body*/}
             <div className="relative p-3 flex-auto  h-10/12 overflow-y-scroll">
               <div className="mx-5 my-2 flex flex-col items-center justify-center text-base font-medium">
-                <div className="flex flex-col justify-center items-center w-full">
+                <div className="flex flex-col justify-between items-center w-full">
                   <div className="p-4 rounded-full bg-green-100">
                     <svg className="w-10 h-10 text-green-300 ">
                       <AddIcon />
@@ -291,37 +313,46 @@ const JobBookingModal = ({
                       />
                     </Label>
 
-                    <Label className="mt-4">
-                      <span>Description</span>
-                      <Textarea
-                        css=""
-                        className="mt-1"
-                        rows={3}
-                        placeholder="Enter some description about job"
-                        style={{ resize: "none" }}
-                        onChange={(event) =>
-                          setJob({ ...job, description: event.target.value })
-                        }
+                    <div className="mt-4 h-30">
+                      <span className="my-3">Description</span>
+                      <ReactQuill
+                        theme="snow"
                         value={job.description}
+                        onChange={handleChangeDescription}
+                        className="h-24 mb-5"
                       />
-                    </Label>
+                    </div>
 
-                    <Label className="mt-4">
-                      <span>Requirement</span>
-                      <Textarea
-                        css=""
-                        className="mt-1"
-                        rows={3}
-                        placeholder="Enter some requirement about job"
-                        style={{ resize: "none" }}
-                        onChange={(event) =>
-                          setJob({ ...job, requirement: event.target.value })
-                        }
+                    <div className="mt-14 h-32">
+                      <span className="my-3">Requirement</span>
+                      <ReactQuill
+                        theme="snow"
                         value={job.requirement}
+                        onChange={handleChangeRequirement}
+                        className="h-24 mb-5"
                       />
-                    </Label>
+                    </div>
 
-                    <Label className="mt-4">
+                    <div className="mt-14 h-32">
+                      <span className="my-3">Benefits</span>
+                      <ReactQuill
+                        theme="snow"
+                        value={job?.benefits}
+                        onChange={handleChangeBenefit}
+                        className="h-24 mb-5"
+                      />
+                    </div>
+                    <div className="mt-14 h-32">
+                      <span className="my-3">How & when to work</span>
+                      <ReactQuill
+                        theme="snow"
+                        value={job?.time_work}
+                        onChange={handleChangeTimework}
+                        className="h-24 mb-5"
+                      />
+                    </div>
+
+                    <Label className="mt-14">
                       <span>Price</span>
                       <Input
                         crossOrigin=""

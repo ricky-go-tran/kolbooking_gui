@@ -32,6 +32,8 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import ReportModal from "../../../components/general/modal/ReportModal"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -261,9 +263,9 @@ const Detail = () => {
                         alt="Default avatar"
                       ></img>
                       <div className="ml-5">
-                        <div className="text-gray-500 text-xl font-semibold font-sans">
+                        <p className="text-gray-500 text-xl font-semibold font-sans">
                           {data?.title}
-                        </div>
+                        </p>
                         <div className="max-w-lg mt-3 2xl:max-w-2xl">
                           {data?.industry?.data.map((industry: any) => {
                             return (
@@ -338,13 +340,47 @@ const Detail = () => {
                       Job Description
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.description}
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.description}`)}
+                        </div>{" "}
+                      </main>
                     </p>
                     <h6 className="text-lg font-bold dark:text-white">
                       Requirements
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.requirement}
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.requirement}`)}
+                        </div>{" "}
+                      </main>
+                    </p>
+
+                    <h6 className="text-lg font-bold dark:text-white">
+                      Benefits
+                    </h6>
+                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.benefits}`)}
+                        </div>{" "}
+                      </main>
+                    </p>
+
+                    <h6 className="text-lg font-bold dark:text-white">
+                      How and when to work
+                    </h6>
+                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.time_work}`)}
+                        </div>{" "}
+                      </main>
                     </p>
                   </div>
                 </div>

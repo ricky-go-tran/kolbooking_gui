@@ -54,6 +54,8 @@ export const fetchDataToJob = (data: any): Job => {
     kol_id: data?.kol_id || "",
     image: data?.image,
     price: data?.price,
+    benefits: data?.benefits || "",
+    time_work: data?.time_work,
   }
   return rs
 }

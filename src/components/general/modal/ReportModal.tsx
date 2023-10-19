@@ -12,6 +12,8 @@ import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 import { checkValid } from "../../../validates/general/ReportValidate"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 const ReportModal = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
@@ -52,6 +54,10 @@ const ReportModal = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
+  }
+
+  const handleChangeDescription = (value: string) => {
+    setReported({ ...reported, description: value })
   }
 
   const createSubmit = () => {
@@ -118,23 +124,15 @@ const ReportModal = () => {
                       value={reported.title}
                     />
                   </Label>
-                  <Label className="mt-4">
+                  <div className="mt-4 h-5">
                     <span>Description</span>
-                    <Textarea
-                      css=""
-                      className="mt-1"
-                      rows={3}
-                      placeholder="Enter some description..."
-                      style={{ resize: "none" }}
-                      onChange={(event) =>
-                        setReported({
-                          ...reported,
-                          description: event.target.value,
-                        })
-                      }
+                    <ReactQuill
+                      theme="snow"
                       value={reported.description}
+                      onChange={handleChangeDescription}
+                      className="h-28 rounded-lg"
                     />
-                  </Label>
+                  </div>
                 </div>
               </div>
             </div>

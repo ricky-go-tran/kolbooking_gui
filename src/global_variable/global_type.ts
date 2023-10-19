@@ -92,6 +92,8 @@ export type Job = {
   requirement: string
   kol_id: string | undefined
   image: string
+  benefits: string
+  time_work: string
 }
 
 export type KolProfile = {

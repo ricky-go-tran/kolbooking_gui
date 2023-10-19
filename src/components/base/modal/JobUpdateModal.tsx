@@ -24,6 +24,8 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import { Loading } from "../../general/loading/Loading"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 const JobUpdateModal = ({
   job_id,
@@ -58,6 +60,8 @@ const JobUpdateModal = ({
     price: 0,
     kol_id: "",
     image: "",
+    benefits: "",
+    time_work: "",
   })
   const { setErrorCode } = useContext(ErrorContext)
 
@@ -130,6 +134,14 @@ const JobUpdateModal = ({
     setSelectIndustries([...oldIndustry])
   }
 
+  const handleChangeDescription = (value: string) => {
+    setJob({ ...job, description: value })
+  }
+
+  const handleChangeRequirement = (value: string) => {
+    setJob({ ...job, requirement: value })
+  }
+
   const submit = () => {
     let count = 0
     let formData = new FormData()
@@ -141,6 +153,8 @@ const JobUpdateModal = ({
     formData.append("job[requirement]", job.requirement)
     formData.append("job[price]", job.price.toString())
     formData.append("job[profile_id]", profile_state.id)
+    formData.append("job[benefits]", job.benefits)
+    formData.append("job[time_work]", job.time_work)
     let industries_association = handleUpdateIndustry()
     const industries_association_json = JSON.stringify(industries_association)
     formData.append(
@@ -166,6 +180,13 @@ const JobUpdateModal = ({
       })
   }
 
+  const handleChangeBenefit = (value: string) => {
+    setJob({ ...job, benefits: value })
+  }
+
+  const handleChangeTimework = (value: string) => {
+    setJob({ ...job, time_work: value })
+  }
   const handleUpdateIndustry = () => {
     let new_industry: IndustryAssocationNestd[] = []
     selectIndustries.forEach((item) => {
@@ -213,44 +234,44 @@ const JobUpdateModal = ({
     }
   }
 
-  const handleFileInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (!event.target.files) {
-      setMessage("Image not found")
-      return
-    }
-    const file = event.target.files[0]
-    const type = file.type.split("/")[1]
-    const max_size_support = 1000000 // 1mb
-    const supportFile = ["jpeg", "png"]
-    const reader = new FileReader()
-    if (supportFile.includes(type)) {
-      if (file.size <= max_size_support) {
-        setAvatar(file)
-        setMessage("")
-        reader.onload = (event) => {
-          const fileContent = event?.target?.result
-          if (previewAvatar.current !== null) {
-            previewAvatar.current.src = `${fileContent}`
-          }
-        }
-        reader.readAsDataURL(file)
-      } else {
-        if (previewAvatar.current !== null) {
-          previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
-        }
-        setAvatar(null)
-        setMessage("Upload file under 1mb")
-      }
-    } else {
-      if (previewAvatar.current !== null) {
-        previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
-      }
-      setAvatar(null)
-      setMessage("Support type png, jpg and jpeg only")
-    }
-  }
+  // const handleFileInputChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   if (!event.target.files) {
+  //     setMessage("Image not found")
+  //     return
+  //   }
+  //   const file = event.target.files[0]
+  //   const type = file.type.split("/")[1]
+  //   const max_size_support = 1000000 // 1mb
+  //   const supportFile = ["jpeg", "png"]
+  //   const reader = new FileReader()
+  //   if (supportFile.includes(type)) {
+  //     if (file.size <= max_size_support) {
+  //       setAvatar(file)
+  //       setMessage("")
+  //       reader.onload = (event) => {
+  //         const fileContent = event?.target?.result
+  //         if (previewAvatar.current !== null) {
+  //           previewAvatar.current.src = `${fileContent}`
+  //         }
+  //       }
+  //       reader.readAsDataURL(file)
+  //     } else {
+  //       if (previewAvatar.current !== null) {
+  //         previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
+  //       }
+  //       setAvatar(null)
+  //       setMessage("Upload file under 1mb")
+  //     }
+  //   } else {
+  //     if (previewAvatar.current !== null) {
+  //       previewAvatar.current.src = `url(${getCDNImage(DEFAULT_IMAGE)})`
+  //     }
+  //     setAvatar(null)
+  //     setMessage("Support type png, jpg and jpeg only")
+  //   }
+  // }
 
   return (
     <>
@@ -291,16 +312,16 @@ const JobUpdateModal = ({
                           {message}
                         </Alert>
                       )}
-                      <Label className="mt-4">
+                      {/* <Label className="mt-4">
                         <span>Image Job</span>
                         <div className="personal-image">
                           <label className="label">
                             <input
                               type="file"
                               accept="image/*"
-                              onChange={(e) => {
-                                handleFileInputChange(e)
-                              }}
+                              // onChange={(e) => {
+                              //   handleFileInputChange(e)
+                              // }}
                             />
                             <figure className="personal-figure">
                               <img
@@ -322,7 +343,7 @@ const JobUpdateModal = ({
                             </figure>
                           </label>
                         </div>
-                      </Label>
+                      </Label> */}
                       <Label className="mt-4">
                         <span>Title</span>
                         <Input
@@ -338,38 +359,46 @@ const JobUpdateModal = ({
                           value={job.title}
                         />
                       </Label>
-
-                      <Label className="mt-4">
-                        <span>Description</span>
-                        <Textarea
-                          css=""
-                          className="mt-1"
-                          rows={3}
-                          placeholder="Enter some description about job"
-                          style={{ resize: "none" }}
-                          onChange={(event) =>
-                            setJob({ ...job, description: event.target.value })
-                          }
+                      <div className="mt-4 h-30">
+                        <span className="my-3">Description</span>
+                        <ReactQuill
+                          theme="snow"
                           value={job.description}
+                          onChange={handleChangeDescription}
+                          className="h-24 mb-5"
                         />
-                      </Label>
+                      </div>
 
-                      <Label className="mt-4">
-                        <span>Requirement</span>
-                        <Textarea
-                          css=""
-                          className="mt-1"
-                          rows={3}
-                          placeholder="Enter some requirement about job"
-                          style={{ resize: "none" }}
-                          onChange={(event) =>
-                            setJob({ ...job, requirement: event.target.value })
-                          }
+                      <div className="mt-14 h-32">
+                        <span className="my-3">Requirement</span>
+                        <ReactQuill
+                          theme="snow"
                           value={job.requirement}
+                          onChange={handleChangeRequirement}
+                          className="h-24 mb-5"
                         />
-                      </Label>
+                      </div>
 
-                      <Label className="mt-4">
+                      <div className="mt-14 h-32">
+                        <span className="my-3">Benefits</span>
+                        <ReactQuill
+                          theme="snow"
+                          value={job?.benefits}
+                          onChange={handleChangeBenefit}
+                          className="h-24 mb-5"
+                        />
+                      </div>
+                      <div className="mt-14 h-32">
+                        <span className="my-3">How & when to work</span>
+                        <ReactQuill
+                          theme="snow"
+                          value={job?.time_work}
+                          onChange={handleChangeTimework}
+                          className="h-24 mb-5"
+                        />
+                      </div>
+
+                      <Label className="mt-14">
                         <span>Price</span>
                         <Input
                           crossOrigin=""

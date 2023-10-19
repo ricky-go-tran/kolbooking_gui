@@ -9,6 +9,8 @@ import React, { SetStateAction, useState, useEffect, useContext } from "react"
 import { ErrorContext } from "../../../../contexts/ErrorContext"
 import { ToastContext } from "../../../../contexts/ToastContext"
 import { HandleResponseError } from "../../../../utils/ErrorHandleUtil"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const ReportDetail = ({
   report_id,
@@ -120,7 +122,14 @@ const ReportDetail = ({
                       Report Title
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.title}
+                      <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                        <main className="ql-snow">
+                          {" "}
+                          <div className="ql-editor">
+                            {parse(`${data?.description}`)}
+                          </div>{" "}
+                        </main>
+                      </p>
                     </p>
                     <h6 className="text-lg font-bold dark:text-white">
                       Report Description

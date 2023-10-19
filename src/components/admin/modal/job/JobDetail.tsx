@@ -24,6 +24,8 @@ import {
 import { ErrorContext } from "../../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../../utils/ErrorHandleUtil"
 import { ToastContext } from "../../../../contexts/ToastContext"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const JobDetail = ({
   job_id,
@@ -124,15 +126,49 @@ const JobDetail = ({
                       Job Description
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.description}
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.description}`)}
+                        </div>{" "}
+                      </main>
                     </p>
                     <h6 className="text-lg font-bold dark:text-white">
                       Requirements
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.requirement}
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.requirement}`)}
+                        </div>{" "}
+                      </main>
                     </p>
-                    <div className="w-full mb-2 select-none rounded-l-lg border-l-4 border-yellow-400 bg-yellow-100 p-4 font-medium hover:border-yellow-500">
+
+                    <h6 className="text-lg font-bold dark:text-white">
+                      Benefits
+                    </h6>
+                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.benefits}`)}
+                        </div>{" "}
+                      </main>
+                    </p>
+                    <h6 className="text-lg font-bold dark:text-white">
+                      How and when to work
+                    </h6>
+                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.time_work}`)}
+                        </div>{" "}
+                      </main>
+                    </p>
+
+                    <div className="w-full text-lg mb-2 mt-5 select-none rounded-l-lg border-l-4 border-blue-400 bg-blue-50 p-2 font-medium hover:border-blue-500">
                       About this job
                     </div>
                     <table className="text-xs my-3">
@@ -161,7 +197,7 @@ const JobDetail = ({
                         </tr>
                       </tbody>
                     </table>
-                    <div className="hover:red-yellow-500 w-full mb-2 select-none rounded-l-lg border-l-4 border-red-400 bg-red-100 p-4 font-medium">
+                    <div className="w-full text-lg mb-2 mt-5 select-none rounded-l-lg border-l-4 border-blue-400 bg-blue-50 p-2 font-medium hover:border-blue-500">
                       About onwer of this job
                     </div>
                     <div className="w-ful flex items-center justify-start">
@@ -203,48 +239,6 @@ const JobDetail = ({
                         </table>
                       </div>
                     </div>
-                    <div className="hover:red-pink-500 w-full mb-2 select-none rounded-l-lg border-l-4 border-pink-400 bg-pink-100 p-4 font-medium">
-                      About Kol of this job
-                    </div>
-                    {data.kol === undefined && (
-                      <span className="inline-block m-2 bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                        This job hasn't been accepted by any Kol, or you lack
-                        viewing permission.
-                      </span>
-                    )}
-                    {data.kol !== undefined && (
-                      <div className="w-ful flex items-center justify-start">
-                        <div className="photo-wrapper p-2">
-                          <div className="text-center text-gray-400 text-base font-semibold mb-5"></div>
-                          <img
-                            className="w-32 h-32 rounded-full mx-auto"
-                            src={getCDNImage(DEFAULT_AVATAR)}
-                            alt="John Doe"
-                          />
-                          <h3 className="text-center text-xl text-gray-900 font-medium leading-8">
-                            John Der
-                          </h3>
-                        </div>
-                        <div className="p-2">
-                          <table className="text-xs my-3">
-                            <tbody>
-                              <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                  Address
-                                </td>
-                                <td className="px-2 py-2">Distric 11, HCMC</td>
-                              </tr>
-                              <tr>
-                                <td className="px-2 py-2 text-gray-500 font-semibold">
-                                  Phone
-                                </td>
-                                <td className="px-2 py-2">{`+84 83259875693`}</td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    )}
                   </>
                 )}
               </div>

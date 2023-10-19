@@ -29,6 +29,8 @@ export default function Payment() {
     requirement: "",
     kol_id: "",
     image: "",
+    benefits: "",
+    time_work: "",
   })
   const params = useParams()
   const { setErrorCode } = useContext(ErrorContext)
