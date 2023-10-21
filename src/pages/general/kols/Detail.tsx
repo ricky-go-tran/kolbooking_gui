@@ -1,5 +1,14 @@
 import axios, { AxiosResponse } from "axios"
 import { useState, useEffect, useContext } from "react"
+import PhotoAlbum from "react-photo-album"
+import Lightbox from "yet-another-react-lightbox"
+import "yet-another-react-lightbox/styles.css"
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen"
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow"
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails"
+import Zoom from "yet-another-react-lightbox/plugins/zoom"
+import "yet-another-react-lightbox/plugins/thumbnails.css"
+
 import {
   PeopleIcon,
   IndustryIcon,
@@ -29,6 +38,12 @@ import { ReportProfileType } from "../../../global_variable/global_type"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 import JobBookingModal from "../../../components/base/modal/JobBookingModal"
+import { PhotoIcon } from "@heroicons/react/24/outline"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
+import ReactPlayer from "react-player"
+import { Button } from "@windmill/react-ui"
+import ReviewItem from "../../../components/general/review/ReviewItem"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -44,9 +59,20 @@ const Detail = () => {
   const [booking, setBooking] = useState<string>("-1")
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
+  const [review, setReview] = useState("")
+
   const { state: report_profile_state, dispatch: report_profile_dispatch } =
     useContext(ReportProfileGeneralContext)
   const { setErrorCode } = useContext(ErrorContext)
+  const sampleData: any[] = [
+    { src: "https://picsum.photos/id/237/200/300", width: 800, height: 400 },
+    {
+      src: "https://picsum.photos/seed/picsum/200/300",
+      width: 900,
+      height: 700,
+    },
+  ]
+  const [index, setIndex] = useState(-1)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -248,6 +274,16 @@ const Detail = () => {
       id_reporter: profile_state.id,
     }
     report_profile_dispatch({ type: "FETCH", payload: rs })
+  }
+
+  const handleChangeReview = (value: string) => {
+    if (review != value) {
+      setReview(value)
+    }
+  }
+
+  const clearReview = () => {
+    setReview("")
   }
 
   return (
@@ -510,6 +546,49 @@ const Detail = () => {
                 <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
                   <div className="mx-5 my-7">
                     <div className="flex justify-start">
+                      <PhotoIcon className="text-gray-400 w-6 h-6" />
+                      <span className="text-base text-gray-400 font-semibold ml-4">
+                        Introduction Video
+                      </span>
+                    </div>
+                    <div className="mt-5 flex justify-center h-96">
+                      <ReactPlayer
+                        url="https://www.youtube.com/watch?v=2mjgaDkGccA"
+                        width="85%"
+                        height="100%"
+                        playing={true}
+                        controls={true}
+                        style={{ borderRadius: "10px" }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+                  <div className="mx-5 my-7">
+                    <div className="flex justify-start mb-5">
+                      <PhotoIcon className="text-gray-400 w-6 h-6" />
+                      <span className="text-base text-gray-400 font-semibold ml-4">
+                        Gallery
+                      </span>
+                    </div>
+                    <PhotoAlbum
+                      photos={sampleData}
+                      layout="rows"
+                      targetRowHeight={150}
+                      onClick={({ index }) => setIndex(index)}
+                    />
+                    <Lightbox
+                      slides={sampleData}
+                      open={index >= 0}
+                      index={index}
+                      close={() => setIndex(-1)}
+                      plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
+                    />
+                  </div>
+                </div>
+                <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+                  <div className="mx-5 my-7">
+                    <div className="flex justify-start">
                       <LineChartIcon className="text-gray-400 w-6 h-6" />
                       <span className="text-base text-gray-400 font-semibold ml-4 ">
                         Statisticals
@@ -571,6 +650,35 @@ const Detail = () => {
                         }
                       )}
                     </div>
+                  </div>
+                </div>
+                <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+                  <div className="p-5">
+                    <h2 className="text-xl font-bold mb-4"> Reviews </h2>
+                    <ReactQuill
+                      theme="snow"
+                      value={review}
+                      onChange={handleChangeReview}
+                      className="h-24 mb-14"
+                    />
+                    <div className="w-full flex  flex-row-reverse">
+                      <Button className="mx-3">Submit</Button>
+                      <Button
+                        layout="outline"
+                        className="mx-3"
+                        onClick={() => {
+                          clearReview()
+                        }}
+                      >
+                        Clear
+                      </Button>
+                    </div>
+                    <hr className="my-6 border-t border-gray-300" />
+                    <ReviewItem />
+                    <ReviewItem />
+                    <ReviewItem />
+                    <ReviewItem />
+                    <ReviewItem />
                   </div>
                 </div>
               </div>

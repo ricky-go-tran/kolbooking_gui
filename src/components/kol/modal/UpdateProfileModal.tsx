@@ -5,12 +5,13 @@ import { ProfileContext } from "../../../contexts/ProfileContext"
 import { EditIcon } from "../../../icons"
 import { Alert, Button, Input, Label, Textarea } from "@windmill/react-ui"
 import axios from "axios"
-import { getProxy } from "../../../utils/PathUtil"
+import { getCDNImage, getProxy } from "../../../utils/PathUtil"
 import { PROFILE_URL } from "../../../global_variable/global_uri_backend"
 import "../../../assets/css/component/avatar_input.css"
 import { generalMessage } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
 
 export const UpdateProfileModal = ({
   profile_id,
@@ -187,7 +188,11 @@ export const UpdateProfileModal = ({
                           />
                           <figure className="personal-figure">
                             <img
-                              src={getProxy(profileData.avatar)}
+                              src={
+                                profileData.avatar !== "null"
+                                  ? getProxy(profileData.avatar)
+                                  : getCDNImage(DEFAULT_AVATAR)
+                              }
                               className="personal-avatar"
                               alt="avatar"
                               ref={previewAvatar}

@@ -172,7 +172,11 @@ export const Profile = () => {
                 />
                 <figure className="personal-figure">
                   <img
-                    src={getProxy(profileData.avatar)}
+                    src={
+                      profileData.avatar !== "null"
+                        ? getProxy(profileData.avatar)
+                        : getCDNImage(DEFAULT_AVATAR)
+                    }
                     className="personal-avatar"
                     alt={getCDNImage(DEFAULT_AVATAR)}
                     ref={previewAvatar}

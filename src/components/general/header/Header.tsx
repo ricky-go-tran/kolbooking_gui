@@ -32,6 +32,7 @@ const navigation = [
   { name: "Home", href: "/" },
   { name: "Jobs", href: "/jobs" },
   { name: "Kols", href: "/kols" },
+  { name: "Bussiness/Personal", href: "/bussiness" },
 ]
 
 const Header = () => {

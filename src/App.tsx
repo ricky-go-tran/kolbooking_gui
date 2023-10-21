@@ -60,6 +60,8 @@ const Payment = lazy(() => import("./pages/base/Payment"))
 const PaymentComplete = lazy(() => import("./pages/base/PaymentComplete"))
 const InvalidAccount = lazy(() => import("./pages/general/error/NotRole"))
 const Empty = lazy(() => import("./components/general/empty/Empty"))
+const Bussiness = lazy(() => import("./pages/general/bussiness/Bussiness"))
+const BussinessDetail = lazy(() => import("./pages/general/bussiness/Detail"))
 
 const IntergateRedirect = lazy(
   () => import("./pages/general/redirect/IntergrateRedirect")
@@ -175,6 +177,14 @@ function App() {
               }
             />
             <Route
+              path="/bussiness"
+              element={
+                <NewfeedLayout>
+                  <Bussiness />
+                </NewfeedLayout>
+              }
+            />
+            <Route
               path="/kols/:id"
               element={
                 <NewfeedLayout>
@@ -190,6 +200,16 @@ function App() {
                 </NewfeedLayout>
               }
             />
+
+            <Route
+              path="/bussiness/:id"
+              element={
+                <NewfeedLayout>
+                  <BussinessDetail />
+                </NewfeedLayout>
+              }
+            />
+
             <Route
               path="/login"
               element={

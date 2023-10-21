@@ -14,6 +14,8 @@ import { Loading } from "../../components/general/loading/Loading"
 import { ToastContext } from "../../contexts/ToastContext"
 import { isAuth } from "../../utils/AuthUtil"
 import axios, { AxiosResponse } from "axios"
+import "yet-another-react-lightbox/plugins/thumbnails.css"
+import "yet-another-react-lightbox/styles.css"
 import {
   KOL_PROFILE_URL,
   PROFILE_URL,
@@ -23,6 +25,16 @@ import { Link } from "react-router-dom"
 import { UpdateKolProfileModal } from "../../components/kol/modal/UpdateKolProfileModal"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import ReactPlayer from "react-player"
+import { PhotoIcon } from "@heroicons/react/24/outline"
+import PhotoAlbum from "react-photo-album"
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen"
+import Slideshow from "yet-another-react-lightbox/plugins/slideshow"
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails"
+import Zoom from "yet-another-react-lightbox/plugins/zoom"
+import Lightbox from "yet-another-react-lightbox"
+import UploadIntroductionVideo from "../../components/general/modal/UploadIntroductionVideo"
+import UploadAlbumModal from "../../components/general/modal/UploadAlbumModal"
 
 const KolProfile = () => {
   const [data, setData] = useState<any>(null)
@@ -31,11 +43,22 @@ const KolProfile = () => {
   const [followerCount, setFollowerCount] = useState(0)
   const [updateProfile, setUpdateProfile] = useState<number>(-1)
   const [updateKolProfile, setUpdateKolProfile] = useState<number>(-1)
+  const [updateVideo, setVideo] = useState<number>(-1)
+  const [updateAlbum, setAlbum] = useState<number>(-1)
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
+  const [photos, setPhotos] = useState([
+    { src: "https://picsum.photos/id/237/200/300", width: 800, height: 400 },
+    {
+      src: "https://picsum.photos/seed/picsum/200/300",
+      width: 900,
+      height: 700,
+    },
+  ])
+  const [index, setIndex] = useState(-1)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -43,6 +66,14 @@ const KolProfile = () => {
     setLikeCount(raw_data.like_num)
     setUnlikeCount(raw_data.unlike_num)
     setFollowerCount(raw_data.follow_num)
+  }
+
+  const deleteImage = (i: number) => {
+    setPhotos(
+      photos.filter((item, index) => {
+        return index !== i
+      })
+    )
   }
 
   useEffect(() => {
@@ -299,9 +330,81 @@ const KolProfile = () => {
               </div>
             </div>
           </div>
+          <div className="w-full bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+            <div className="mx-5 my-7">
+              <div className="w-full flex justify-between">
+                <div className="flex justify-start">
+                  <PhotoIcon className="text-gray-400 w-6 h-6" />
+                  <span className="text-base text-gray-400 font-semibold ml-4">
+                    Introduction Video
+                  </span>
+                </div>
+                <span
+                  className="text-gray-400 mr-5"
+                  onClick={() => {
+                    setVideo(1)
+                  }}
+                >
+                  <EditIcon />
+                </span>
+              </div>
+              <div className="mt-5 flex justify-center h-96">
+                <ReactPlayer
+                  url="https://www.youtube.com/watch?v=2mjgaDkGccA"
+                  width="85%"
+                  height="100%"
+                  playing={true}
+                  controls={true}
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="w-full bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+            <div className="mx-5 my-7">
+              <div className="w-full flex justify-between mb-5">
+                <div className="flex justify-start">
+                  <PhotoIcon className="text-gray-400 w-6 h-6" />
+                  <span className="text-base text-gray-400 font-semibold ml-4">
+                    Gallery
+                  </span>
+                </div>
+                <span
+                  className="text-gray-400 mr-5"
+                  onClick={() => {
+                    setAlbum(1)
+                  }}
+                >
+                  <EditIcon />
+                </span>
+              </div>
+              <PhotoAlbum
+                photos={photos}
+                layout="rows"
+                targetRowHeight={150}
+                onClick={({ index }) => deleteImage(index)}
+              />
+              <Lightbox
+                slides={photos}
+                open={index >= 0}
+                index={index}
+                close={() => setIndex(-1)}
+                plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
+              />
+            </div>
+          </div>
         </div>
       )}
       {data === null && <Loading />}
+      {updateVideo !== -1 && (
+        <UploadIntroductionVideo
+          profile_id={profile_state.id}
+          onClose={setVideo}
+        />
+      )}
+      {updateAlbum !== -1 && (
+        <UploadAlbumModal profile_id={profile_state.id} onClose={setAlbum} />
+      )}
       {updateProfile !== -1 && (
         <UpdateProfileModal
           profile_id={profile_state.id}

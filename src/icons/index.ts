@@ -54,6 +54,8 @@ import { ReactComponent as CardOutlineIcon } from "./card_outline.svg"
 import { ReactComponent as GoogleCalendarIcon } from "./google_calendar.svg"
 import { ReactComponent as SuccessRedirectIcon } from "./success_redirect.svg"
 import { ReactComponent as ErrorRedirectIcon } from "./error_redirect.svg"
+import { ReactComponent as JobOutlineIcon } from "./job.svg"
+import { ReactComponent as CommentOutlineIcon } from "./comment.svg"
 
 export {
   ButtonsIcon,
@@ -112,4 +114,6 @@ export {
   GoogleCalendarIcon,
   SuccessRedirectIcon,
   ErrorRedirectIcon,
+  CommentOutlineIcon,
+  JobOutlineIcon,
 }
