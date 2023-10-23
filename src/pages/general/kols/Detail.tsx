@@ -24,7 +24,10 @@ import {
   WarningOutlineIcon,
 } from "../../../icons"
 import { getProxy, getCDNImage } from "../../../utils/PathUtil"
-import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
+import {
+  DEFAULT_AVATAR,
+  DEFAULT_VIDEO,
+} from "../../../global_variable/global_constant"
 import { Link, useParams } from "react-router-dom"
 import { isAuth } from "../../../utils/AuthUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
@@ -44,6 +47,8 @@ import "react-quill/dist/quill.snow.css"
 import ReactPlayer from "react-player"
 import { Button } from "@windmill/react-ui"
 import ReviewItem from "../../../components/general/review/ReviewItem"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const Detail = () => {
   const [data, setData] = useState<any>(null)
@@ -64,19 +69,13 @@ const Detail = () => {
   const { state: report_profile_state, dispatch: report_profile_dispatch } =
     useContext(ReportProfileGeneralContext)
   const { setErrorCode } = useContext(ErrorContext)
-  const sampleData: any[] = [
-    { src: "https://picsum.photos/id/237/200/300", width: 800, height: 400 },
-    {
-      src: "https://picsum.photos/seed/picsum/200/300",
-      width: 900,
-      height: 700,
-    },
-  ]
+  const [photos, setPhotos] = useState<any[]>([])
   const [index, setIndex] = useState(-1)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
     setData(raw_data)
+    setPhotos(handleUrlAlbum(raw_data.gallaries))
     setLikeCount(raw_data.like_num)
     setUnlikeCount(raw_data.unlike_num)
     setFollowerCount(raw_data.follow_num)
@@ -107,6 +106,19 @@ const Detail = () => {
     }
   }
 
+  const handleUrlAlbum = (album: object[]) => {
+    let rs = album.map((image: any) => {
+      return {
+        id: image.id,
+        src: getProxy(image.src),
+        height: image.height,
+        width: image.width,
+      }
+    })
+    console.log(rs)
+    return rs
+  }
+
   useEffect(() => {
     let config = {}
     if (isAuth(auth_state)) {
@@ -117,6 +129,7 @@ const Detail = () => {
     axios
       .get(getProxy(`/api/v1/kols/${params.id}`), { ...config })
       .then((response) => {
+        console.log(response)
         fetchData(response)
       })
       .catch((error) => {
@@ -539,7 +552,12 @@ const Detail = () => {
                       </span>
                     </div>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.kol?.data?.attributes?.about_me}
+                      <main className="ql-snow">
+                        {" "}
+                        <div className="ql-editor">
+                          {parse(`${data?.kol?.data?.attributes?.about_me}`)}
+                        </div>{" "}
+                      </main>
                     </p>
                   </div>
                 </div>
@@ -553,7 +571,11 @@ const Detail = () => {
                     </div>
                     <div className="mt-5 flex justify-center h-96">
                       <ReactPlayer
-                        url="https://www.youtube.com/watch?v=2mjgaDkGccA"
+                        url={
+                          data?.intro_video === "null"
+                            ? getCDNImage(DEFAULT_VIDEO)
+                            : getProxy(data.intro_video)
+                        }
                         width="85%"
                         height="100%"
                         playing={true}
@@ -571,19 +593,43 @@ const Detail = () => {
                         Gallery
                       </span>
                     </div>
-                    <PhotoAlbum
-                      photos={sampleData}
-                      layout="rows"
-                      targetRowHeight={150}
-                      onClick={({ index }) => setIndex(index)}
-                    />
-                    <Lightbox
-                      slides={sampleData}
-                      open={index >= 0}
-                      index={index}
-                      close={() => setIndex(-1)}
-                      plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
-                    />
+                    {photos.length > 0 && (
+                      <>
+                        <PhotoAlbum
+                          photos={photos}
+                          layout="masonry"
+                          targetRowHeight={150}
+                          onClick={({ index }) => setIndex(index)}
+                        />
+                        <Lightbox
+                          slides={photos}
+                          open={index >= 0}
+                          index={index}
+                          close={() => setIndex(-1)}
+                          plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
+                        />
+                      </>
+                    )}
+                    {photos.length === 0 && (
+                      <ul
+                        id="gallery"
+                        className="flex flex-1 flex-wrap -m-1 mt-16"
+                      >
+                        <li
+                          id="empty"
+                          className="h-full w-full text-center flex flex-col items-center justify-center"
+                        >
+                          <img
+                            className="mx-auto w-28"
+                            src="https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png"
+                            alt="no data"
+                          />
+                          <span className="text-small text-gray-500">
+                            No image
+                          </span>
+                        </li>
+                      </ul>
+                    )}
                   </div>
                 </div>
                 <div className="w-11/12 bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">

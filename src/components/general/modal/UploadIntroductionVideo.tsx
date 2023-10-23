@@ -25,6 +25,10 @@ const UploadIntroductionVideo = ({
 }) => {
   const [video, setVideo] = useState<File | null>(null)
   const [message, setMessage] = useState("")
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { setErrorCode } = useContext(ErrorContext)
+  const [loading, setLoading] = useState(false)
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -52,6 +56,34 @@ const UploadIntroductionVideo = ({
       setMessage("Support type mp4 only")
     }
   }
+
+  const handleChangeProfile = () => {
+    setLoading(true)
+    let formData = new FormData()
+    if (video !== null) {
+      formData.append("kol_profile[intro_video]", video)
+      axios
+        .put(getProxy("/api/v1/kol/kol_profiles/change_video"), formData, {
+          headers: {
+            Authorization: auth_state.auth_token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          setLoading(false)
+          onClose(-1)
+          generalMessage({
+            message: "Profile change successfully",
+            toast_dispatch: toast_dispatch,
+          })
+        })
+        .catch((error) => {
+          setLoading(false)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
+        })
+    }
+  }
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -115,9 +147,9 @@ const UploadIntroductionVideo = ({
                           stroke="currentColor"
                         >
                           <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                           />
                         </svg>
@@ -159,8 +191,20 @@ const UploadIntroductionVideo = ({
               <button
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={() => {
+                  handleChangeProfile()
+                }}
+                disabled={loading}
               >
-                Submit
+                {loading === false && `Delete`}
+                {loading === true && (
+                  <div className="flex items-center justify-center w-12">
+                    <div
+                      style={{ borderTopColor: "transparent" }}
+                      className="w-5 h-5 border-4 border-white rounded-full animate-spin"
+                    ></div>
+                  </div>
+                )}
               </button>
             </div>
           </div>

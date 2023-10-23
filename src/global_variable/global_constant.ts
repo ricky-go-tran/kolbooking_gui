@@ -20,6 +20,8 @@ export const DEFAULT_IMAGE =
   "/image/upload/v1695613812/mowxzej1idnfvuwuket3.jpg"
 export const DEFAULT_AVATAR =
   "/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"
+export const DEFAULT_VIDEO =
+  "/video/upload/v1698028006/ojf5jlvffa7d6q7glwb1.mp4"
 
 export const INITIAL_STATE: AuthType = {
   auth_token: TokenStorage(),

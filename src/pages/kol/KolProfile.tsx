@@ -1,5 +1,8 @@
 import { useContext, useEffect, useState } from "react"
-import { DEFAULT_AVATAR } from "../../global_variable/global_constant"
+import {
+  DEFAULT_AVATAR,
+  DEFAULT_VIDEO,
+} from "../../global_variable/global_constant"
 import {
   CalendarIcon,
   EditIcon,
@@ -35,6 +38,10 @@ import Zoom from "yet-another-react-lightbox/plugins/zoom"
 import Lightbox from "yet-another-react-lightbox"
 import UploadIntroductionVideo from "../../components/general/modal/UploadIntroductionVideo"
 import UploadAlbumModal from "../../components/general/modal/UploadAlbumModal"
+import { TrashIcon } from "@heroicons/react/24/solid"
+import DeleteAlbumModal from "../../components/kol/modal/DeleteAlbumModal"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const KolProfile = () => {
   const [data, setData] = useState<any>(null)
@@ -45,27 +52,35 @@ const KolProfile = () => {
   const [updateKolProfile, setUpdateKolProfile] = useState<number>(-1)
   const [updateVideo, setVideo] = useState<number>(-1)
   const [updateAlbum, setAlbum] = useState<number>(-1)
+  const [deleteAlbum, setDeleteAlbum] = useState<number>(-1)
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
-  const [photos, setPhotos] = useState([
-    { src: "https://picsum.photos/id/237/200/300", width: 800, height: 400 },
-    {
-      src: "https://picsum.photos/seed/picsum/200/300",
-      width: 900,
-      height: 700,
-    },
-  ])
+  const [photos, setPhotos] = useState<any[]>([])
   const [index, setIndex] = useState(-1)
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
     setData(raw_data)
+    setPhotos(handleUrlAlbum(raw_data.gallaries))
     setLikeCount(raw_data.like_num)
     setUnlikeCount(raw_data.unlike_num)
     setFollowerCount(raw_data.follow_num)
+  }
+
+  const handleUrlAlbum = (album: object[]) => {
+    let rs = album.map((image: any) => {
+      return {
+        id: image.id,
+        src: getProxy(image.src),
+        height: image.height,
+        width: image.width,
+      }
+    })
+    console.log(rs)
+    return rs
   }
 
   const deleteImage = (i: number) => {
@@ -86,13 +101,12 @@ const KolProfile = () => {
     axios
       .get(getProxy(KOL_PROFILE_URL), { ...config })
       .then((response) => {
-        console.log(response.data.data)
         fetchData(response)
       })
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-  }, [updateKolProfile, updateProfile])
+  }, [updateKolProfile, updateProfile, updateVideo, updateAlbum])
 
   return (
     <>
@@ -289,9 +303,13 @@ const KolProfile = () => {
                   <EditIcon />
                 </span>
               </div>
-
               <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                {data?.kol?.data?.attributes?.about_me}
+                <main className="ql-snow">
+                  {" "}
+                  <div className="ql-editor">
+                    {parse(`${data?.kol?.data?.attributes?.about_me}`)}
+                  </div>{" "}
+                </main>
               </p>
             </div>
           </div>
@@ -350,7 +368,11 @@ const KolProfile = () => {
               </div>
               <div className="mt-5 flex justify-center h-96">
                 <ReactPlayer
-                  url="https://www.youtube.com/watch?v=2mjgaDkGccA"
+                  url={
+                    data?.intro_video === "null"
+                      ? getCDNImage(DEFAULT_VIDEO)
+                      : getProxy(data.intro_video)
+                  }
                   width="85%"
                   height="100%"
                   playing={true}
@@ -369,28 +391,57 @@ const KolProfile = () => {
                     Gallery
                   </span>
                 </div>
-                <span
-                  className="text-gray-400 mr-5"
-                  onClick={() => {
-                    setAlbum(1)
-                  }}
-                >
-                  <EditIcon />
-                </span>
+                <div className="mr-5 flex flex-row-reverse">
+                  <span
+                    className="text-red-400 mr-0 w-5 h-5 cursor-pointer"
+                    onClick={() => {
+                      setDeleteAlbum(1)
+                    }}
+                  >
+                    <TrashIcon />
+                  </span>
+                  <span
+                    className="text-gray-400 mr-5 w-5 h-5 cursor-pointer"
+                    onClick={() => {
+                      setAlbum(1)
+                    }}
+                  >
+                    <EditIcon />
+                  </span>
+                </div>
               </div>
-              <PhotoAlbum
-                photos={photos}
-                layout="rows"
-                targetRowHeight={150}
-                onClick={({ index }) => deleteImage(index)}
-              />
-              <Lightbox
-                slides={photos}
-                open={index >= 0}
-                index={index}
-                close={() => setIndex(-1)}
-                plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
-              />
+              {photos.length > 0 && (
+                <>
+                  <PhotoAlbum
+                    photos={photos}
+                    layout="masonry"
+                    targetRowHeight={150}
+                    onClick={({ index }) => setIndex(index)}
+                  />
+                  <Lightbox
+                    slides={photos}
+                    open={index >= 0}
+                    index={index}
+                    close={() => setIndex(-1)}
+                    plugins={[Fullscreen, Slideshow, Thumbnails, Zoom]}
+                  />
+                </>
+              )}
+              {photos.length === 0 && (
+                <ul id="gallery" className="flex flex-1 flex-wrap -m-1 mt-16">
+                  <li
+                    id="empty"
+                    className="h-full w-full text-center flex flex-col items-center justify-center"
+                  >
+                    <img
+                      className="mx-auto w-28"
+                      src="https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png"
+                      alt="no data"
+                    />
+                    <span className="text-small text-gray-500">No image</span>
+                  </li>
+                </ul>
+              )}
             </div>
           </div>
         </div>
@@ -405,6 +456,14 @@ const KolProfile = () => {
       {updateAlbum !== -1 && (
         <UploadAlbumModal profile_id={profile_state.id} onClose={setAlbum} />
       )}
+
+      {deleteAlbum !== -1 && (
+        <DeleteAlbumModal
+          profile_id={profile_state.id}
+          onClose={setDeleteAlbum}
+        />
+      )}
+
       {updateProfile !== -1 && (
         <UpdateProfileModal
           profile_id={profile_state.id}

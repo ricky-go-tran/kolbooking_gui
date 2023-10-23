@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react"
 import { EditIcon } from "../../../icons"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ProfileContext } from "../../../contexts/ProfileContext"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 import {
   IndustryAssocationNestd,
   IndustryAssociation,
@@ -199,6 +201,12 @@ export const UpdateKolProfileModal = ({
     }
   }
 
+  const handleChangeAboutme = (value: string) => {
+    if (value !== profileData.about_me) {
+      setProfileData({ ...profileData, about_me: value })
+    }
+  }
+
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -295,23 +303,16 @@ export const UpdateKolProfileModal = ({
                       />
                     </Label>
 
-                    <Label className="mt-4">
-                      <span>About me</span>
-                      <Textarea
-                        className="mt-1"
-                        css=""
-                        rows={5}
-                        placeholder="Enter some long form content."
-                        style={{ resize: "none" }}
-                        onChange={(event) =>
-                          setProfileData({
-                            ...profileData,
-                            about_me: event.target.value,
-                          })
-                        }
+                    <div className="mt-4 mb-10">
+                      <span>Overview</span>
+                      <ReactQuill
+                        theme="snow"
                         value={profileData.about_me}
+                        onChange={handleChangeAboutme}
+                        className="h-24 mb-5"
                       />
-                    </Label>
+                    </div>
+
                     <Label className="mt-4">
                       <span>Industry</span>
                       <Select

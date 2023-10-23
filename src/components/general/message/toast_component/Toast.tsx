@@ -1,9 +1,9 @@
-import { ToastComponentType } from "../../../../global_variable/global_component_type";
-import { useContext } from "react";
-import { ToastContext } from "../../../../contexts/ToastContext";
+import { ToastComponentType } from "../../../../global_variable/global_component_type"
+import { useContext } from "react"
+import { ToastContext } from "../../../../contexts/ToastContext"
 
 const Toast = ({ toast }: { toast: ToastComponentType }) => {
-  const { dispatch: toast_dispatch } = useContext(ToastContext);
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   return (
     <div
@@ -30,7 +30,7 @@ const Toast = ({ toast }: { toast: ToastComponentType }) => {
         data-dismiss-target="#alert-border-1"
         aria-label="Close"
         onClick={() => {
-          toast_dispatch({ type: "CLOSE", payload: toast });
+          toast_dispatch({ type: "CLOSE", payload: toast })
         }}
       >
         <span className="sr-only">Dismiss</span>
@@ -43,15 +43,15 @@ const Toast = ({ toast }: { toast: ToastComponentType }) => {
         >
           <path
             stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
           />
         </svg>
       </button>
     </div>
-  );
-};
+  )
+}
 
-export default Toast;
+export default Toast

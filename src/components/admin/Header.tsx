@@ -186,8 +186,17 @@ const Header = () => {
                 onClose={() => setIsProfileMenuOpen(false)}
                 className="z-50"
               >
-                {profile_state.role !== "kol" && (
+                {profile_state.role === "admin" && (
                   <DropdownItem tag="a" href="/profile">
+                    <OutlinePersonIcon
+                      className="w-4 h-4 mr-3"
+                      aria-hidden="true"
+                    />
+                    <span>Profile</span>
+                  </DropdownItem>
+                )}
+                {profile_state.role === "base" && (
+                  <DropdownItem tag="a" href="/base/profile">
                     <OutlinePersonIcon
                       className="w-4 h-4 mr-3"
                       aria-hidden="true"

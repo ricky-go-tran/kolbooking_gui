@@ -6,6 +6,8 @@ import {
   Select,
   Textarea,
 } from "@windmill/react-ui"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 import { getCDNImage, getProxy } from "../../../utils/PathUtil"
 import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
 import { useContext, useEffect, useRef, useState } from "react"
@@ -89,6 +91,12 @@ const KolSetupProfile = () => {
       }
       setAvatar(null)
       setMessage("Support type png, jpg and jpeg only")
+    }
+  }
+
+  const handleChangeAboutme = (value: string) => {
+    if (value !== profileData.about_me) {
+      setProfileData({ ...profileData, about_me: value })
     }
   }
 
@@ -359,23 +367,15 @@ const KolSetupProfile = () => {
       </Label>
       <hr className="mt-4" />
 
-      <Label className="mt-4">
-        <span>About me</span>
-        <Textarea
-          className="mt-1"
-          css=""
-          rows={5}
-          placeholder="About me."
-          style={{ resize: "none" }}
-          onChange={(event) =>
-            setProfileData({
-              ...profileData,
-              about_me: event.target.value,
-            })
-          }
+      <div className="mt-4 mb-12">
+        <span>Overview</span>
+        <ReactQuill
+          theme="snow"
           value={profileData.about_me}
+          onChange={handleChangeAboutme}
+          className="h-24 mb-5"
         />
-      </Label>
+      </div>
 
       <Label className="mt-4">
         <span>Industry</span>

@@ -29,6 +29,10 @@ const UploadAlbumModal = ({
 }) => {
   const [album, setAlbum] = useState<File[]>([])
   const [message, setMessage] = useState("")
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { setErrorCode } = useContext(ErrorContext)
+  const [loading, setLoading] = useState(false)
 
   const handleFileInputChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -61,6 +65,35 @@ const UploadAlbumModal = ({
       setMessage("")
     } else {
       setAlbum([])
+    }
+  }
+
+  const handleChangeProfile = () => {
+    setLoading(true)
+    let formData = new FormData()
+    if (album.length !== 0) {
+      album.forEach((image, index) => {
+        formData.append("kol_profile[gallaries][]", image)
+      })
+      axios
+        .put(getProxy("/api/v1/kol/kol_profiles/upload_image"), formData, {
+          headers: {
+            Authorization: auth_state.auth_token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          setLoading(false)
+          onClose(-1)
+          generalMessage({
+            message: "Profile change successfully",
+            toast_dispatch: toast_dispatch,
+          })
+        })
+        .catch((error) => {
+          setLoading(false)
+          HandleResponseError(error, setErrorCode, toast_dispatch)
+        })
     }
   }
 
@@ -179,8 +212,20 @@ const UploadAlbumModal = ({
               <button
                 className="bg-green-400 text-white hover:bg-green-500 active:bg-green-500 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={() => {
+                  handleChangeProfile()
+                }}
+                disabled={loading}
               >
-                Submit
+                {loading === false && `Delete`}
+                {loading === true && (
+                  <div className="flex items-center justify-center w-12">
+                    <div
+                      style={{ borderTopColor: "transparent" }}
+                      className="w-5 h-5 border-4 border-white rounded-full animate-spin"
+                    ></div>
+                  </div>
+                )}
               </button>
             </div>
           </div>

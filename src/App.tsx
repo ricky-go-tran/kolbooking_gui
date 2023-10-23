@@ -18,6 +18,7 @@ import { ErrorContext } from "./contexts/ErrorContext"
 import AuthRoutes from "./components/auth/AuthRoute"
 import HomePage from "./pages/general/newfeed/HomePage"
 import Logout from "./components/general/logout/Logout"
+import BussinessProfile from "./pages/base/BussinessProfile"
 const UnAuthRoutes = lazy(() => import("./pages/general/redirect/UnAuthRoutes"))
 const RedirectByRole = lazy(
   () => import("./pages/general/redirect/RedirectByRole")
@@ -338,6 +339,16 @@ function App() {
                     <KolProfile />
                   </AdminLayout>
                 </KolProtectRoute>
+              }
+            />
+            <Route
+              path="/base/profile"
+              element={
+                <BaseProtectRoute>
+                  <AdminLayout>
+                    <BussinessProfile />
+                  </AdminLayout>
+                </BaseProtectRoute>
               }
             />
 

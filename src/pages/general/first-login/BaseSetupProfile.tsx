@@ -12,6 +12,8 @@ import { StatusLoginContext } from "../../../contexts/StatusLoginContext"
 import { useNavigate } from "react-router-dom"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import ReactQuill from "react-quill"
+import "react-quill/dist/quill.snow.css"
 
 const BaseSetupProfile = () => {
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -22,6 +24,7 @@ const BaseSetupProfile = () => {
     birthday: "",
     phone: "",
     address: "",
+    overview: "",
   })
   const previewAvatar = useRef<HTMLImageElement>(null)
   const { state: auth_state } = useContext(AuthContext)
@@ -109,6 +112,12 @@ const BaseSetupProfile = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
+  }
+
+  const handleChangeOverview = (value: string) => {
+    if (value !== profileData.overview) {
+      setProfileData({ ...profileData, overview: value })
+    }
   }
 
   return (
@@ -212,6 +221,15 @@ const BaseSetupProfile = () => {
           value={profileData.address}
         />
       </Label>
+      <div className="mt-4 mb-10">
+        <span>Overview</span>
+        <ReactQuill
+          theme="snow"
+          value={profileData.overview}
+          onChange={handleChangeOverview}
+          className="h-24 mb-5"
+        />
+      </div>
       <hr className="mt-4" />
       <Button
         block
