@@ -28,6 +28,14 @@ import { ProfileContext } from "../../contexts/ProfileContext"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import {
+  ArrowRightCircleIcon,
+  CheckCircleIcon,
+  ClipboardDocumentCheckIcon,
+  PlusCircleIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/solid"
+import { CreditCardIcon } from "@heroicons/react/24/outline"
 
 const Job = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -272,24 +280,6 @@ const Job = () => {
     writeFile(wb, `Job-${Date.now()}.xlsx`)
   }
 
-  function handleAction(
-    event: React.ChangeEvent<HTMLSelectElement>,
-    job: ITableJob
-  ) {
-    let action = event.target.value
-    if (action === "apply") {
-      apply(job)
-    } else if (action === "complete") {
-      complete(job)
-    } else if (action === "payment") {
-      payment(job)
-    } else if (action === "finish") {
-      finish(job)
-    } else if (action === "cancle") {
-      cancle(job)
-    }
-  }
-
   return (
     <>
       <PageTitle>Job Managements</PageTitle>
@@ -449,18 +439,57 @@ const Job = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center space-x-4">
-                    <select
-                      id="countries"
-                      onChange={(event) => handleAction(event, job)}
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    >
-                      <option selected>Action</option>
-                      <option value="apply">Apply</option>
-                      <option value="complete">Complete</option>
-                      <option value="payment">Payment</option>
-                      <option value="finish">Finish</option>
-                      <option value="cancle">Cancel</option>
-                    </select>
+                    {job.status === "booking" && (
+                      <span
+                        className="text-gray-500 w-7 h-7 cursor-pointer"
+                        onClick={() => {
+                          apply(job)
+                        }}
+                      >
+                        <PlusCircleIcon />
+                      </span>
+                    )}
+                    {job.status === "apply" && (
+                      <span
+                        className="text-gray-500  w-7 h-7 cursor-pointer"
+                        onClick={() => {
+                          complete(job)
+                        }}
+                      >
+                        <ClipboardDocumentCheckIcon />
+                      </span>
+                    )}
+                    {job.status === "complete" && (
+                      <span
+                        className="text-gray-500  w-7 h-7 cursor-pointer"
+                        onClick={() => {
+                          payment(job)
+                        }}
+                      >
+                        <CreditCardIcon />
+                      </span>
+                    )}
+                    {(job.status === "complete" ||
+                      job.status === "payment") && (
+                      <span
+                        className="text-gray-500  w-7 h-7 cursor-pointer"
+                        onClick={() => {
+                          finish(job)
+                        }}
+                      >
+                        <CheckCircleIcon />
+                      </span>
+                    )}
+                    {job.status === "booking" && (
+                      <span
+                        className="text-gray-500  w-7 h-7 cursor-pointer"
+                        onClick={() => {
+                          cancle(job)
+                        }}
+                      >
+                        <XCircleIcon />
+                      </span>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>

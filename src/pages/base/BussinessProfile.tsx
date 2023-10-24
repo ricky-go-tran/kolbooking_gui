@@ -1,6 +1,13 @@
 import PageTitle from "../../components/admin/typography/PageTitle"
 import SectionTitle from "../../components/admin/typography/SectionTitle"
-import { Input, Label, Textarea, Button, Alert } from "@windmill/react-ui"
+import {
+  Input,
+  Label,
+  Textarea,
+  Button,
+  Alert,
+  Select,
+} from "@windmill/react-ui"
 import { useState, useContext, useEffect, useRef } from "react"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -15,6 +22,7 @@ import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 import { DEFAULT_AVATAR } from "../../global_variable/global_constant"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
+import { type } from "os"
 
 export const BussinessProfile = () => {
   const { state: auth_state } = useContext(AuthContext)
@@ -31,6 +39,7 @@ export const BussinessProfile = () => {
     birthday: "",
     phone: "",
     address: "",
+    type_profile: "personal",
     overview: "",
   })
   const previewAvatar = useRef<HTMLImageElement>(null)
@@ -38,7 +47,7 @@ export const BussinessProfile = () => {
 
   useEffect(() => {
     axios
-      .get(getProxy(PROFILE_URL), {
+      .get(getProxy("/api/v1/base/bussiness_profiles"), {
         headers: {
           Authorization: auth_state.auth_token,
         },
@@ -51,7 +60,8 @@ export const BussinessProfile = () => {
           birthday: handle_data.birthday,
           phone: handle_data.phone,
           address: handle_data.address,
-          overview: handle_data.overview,
+          type_profile: handle_data.bussiness.data.attributes.type_profile,
+          overview: handle_data.bussiness.data.attributes.overview,
         })
         setLoading(true)
       })
@@ -70,6 +80,18 @@ export const BussinessProfile = () => {
 
   const handleChangeProfile = () => {
     let formData = new FormData()
+    let bussiness = {
+      bussiness_profile: {
+        type_profile: profileData.type_profile,
+        overview: profileData.overview,
+      },
+    }
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+        "Content-Type": "multipart/form-data",
+      },
+    }
     if (avatar !== null) {
       formData.append("profile[avatar]", avatar)
     }
@@ -79,23 +101,26 @@ export const BussinessProfile = () => {
     formData.append("profile[address]", profileData.address)
     console.log(formData)
     axios
-      .put(getProxy("/api/v1/profiles/change"), formData, {
-        headers: {
-          Authorization: auth_state.auth_token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .put(getProxy("/api/v1/profiles/change"), formData, config)
       .then((response) => {
-        generalMessage({
-          message: "Profile change successfully",
-          toast_dispatch: toast_dispatch,
-        })
-        let handle_data = {
-          fullname: response.data.data.attributes.fullname,
-          avatar: getProxy(response.data.data.attributes.avatar),
-          role: response.data.data.attributes.role,
-        }
-        profile_dispatch({ type: "FETCH", payload: handle_data })
+        axios
+          .put(
+            getProxy("/api/v1/base/bussiness_profiles/change"),
+            bussiness,
+            config
+          )
+          .then((res) => {
+            generalMessage({
+              message: "Profile change successfully",
+              toast_dispatch: toast_dispatch,
+            })
+            let handle_data = {
+              fullname: response.data.data.attributes.fullname,
+              avatar: getProxy(response.data.data.attributes.avatar),
+              role: response.data.data.attributes.role,
+            }
+            profile_dispatch({ type: "FETCH", payload: handle_data })
+          })
       })
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
@@ -258,13 +283,30 @@ export const BussinessProfile = () => {
             />
           </Label>
 
+          <Label className="mt-4">
+            <span>Type Profile</span>
+            <select
+              onChange={(event) =>
+                setProfileData({
+                  ...profileData,
+                  type_profile: event.target.value,
+                })
+              }
+              value={profileData.type_profile}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option value="personal">Personal</option>
+              <option value="bussiness">Bussiness</option>
+            </select>
+          </Label>
+
           <div className="mt-4">
             <span>Overview</span>
             <ReactQuill
               theme="snow"
               value={profileData.overview}
               onChange={handleChangeOverview}
-              className="h-24 mb-5"
+              className="h-24 mb-10"
             />
           </div>
 

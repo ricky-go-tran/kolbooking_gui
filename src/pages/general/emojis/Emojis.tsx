@@ -146,7 +146,7 @@ const Emojis = () => {
 
   return (
     <>
-      <SectionTitle>Emojis</SectionTitle>
+      <SectionTitle>Interaction</SectionTitle>
       <div className="w-full flex justify-between py-5">
         <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
           <li>

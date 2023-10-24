@@ -1,56 +1,34 @@
-import React, { useState, useEffect, useContext } from "react"
-
-import InfoCard from "../../components/admin/cart/InfoCart"
-import ChartCard from "../../components/admin/chart/ChartCard"
-import { Doughnut, Line } from "react-chartjs-2"
-import ChartLegend from "../../components/admin/chart/CardLegend"
+import SectionTitle from "../../components/admin/typography/SectionTitle"
 import PageTitle from "../../components/admin/typography/PageTitle"
+import InfoCard from "../../components/admin/cart/InfoCart"
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
 import RoundIcon from "../../components/admin/RoundIcon"
-import response from "../../global_variable/global_table_admin"
-import { ITableData } from "../../global_variable/global_table_admin"
-import {
-  TableBody,
-  TableContainer,
-  Table,
-  TableHeader,
-  TableCell,
-  TableRow,
-  TableFooter,
-  Avatar,
-  Badge,
-  Pagination,
-  Button,
-} from "@windmill/react-ui"
 import { Chart, registerables } from "chart.js"
-import {
-  lineDashboardlLegends,
-  lineStatisticalLegends,
-} from "../../global_variable/global_charts_admin"
-Chart.register(...registerables)
-
-import {
-  doughnutOptions,
-  lineOptions,
-  doughnutLegends,
-  lineLegends,
-} from "../../global_variable/global_charts_admin"
-import axios from "axios"
-import { getProxy } from "../../utils/PathUtil"
+import { Line, Chart as ChartJS } from "react-chartjs-2"
+import ChartLegend from "../../components/admin/chart/CardLegend"
+import ChartCard from "../../components/admin/chart/ChartCard"
 import { AuthContext } from "../../contexts/AuthContext"
+import { lineStatisticalLegends } from "../../global_variable/global_charts_admin"
+import { useEffect, useContext, useState } from "react"
+import { getProxy } from "../../utils/PathUtil"
 import {
   defaultDataForLinechartCrontab,
-  fetchDataForLinechartDashboard,
+  fetchDataForLinechartStatistical,
+  fetchDataForLinechartStatisticalKol,
 } from "../../utils/ChartUtil"
+import axios from "axios"
+import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend"
 import { getSumOfArray } from "../../utils/NumberUtil"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import { Button, Input } from "@windmill/react-ui"
 import { getCurrentDateFormatted } from "../../utils/DateUtil"
+Chart.register(...registerables)
 
-function Dashboard() {
+const Statistics = () => {
   const [tab, setTab] = useState<string>("month")
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [dataCard, setDataCard] = useState([0, 0, 0, 0])
   const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
   const { state: toast_state, dispatch: toast_dispatch } =
@@ -59,6 +37,7 @@ function Dashboard() {
   const [month, setMonth] = useState(getCurrentDateFormatted())
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const [submit, setSubmit] = useState<string>("")
+
   type TParam = {
     tab: string
     filter: any | undefined
@@ -71,53 +50,57 @@ function Dashboard() {
     }
     if (tab === "year") {
       params = {
-        tab: tab,
+        ...params,
         filter: year,
       }
     }
     if (tab === "month") {
       params = {
-        tab: tab,
+        ...params,
         filter: month,
       }
     }
-    const config = {
-      headers: {
-        Authorization: auth_state.auth_token,
-      },
-      params: params,
-    }
     axios
-      .get(getProxy("/api/v1/admin/dashboard"), config)
-      .then((res) => {
-        const data = res.data.data
+      .get(getProxy("/api/v1/base/statistical"), {
+        headers: {
+          Authorization: auth_state.auth_token,
+        },
+        params: params,
+      })
+      .then((response) => {
+        const data = response.data
+        console.log(data)
         setDataCard([
           getSumOfArray(data.total_job),
-          getSumOfArray(data.total_base_user),
-          getSumOfArray(data.total_kol),
-          getSumOfArray(data.total_report),
+          getSumOfArray(data.finish_job),
+          getSumOfArray(data.cancle_job),
+
+          0,
         ])
         setDataChart(
-          fetchDataForLinechartDashboard(
+          fetchDataForLinechartStatisticalKol(
             data.label,
             data.total_job,
-            data.total_base_user,
-            data.total_kol,
-            data.total_report
+            data.finish_job,
+            data.cancle_job
           )
         )
       })
-      .catch((error) => {
-        HandleResponseError(error, setErrorCode, toast_dispatch)
-      })
+      .catch((error) => console.log(error))
   }, [tab, submit])
 
   return (
     <>
+      <PageTitle>Statistics</PageTitle>
+
       <div className="w-full flex justify-between py-6">
-        <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
-          Dashboard
-        </h1>
+        <SectionTitle>
+          {tab === "moth"
+            ? "Index month"
+            : tab === "half_year"
+            ? "Index 6 Month"
+            : "Index year"}
+        </SectionTitle>
         <div className="w-3/5 flex flex-row justify-between">
           {tab === "month" && (
             <div className="w-1/2">
@@ -208,8 +191,8 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total Jobs" value={`${dataCard[0]}`}>
+      <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
+        <InfoCard title="Total" value={`${dataCard[0]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={PeopleIcon}
@@ -219,7 +202,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Total Base User" value={`${dataCard[1]}`}>
+        <InfoCard title="Finish jobs" value={`${dataCard[1]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={MoneyIcon}
@@ -228,7 +211,8 @@ function Dashboard() {
             className="mr-4"
           />
         </InfoCard>
-        <InfoCard title="Total Kol" value={`${dataCard[2]}`}>
+
+        <InfoCard title="Cancel jobs" value={`${dataCard[2]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={CartIcon}
@@ -237,19 +221,12 @@ function Dashboard() {
             className="mr-4"
           />
         </InfoCard>
-
-        <InfoCard title="Total Report" value={`${dataCard[3]}`}>
-          {/* @ts-ignore */}
-          <RoundIcon
-            icon={ChatIcon}
-            iconColorClass="text-teal-500 dark:text-teal-100"
-            bgColorClass="bg-teal-100 dark:bg-teal-500"
-            className="mr-4"
-          />
-        </InfoCard>
       </div>
+
+      <SectionTitle>Compare Chart</SectionTitle>
+
       <div className="grid gap-6 mb-8 md:grid-cols-1">
-        <ChartCard title="System chart">
+        <ChartCard title="Job Index">
           <Line {...dataChart} />
         </ChartCard>
       </div>
@@ -257,4 +234,4 @@ function Dashboard() {
   )
 }
 
-export default Dashboard
+export default Statistics

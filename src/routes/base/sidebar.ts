@@ -2,6 +2,11 @@ import { IRoute } from "../../global_variable/global_type"
 
 const externalRoutes: IRoute[] = [
   {
+    path: "/base/statistics",
+    icon: "HomeIcon",
+    name: "Statistics",
+  },
+  {
     path: "/base/follow",
     icon: "PeopleIcon",
     name: "Follow",
@@ -14,7 +19,7 @@ const externalRoutes: IRoute[] = [
   {
     path: "/profile/emojis",
     icon: "LikeOuletIcon",
-    name: "Rates",
+    name: "Interaction",
   },
   {
     path: "/base/invoices",

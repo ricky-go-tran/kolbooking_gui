@@ -22,6 +22,8 @@ import { getSumOfArray } from "../../utils/NumberUtil"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
+import { Button, Input } from "@windmill/react-ui"
+import { getCurrentDateFormatted } from "../../utils/DateUtil"
 Chart.register(...registerables)
 
 const Statistics = () => {
@@ -32,16 +34,38 @@ const Statistics = () => {
   const { state: toast_state, dispatch: toast_dispatch } =
     useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
+  const [month, setMonth] = useState(getCurrentDateFormatted())
+  const [year, setYear] = useState<number>(new Date().getFullYear())
+  const [submit, setSubmit] = useState<string>("")
+
+  type TParam = {
+    tab: string
+    filter: any | undefined
+  }
 
   useEffect(() => {
+    let params: TParam = {
+      tab: tab,
+      filter: null,
+    }
+    if (tab === "year") {
+      params = {
+        ...params,
+        filter: year,
+      }
+    }
+    if (tab === "month") {
+      params = {
+        ...params,
+        filter: month,
+      }
+    }
     axios
       .get(getProxy(KOL_STATISTICALS_URL), {
         headers: {
           Authorization: auth_state.auth_token,
         },
-        params: {
-          tab: tab,
-        },
+        params: params,
       })
       .then((response) => {
         const data = response.data
@@ -65,7 +89,8 @@ const Statistics = () => {
       .catch((error) =>
         HandleResponseError(error, setErrorCode, toast_dispatch)
       )
-  }, [tab])
+  }, [tab, submit])
+
   return (
     <>
       <PageTitle>Statistics</PageTitle>
@@ -78,44 +103,94 @@ const Statistics = () => {
             ? "Index 6 Month"
             : "Index year"}
         </SectionTitle>
-        <ul className="w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs">
-          <li>
-            <div
-              className={`flex justify-center py-2 cursor-pointer ${
-                tab === "month"
-                  ? "bg-white rounded-lg shadow text-indigo-900"
-                  : ""
-              }`}
-              onClick={() => setTab("month")}
-            >
-              Month
+        <div className="w-3/5 flex flex-row justify-between">
+          {tab === "month" && (
+            <div className="w-1/2">
+              <input
+                type="month"
+                placeholder="Picker month"
+                value={month}
+                onChange={(e) => {
+                  setMonth(e.target.value)
+                }}
+                className="border border-gray-200 rounded-lg mr-3 w-2/4"
+              />
+              <Button
+                onClick={() => {
+                  setSubmit(month)
+                }}
+              >
+                Statisticals
+              </Button>
             </div>
-          </li>
-          <li>
-            <div
-              className={`flex justify-center py-2 cursor-pointer ${
-                tab === "half_year"
-                  ? "bg-white rounded-lg shadow text-indigo-900"
-                  : ""
-              }`}
-              onClick={() => setTab("half_year")}
-            >
-              6 Month
+          )}
+          {tab === "year" && (
+            <div className="w-1/2">
+              <input
+                type="number"
+                min="2000"
+                max="2200"
+                placeholder="Picker year"
+                className="border border-gray-200 rounded-lg mr-3 w-2/4"
+                value={year}
+                onChange={(e) => {
+                  setYear(Number(e.target.value))
+                }}
+              />
+              <Button
+                onClick={() => {
+                  setSubmit(`${year}`)
+                }}
+              >
+                Statisticals
+              </Button>
             </div>
-          </li>
-          <li>
-            <div
-              className={`flex justify-center py-2  cursor-pointer ${
-                tab === "year"
-                  ? "bg-white rounded-lg shadow text-indigo-900"
-                  : ""
-              }`}
-              onClick={() => setTab("year")}
-            >
-              Year
-            </div>
-          </li>
-        </ul>
+          )}
+          <ul
+            className={
+              tab !== "half_year"
+                ? "w-1/2 max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs"
+                : "w-full max-w-2xl grid grid-flow-col text-center text-gray-500 bg-gray-100 rounded-lg p-1 text-xs"
+            }
+          >
+            <li>
+              <div
+                className={`flex justify-center py-2 cursor-pointer ${
+                  tab === "month"
+                    ? "bg-white rounded-lg shadow text-indigo-900"
+                    : ""
+                }`}
+                onClick={() => setTab("month")}
+              >
+                Month
+              </div>
+            </li>
+            <li>
+              <div
+                className={`flex justify-center py-2 cursor-pointer ${
+                  tab === "half_year"
+                    ? "bg-white rounded-lg shadow text-indigo-900"
+                    : ""
+                }`}
+                onClick={() => setTab("half_year")}
+              >
+                6 Month
+              </div>
+            </li>
+            <li>
+              <div
+                className={`flex justify-center py-2  cursor-pointer ${
+                  tab === "year"
+                    ? "bg-white rounded-lg shadow text-indigo-900"
+                    : ""
+                }`}
+                onClick={() => setTab("year")}
+              >
+                Year
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
@@ -155,7 +230,6 @@ const Statistics = () => {
       <div className="grid gap-6 mb-8 md:grid-cols-1">
         <ChartCard title="Job Index">
           <Line {...dataChart} />
-          <ChartLegend legends={lineStatisticalLegends} />
         </ChartCard>
       </div>
     </>

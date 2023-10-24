@@ -24,6 +24,7 @@ const BaseSetupProfile = () => {
     birthday: "",
     phone: "",
     address: "",
+    type_profile: "personal",
     overview: "",
   })
   const previewAvatar = useRef<HTMLImageElement>(null)
@@ -79,6 +80,18 @@ const BaseSetupProfile = () => {
 
   const handleCreateProfile = () => {
     let formData = new FormData()
+    let bussiness = {
+      bussiness_profile: {
+        type_profile: profileData.type_profile,
+        overview: profileData.overview,
+      },
+    }
+    const config = {
+      headers: {
+        Authorization: auth_state.auth_token,
+        "Content-Type": "multipart/form-data",
+      },
+    }
     if (avatar !== null) {
       formData.append("base[avatar]", avatar)
     }
@@ -88,26 +101,25 @@ const BaseSetupProfile = () => {
     formData.append("base[address]", profileData.address)
     console.log(formData)
     axios
-      .post(getProxy("/api/v1/setup_profiles/base"), formData, {
-        headers: {
-          Authorization: auth_state.auth_token,
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .post(getProxy("/api/v1/setup_profiles/base"), formData, config)
       .then((response) => {
-        generalMessage({
-          message: "Profile change successfully",
-          toast_dispatch: toast_dispatch,
-        })
-        let handle_data = {
-          fullname: response.data.data.attributes.fullname,
-          avatar: response.data.data.attributes.avatar,
-          role: response.data.data.attributes.role,
-          id: response.data.data.attributes.id,
-        }
-        profile_dispatch({ type: "FETCH", payload: handle_data })
-        status_dispatch({ type: "valid" })
-        navigate("/")
+        axios
+          .post(getProxy("/api/v1/base/bussiness_profiles"), bussiness, config)
+          .then((res) => {
+            generalMessage({
+              message: "Profile change successfully",
+              toast_dispatch: toast_dispatch,
+            })
+            let handle_data = {
+              fullname: response.data.data.attributes.fullname,
+              avatar: response.data.data.attributes.avatar,
+              role: response.data.data.attributes.role,
+              id: response.data.data.attributes.id,
+            }
+            profile_dispatch({ type: "FETCH", payload: handle_data })
+            status_dispatch({ type: "valid" })
+            navigate("/")
+          })
       })
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
@@ -221,6 +233,23 @@ const BaseSetupProfile = () => {
           value={profileData.address}
         />
       </Label>
+
+      <Label className="mt-4">
+        <span>Type Profile</span>
+        <select
+          onChange={(event) =>
+            setProfileData({
+              ...profileData,
+              type_profile: event.target.value,
+            })
+          }
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        >
+          <option value="personal">Personal</option>
+          <option value="bussiness">Bussiness</option>
+        </select>
+      </Label>
+
       <div className="mt-4 mb-10">
         <span>Overview</span>
         <ReactQuill

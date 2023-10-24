@@ -24,7 +24,7 @@ const externalRoutes: IRoute[] = [
   {
     path: "/profile/emojis",
     icon: "LikeOuletIcon",
-    name: "Rates",
+    name: "Interaction",
   },
 ]
 export default externalRoutes

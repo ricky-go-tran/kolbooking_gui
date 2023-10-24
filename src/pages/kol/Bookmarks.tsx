@@ -292,9 +292,15 @@ const Bookmark = () => {
                       <option selected disabled>
                         Action
                       </option>
-                      <option value="care">Care</option>
-                      <option value="attention">Attention</option>
-                      <option value="extremely">Extremely</option>
+                      {bookmark.status !== "care" && (
+                        <option value="care">Care</option>
+                      )}
+                      {bookmark.status !== "attention" && (
+                        <option value="attention">Attention</option>
+                      )}
+                      {bookmark.status !== "extremely" && (
+                        <option value="extremely">Extremely</option>
+                      )}
                       <option value="unmark">Unmark</option>
                     </select>
                   </div>

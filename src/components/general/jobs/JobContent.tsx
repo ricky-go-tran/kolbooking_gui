@@ -47,6 +47,7 @@ const JobContent = () => {
           number: pageTable,
         },
         search: jobSearch,
+        filter: jobFilter,
       },
     }
     if (isAuth(auth_state)) {

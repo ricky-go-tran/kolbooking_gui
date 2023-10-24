@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios"
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect, useContext, useCallback } from "react"
 import PhotoAlbum from "react-photo-album"
 import Lightbox from "yet-another-react-lightbox"
 import "yet-another-react-lightbox/styles.css"
@@ -34,7 +34,11 @@ import { AuthContext } from "../../../contexts/AuthContext"
 import { Loading } from "../../../components/general/loading/Loading"
 import JobCreateModal from "../../../components/base/modal/JobCreateModal"
 import { ToastContext } from "../../../contexts/ToastContext"
-import { generalError } from "../../../utils/ToastUtil"
+import {
+  generalError,
+  generalMessage,
+  generalWarning,
+} from "../../../utils/ToastUtil"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { ReportProfileGeneralContext } from "../../../contexts/ReportProfileGeneralContext"
 import { ReportProfileType } from "../../../global_variable/global_type"
@@ -71,6 +75,15 @@ const Detail = () => {
   const { setErrorCode } = useContext(ErrorContext)
   const [photos, setPhotos] = useState<any[]>([])
   const [index, setIndex] = useState(-1)
+  const [load, setLoad] = useState("")
+  const [reviews, setReviews] = useState<any[]>([])
+  const config = { headers: { Authorization: auth_state.auth_token } }
+
+  const handleChangeReview = useCallback((value: string) => {
+    if (review != value) {
+      setReview(value)
+    }
+  }, [])
 
   const fetchData = (response: AxiosResponse<any, any>): void => {
     const raw_data = response.data.data.attributes
@@ -136,6 +149,47 @@ const Detail = () => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [])
+
+  useEffect(() => {
+    axios
+      .get(getProxy(`/api/v1/reviews/${params.id}/reviews_by_reviewed`))
+      .then((response) => {
+        setReviews(response.data.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [load])
+
+  const submitComent = () => {
+    if (isAuth(auth_state)) {
+      const param = {
+        review: {
+          content: review,
+          reviewed_id: params.id,
+          reviewer_id: profile_state.id,
+        },
+      }
+      axios
+        .post(getProxy("/api/v1/reviews"), param, config)
+        .then((response) => {
+          generalMessage({
+            message: "Successly reviews",
+            toast_dispatch: toast_dispatch,
+          })
+          setLoad(`${new Date().getTime()}`)
+          setReview("")
+        })
+        .catch((error) => {
+          HandleResponseError(error, setErrorCode, toast_dispatch)
+        })
+    } else {
+      generalWarning({
+        message: "Need login to review!",
+        toast_dispatch: toast_dispatch,
+      })
+    }
+  }
 
   const like = (profile: any) => {
     if (isAuth(auth_state)) {
@@ -287,12 +341,6 @@ const Detail = () => {
       id_reporter: profile_state.id,
     }
     report_profile_dispatch({ type: "FETCH", payload: rs })
-  }
-
-  const handleChangeReview = (value: string) => {
-    if (review != value) {
-      setReview(value)
-    }
   }
 
   const clearReview = () => {
@@ -708,7 +756,14 @@ const Detail = () => {
                       className="h-24 mb-14"
                     />
                     <div className="w-full flex  flex-row-reverse">
-                      <Button className="mx-3">Submit</Button>
+                      <Button
+                        className="mx-3"
+                        onClick={() => {
+                          submitComent()
+                        }}
+                      >
+                        Submit
+                      </Button>
                       <Button
                         layout="outline"
                         className="mx-3"
@@ -720,11 +775,12 @@ const Detail = () => {
                       </Button>
                     </div>
                     <hr className="my-6 border-t border-gray-300" />
-                    <ReviewItem />
-                    <ReviewItem />
-                    <ReviewItem />
-                    <ReviewItem />
-                    <ReviewItem />
+                    {reviews.length > 0 &&
+                      reviews.map((item) => {
+                        return (
+                          <ReviewItem key={item.id} review={item.attributes} />
+                        )
+                      })}
                   </div>
                 </div>
               </div>

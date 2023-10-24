@@ -368,7 +368,7 @@ const KolSetupProfile = () => {
       <hr className="mt-4" />
 
       <div className="mt-4 mb-12">
-        <span>Overview</span>
+        <span>Aboutme</span>
         <ReactQuill
           theme="snow"
           value={profileData.about_me}

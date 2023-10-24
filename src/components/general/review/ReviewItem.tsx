@@ -1,24 +1,39 @@
-const ReviewItem = () => {
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
+import { getCDNImage, getProxy } from "../../../utils/PathUtil"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
+import { memo } from "react"
+
+const ReviewItem = ({ review }: { review: any }) => {
+  console.log(review)
   return (
-    <div className="flex my-3">
-      <div className="flex-shrink-0 mr-3">
-        <img
-          className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
-          src="https://images.unsplash.com/photo-1604426633861-11b2faead63c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=200&h=200&q=80"
-          alt=""
-        />
+    <>
+      <div className="flex my-3">
+        <div className="flex-shrink-0 mr-3">
+          <img
+            className="mt-2 rounded-full w-8 h-8 sm:w-10 sm:h-10"
+            src={
+              review.reviewer.data.attributes.avatar === "null"
+                ? getCDNImage(DEFAULT_AVATAR)
+                : getProxy(review.reviewer.data.attributes.avatar)
+            }
+            alt=""
+          />
+        </div>
+        <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
+          <strong>{review.reviewer.data.attributes.fullname}</strong>{" "}
+          <span className="text-xs ml-3 text-gray-400">
+            {new Date(review.created_at).toLocaleString()}
+          </span>
+          <div className="text-sm">
+            <main className="ql-snow">
+              <div className="ql-editor">{parse(`${review?.content}`)}</div>
+            </main>
+          </div>
+        </div>
       </div>
-      <div className="flex-1 border rounded-lg px-4 py-2 sm:px-6 sm:py-4 leading-relaxed">
-        <strong>Sarah</strong>{" "}
-        <span className="text-xs text-gray-400">3:34 PM</span>
-        <p className="text-sm">
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua.
-        </p>
-      </div>
-    </div>
+    </>
   )
 }
 
-export default ReviewItem
+export default memo(ReviewItem)

@@ -3,7 +3,7 @@ import { ErrorRedirectIcon, SuccessRedirectIcon } from "../../../icons"
 import { Loading } from "../../../components/general/loading/Loading"
 import { useParams } from "react-router-dom"
 import axios from "axios"
-import { getProxy } from "../../../utils/PathUtil"
+import { getFEHost, getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 
 const IntergrateRedirect = () => {
@@ -67,7 +67,7 @@ const IntergrateRedirect = () => {
                 homepage
               </p>
               <a
-                href="/"
+                href={getFEHost("/")}
                 className="inline-flex items-center px-4 py-2 text-white bg-indigo-600 border border-indigo-600 rounded-full hover:bg-indigo-700 focus:outline-none focus:ring"
               >
                 <span className="text-sm font-medium">Home</span>

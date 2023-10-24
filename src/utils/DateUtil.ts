@@ -9,6 +9,13 @@ export const formatDate = (dateString: string) => {
   return formattedDate
 }
 
+export function getCurrentDateFormatted() {
+  const currentDate = new Date()
+  const year = currentDate.getFullYear()
+  const month = String(currentDate.getMonth() + 1).padStart(2, "0")
+  return `${year}-${month}`
+}
+
 export const formatDateWithInputStringOrDate = (dateString: string | Date) => {
   const date = new Date(dateString)
   const year = date.getFullYear()
