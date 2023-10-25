@@ -49,13 +49,11 @@ const JobQuickViewItem = ({ job }: { job: any }) => {
       )}
 
       {job.image !== "null" && (
-        <div
+        <img
           className="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden"
-          style={{
-            backgroundImage: `url(${getProxy(job.image)})`,
-          }}
-          title="Job image"
-        ></div>
+          src={getProxy(job.image)}
+          alt=""
+        />
       )}
       <div className="border-r border-b border-l border-grey-light lg:border-l-0 lg:border-t lg:border-grey-light bg-white dark:bg-gray-800 dark:border-gray-800 rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal flex-grow">
         <div>

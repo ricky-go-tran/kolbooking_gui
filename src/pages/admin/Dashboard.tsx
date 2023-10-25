@@ -114,13 +114,13 @@ function Dashboard() {
 
   return (
     <>
-      <div className="w-full flex justify-between py-6">
-        <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-6">
+        <h1 className="text-xl lg:text-2xl font-semibold text-gray-700 dark:text-gray-200">
           Dashboard
         </h1>
-        <div className="w-3/5 flex flex-row justify-between">
+        <div className="w-full lg:w-3/5 flex flex-col lg:flex-row justify-between">
           {tab === "month" && (
-            <div className="w-1/2">
+            <div className="w-full my-2 lg:w-1/2 lg:my-0">
               <input
                 type="month"
                 placeholder="Picker month"
@@ -207,7 +207,6 @@ function Dashboard() {
           </ul>
         </div>
       </div>
-
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
         <InfoCard title="Total Jobs" value={`${dataCard[0]}`}>
           {/* @ts-ignore */}

@@ -123,19 +123,18 @@ const ReportDetail = ({
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
                       <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                        <main className="ql-snow">
-                          {" "}
-                          <div className="ql-editor">
-                            {parse(`${data?.description}`)}
-                          </div>{" "}
-                        </main>
+                        {data?.title}
                       </p>
                     </p>
                     <h6 className="text-lg font-bold dark:text-white">
                       Report Description
                     </h6>
                     <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
-                      {data?.description}
+                      <main className="ql-snow">
+                        <div className="ql-editor">
+                          {parse(`${data?.description}`)}
+                        </div>
+                      </main>
                     </p>
                   </>
                 )}

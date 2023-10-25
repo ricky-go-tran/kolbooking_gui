@@ -354,7 +354,7 @@ const Detail = () => {
                   theme="snow"
                   value={review}
                   onChange={handleChangeReview}
-                  className="h-24 mb-14"
+                  className="h-24 mb-28 lg:mb-20"
                 />
                 <div className="w-full flex  flex-row-reverse">
                   <Button

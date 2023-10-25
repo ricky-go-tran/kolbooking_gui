@@ -339,7 +339,7 @@ const Detail = () => {
                     <h6 className="text-lg font-bold dark:text-white">
                       Job Description
                     </h6>
-                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                    <p className="my-1 text-sm  -m-2 text-gray-900 dark:text-gray-400">
                       <main className="ql-snow">
                         {" "}
                         <div className="ql-editor">
@@ -350,7 +350,7 @@ const Detail = () => {
                     <h6 className="text-lg font-bold dark:text-white">
                       Requirements
                     </h6>
-                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                    <p className="my-1 text-sm -m-2  text-gray-900 dark:text-gray-400">
                       <main className="ql-snow">
                         {" "}
                         <div className="ql-editor">
@@ -362,7 +362,7 @@ const Detail = () => {
                     <h6 className="text-lg font-bold dark:text-white">
                       Benefits
                     </h6>
-                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                    <p className="my-1 text-sm -m-2  text-gray-900 dark:text-gray-400">
                       <main className="ql-snow">
                         {" "}
                         <div className="ql-editor">
@@ -374,12 +374,11 @@ const Detail = () => {
                     <h6 className="text-lg font-bold dark:text-white">
                       How and when to work
                     </h6>
-                    <p className="my-5 text-sm   text-gray-900 dark:text-gray-400">
+                    <p className="my-1 text-sm -m-2  text-gray-900 dark:text-gray-400">
                       <main className="ql-snow">
-                        {" "}
                         <div className="ql-editor">
                           {parse(`${data?.time_work}`)}
-                        </div>{" "}
+                        </div>
                       </main>
                     </p>
                   </div>

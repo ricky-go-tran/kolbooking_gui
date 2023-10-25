@@ -14,7 +14,7 @@ const BussinessSearch = ({
   return (
     <div className="w-full bg-gray-100 flex justify-center items-center">
       <div className="w-full mx-auto bg-indigo-500 rounded-lg p-14">
-        <h1 className="text-center font-bold text-white text-4xl">
+        <h1 className="text-center font-bold text-white lg:text-4xl text-base">
           Find the bussiness or personal
         </h1>
         <p className="mx-auto font-normal text-center text-white text-sm my-6 max-w-lg">

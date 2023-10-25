@@ -217,7 +217,7 @@ const UploadAlbumModal = ({
                 }}
                 disabled={loading}
               >
-                {loading === false && `Delete`}
+                {loading === false && `Upload`}
                 {loading === true && (
                   <div className="flex items-center justify-center w-12">
                     <div

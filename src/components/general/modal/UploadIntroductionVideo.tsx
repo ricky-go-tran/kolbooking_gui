@@ -63,12 +63,16 @@ const UploadIntroductionVideo = ({
     if (video !== null) {
       formData.append("kol_profile[intro_video]", video)
       axios
-        .put(getProxy("/api/v1/kol/kol_profiles/change_video"), formData, {
-          headers: {
-            Authorization: auth_state.auth_token,
-            "Content-Type": "multipart/form-data",
-          },
-        })
+        .put(
+          "http://14.225.206.62:3000/api/v1/kol/kol_profiles/change_video",
+          formData,
+          {
+            headers: {
+              Authorization: auth_state.auth_token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
         .then((response) => {
           setLoading(false)
           onClose(-1)
@@ -79,7 +83,8 @@ const UploadIntroductionVideo = ({
         })
         .catch((error) => {
           setLoading(false)
-          HandleResponseError(error, setErrorCode, toast_dispatch)
+          console.log(error)
+          // HandleResponseError(error, setErrorCode, toast_dispatch)
         })
     }
   }
@@ -196,7 +201,7 @@ const UploadIntroductionVideo = ({
                 }}
                 disabled={loading}
               >
-                {loading === false && `Delete`}
+                {loading === false && `Upload`}
                 {loading === true && (
                   <div className="flex items-center justify-center w-12">
                     <div
