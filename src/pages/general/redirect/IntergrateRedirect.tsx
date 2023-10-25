@@ -14,21 +14,23 @@ const IntergrateRedirect = () => {
 
   useEffect(() => {
     if (loading === "load") {
-      const config = {
-        headers: {
-          Authorization: auth_state.auth_token,
-        },
-      }
-      const param = {
-        google_auth: {
-          code: params.get("code"),
-          scope: params.get("scope"),
-          authuser: params.get("authuser"),
-          prompt: params.get("prompt"),
-        },
-      }
       axios
-        .post(getProxy("/google_integrates"), param, config)
+        .post(
+          getProxy("/google_integrates"),
+          {
+            google_auth: {
+              code: params.get("code"),
+              scope: params.get("scope"),
+              authuser: params.get("authuser"),
+              prompt: params.get("prompt"),
+            },
+          },
+          {
+            headers: {
+              Authorization: auth_state.auth_token,
+            },
+          }
+        )
         .then((res) => {
           setLoading("success")
         })
