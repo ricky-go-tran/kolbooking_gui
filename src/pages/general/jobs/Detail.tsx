@@ -12,7 +12,6 @@ import {
   WarningOutlineIcon,
   BookMarkIcon,
   BookMarkOutlineIcon,
-  ApplyIcon,
   ApplyOutlineIcon,
 } from "../../../icons"
 import axios, { AxiosResponse } from "axios"
@@ -29,7 +28,6 @@ import {
 } from "../../../utils/ToastUtil"
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
 import { ToastContext } from "../../../contexts/ToastContext"
-import ReportModal from "../../../components/general/modal/ReportModal"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import "react-quill/dist/quill.snow.css"
@@ -45,11 +43,8 @@ const Detail = () => {
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
   const config = { headers: { Authorization: auth_state.auth_token } }
-  const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
-    ReportJobGeneralContext
-  )
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: report_job_dispatch } = useContext(ReportJobGeneralContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const params = useParams()
   const { setErrorCode } = useContext(ErrorContext)
 
@@ -138,7 +133,7 @@ const Detail = () => {
     }
   }
 
-  const apply = (job: any) => {
+  const apply = () => {
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
@@ -200,7 +195,7 @@ const Detail = () => {
     const body = { bookmark: { job_id: job.id, status: "care" } }
     axios
       .post(getProxy(`/api/v1/kol/bookmarks/${job.id}/mark`), body, config)
-      .then((response) => {
+      .then(() => {
         setBookmarked(true)
       })
       .catch((error) => {
@@ -210,7 +205,7 @@ const Detail = () => {
   const unmark = (job: any) => {
     axios
       .delete(getProxy(`/api/v1/kol/bookmarks/${job.id}/unmark`), config)
-      .then((response) => {
+      .then(() => {
         setBookmarked(false)
       })
       .catch((error) => {
@@ -295,7 +290,7 @@ const Detail = () => {
                             <li className="flex text-gray-500 mr-5 cursor-pointer hover:text-gray-400">
                               <ApplyOutlineIcon
                                 onClick={() => {
-                                  apply(data)
+                                  apply()
                                 }}
                               />
                             </li>
@@ -313,7 +308,7 @@ const Detail = () => {
 
                         <li
                           className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400"
-                          onClick={(e) => {
+                          onClick={() => {
                             unlike(data)
                           }}
                         >
@@ -323,7 +318,7 @@ const Detail = () => {
                         </li>
                         <li
                           className="flex items-center justify-center text-gray-500 cursor-pointer mr-5 hover:text-gray-400"
-                          onClick={(e) => {
+                          onClick={() => {
                             like(data)
                           }}
                         >

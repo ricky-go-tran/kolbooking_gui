@@ -15,7 +15,6 @@ import {
 } from "@windmill/react-ui"
 import PageTitle from "../../components/admin/typography/PageTitle"
 import SectionTitle from "../../components/admin/typography/SectionTitle"
-import { LockIcon } from "../../icons"
 import { ISheetJob, ITableJob } from "../../global_variable/global_table_admin"
 import axios from "axios"
 import { getProxy } from "../../utils/PathUtil"
@@ -24,12 +23,10 @@ import { Alert } from "@windmill/react-ui"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
-import { ProfileContext } from "../../contexts/ProfileContext"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 import {
-  ArrowRightCircleIcon,
   CheckCircleIcon,
   ClipboardDocumentCheckIcon,
   PlusCircleIcon,
@@ -48,10 +45,7 @@ const Job = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetJob[]>([])
   const { search } = useContext(SearchAdminContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
@@ -70,9 +64,9 @@ const Job = () => {
     axios
       .get(getProxy("/api/v1/kol/jobs"), config)
       .then((response) => {
-        let handle_data = fetchToITableJob(response.data.data)
-        let sheet = fetchToISheetJob(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableJob(response.data.data)
+        const sheet = fetchToISheetJob(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -81,7 +75,6 @@ const Job = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable, tab, search])
 
   function onPageChangeTable(p: number) {
@@ -102,10 +95,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "apply",
                 status_color: "neutral",
@@ -137,10 +130,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "complete",
                 status_color: "primary",
@@ -172,10 +165,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "payment",
                 status_color: "primary",
@@ -208,10 +201,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "finish",
                 status_color: "success",
@@ -243,10 +236,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "cancle",
                 status_color: "danger",

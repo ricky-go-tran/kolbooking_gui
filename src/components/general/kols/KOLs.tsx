@@ -1,5 +1,4 @@
 import Empty from "../empty/Empty"
-import { Loading } from "../loading/Loading"
 import KOL from "./KOL"
 import { Pagination } from "@windmill/react-ui"
 

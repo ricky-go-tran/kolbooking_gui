@@ -1,20 +1,18 @@
-import React, { useContext, Suspense, useEffect, lazy } from "react"
-import Main from "./Main"
+import React, { useContext } from "react"
+
 import NewfeedMain from "./NewfeedMain"
 import Header from "../components/general/header/Header"
 import Footer from "../components/general/footer/Footer"
-import ToastPanel from "../components/general/message/ToastPanel"
 import ReportModal from "../components/general/modal/ReportModal"
 import { ReportJobGeneralContext } from "../contexts/ReportJobGeneralContext"
 import { ReportProfileGeneralContext } from "../contexts/ReportProfileGeneralContext"
 import ReportProfileModal from "../components/general/modal/ReportProfileModal"
 
 const NewfeedLayout = ({ children }: { children: React.ReactNode }) => {
-  const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
-    ReportJobGeneralContext
+  const { state: report_job_state } = useContext(ReportJobGeneralContext)
+  const { state: report_profile_state } = useContext(
+    ReportProfileGeneralContext
   )
-  const { state: report_profile_state, dispatch: report_profile_dispatch } =
-    useContext(ReportProfileGeneralContext)
 
   return (
     <>

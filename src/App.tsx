@@ -1,7 +1,7 @@
-import { lazy, useEffect, useContext, useState } from "react"
+import { lazy, useEffect, useContext } from "react"
 import { ProfileContext } from "./contexts/ProfileContext"
 import { AuthContext } from "./contexts/AuthContext"
-import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom"
+import { Routes, BrowserRouter, Route } from "react-router-dom"
 import { getProxy, getCDNImage } from "./utils/PathUtil"
 import { ProfileType } from "./global_variable/global_type"
 import axios from "axios"
@@ -42,7 +42,6 @@ const SetupProfile = lazy(
 )
 const SetupKolProfile = lazy(() => import("./pages/kol/setup/SetupKolProfile"))
 const AdminProfile = lazy(() => import("./pages/admin/Profile"))
-const AdminChangePassword = lazy(() => import("./pages/admin/ChangePassword"))
 const NewfeedLayout = lazy(() => import("./containers/NewfeedLayout"))
 const Jobs = lazy(() => import("./pages/general/jobs/Job"))
 const KOL = lazy(() => import("./pages/general/kols/KOL"))
@@ -61,7 +60,6 @@ const Invoices = lazy(() => import("./pages/base/Invoices"))
 const Payment = lazy(() => import("./pages/base/Payment"))
 const PaymentComplete = lazy(() => import("./pages/base/PaymentComplete"))
 const InvalidAccount = lazy(() => import("./pages/general/error/NotRole"))
-const Empty = lazy(() => import("./components/general/empty/Empty"))
 const Bussiness = lazy(() => import("./pages/general/bussiness/Bussiness"))
 const BussinessDetail = lazy(() => import("./pages/general/bussiness/Detail"))
 
@@ -74,32 +72,31 @@ function App() {
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: status_state, dispatch: status_dispatch } =
-    useContext(StatusLoginContext)
-  // const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
+  const { dispatch: status_dispatch } = useContext(StatusLoginContext)
+  const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
   const { errorCode } = useContext(ErrorContext)
 
-  // useEffect(() => {
-  //   cable.subscriptions.create(
-  //     { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
-  //     {
-  //       connected: function () {
-  //         console.log("You've subscribed to the  Channel")
-  //       },
-  //       disconnected: function () {
-  //         console.log("You've disconnected from the  Channel")
-  //       },
-  //       received: (message: string) => {
-  //         if (message) {
-  //           generalMessage({
-  //             message: "You have a new message. Please check your inbox",
-  //             toast_dispatch: toast_dispatch,
-  //           })
-  //         }
-  //       },
-  //     }
-  //   )
-  // }, [])
+  useEffect(() => {
+    cable.subscriptions.create(
+      { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
+      {
+        connected: function () {
+          console.log("You've subscribed to the  Channel")
+        },
+        disconnected: function () {
+          console.log("You've disconnected from the  Channel")
+        },
+        received: (message: string) => {
+          if (message) {
+            generalMessage({
+              message: "You have a new message. Please check your inbox",
+              toast_dispatch: toast_dispatch,
+            })
+          }
+        },
+      }
+    )
+  }, [])
 
   useEffect(() => {
     if (auth_state.auth_token !== "null" && auth_state.auth_token !== "") {

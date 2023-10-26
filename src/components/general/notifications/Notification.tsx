@@ -1,5 +1,4 @@
 import { Badge } from "@windmill/react-ui"
-import { FollowIcon } from "../../../icons"
 import { Notification as NotificationType } from "../../../global_variable/global_type"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../../contexts/AuthContext"
@@ -9,7 +8,7 @@ import { generalWarning } from "../../../utils/ToastUtil"
 import { ToastContext } from "../../../contexts/ToastContext"
 
 const Notification = ({ notification }: { notification: NotificationType }) => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [data, setData] = useState<NotificationType>({
     id: "",

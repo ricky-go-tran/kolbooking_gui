@@ -1,20 +1,12 @@
 import PageTitle from "../../components/admin/typography/PageTitle"
 import SectionTitle from "../../components/admin/typography/SectionTitle"
-import {
-  Input,
-  Label,
-  Textarea,
-  Button,
-  Alert,
-  Select,
-} from "@windmill/react-ui"
+import { Input, Label, Textarea, Button, Alert } from "@windmill/react-ui"
 import { useState, useContext, useEffect, useRef } from "react"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { AuthContext } from "../../contexts/AuthContext"
 import axios from "axios"
 import { getCDNImage, getProxy } from "../../utils/PathUtil"
 import "../../assets/css/component/avatar_input.css"
-import { PROFILE_URL } from "../../global_variable/global_uri_backend"
 import { generalMessage } from "../../utils/ToastUtil"
 import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
@@ -22,14 +14,12 @@ import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 import { DEFAULT_AVATAR } from "../../global_variable/global_constant"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import { type } from "os"
 
 export const BussinessProfile = () => {
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -53,7 +43,7 @@ export const BussinessProfile = () => {
         },
       })
       .then((response) => {
-        let handle_data = response.data.data.attributes
+        const handle_data = response.data.data.attributes
         setProfileData({
           avatar: handle_data.avatar,
           fullname: handle_data.fullname,
@@ -69,7 +59,6 @@ export const BussinessProfile = () => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
         // navigate('/server/error')
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChangeOverview = (value: string) => {
@@ -79,8 +68,8 @@ export const BussinessProfile = () => {
   }
 
   const handleChangeProfile = () => {
-    let formData = new FormData()
-    let bussiness = {
+    const formData = new FormData()
+    const bussiness = {
       bussiness_profile: {
         type_profile: profileData.type_profile,
         overview: profileData.overview,
@@ -109,12 +98,12 @@ export const BussinessProfile = () => {
             bussiness,
             config
           )
-          .then((res) => {
+          .then(() => {
             generalMessage({
               message: "Profile change successfully",
               toast_dispatch: toast_dispatch,
             })
-            let handle_data = {
+            const handle_data = {
               fullname: response.data.data.attributes.fullname,
               avatar: getProxy(response.data.data.attributes.avatar),
               role: response.data.data.attributes.role,

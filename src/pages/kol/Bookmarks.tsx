@@ -10,11 +10,9 @@ import {
   TableContainer,
   Badge,
   Avatar,
-  Button,
   Pagination,
 } from "@windmill/react-ui"
 import PageTitle from "../../components/admin/typography/PageTitle"
-import { LockIcon } from "../../icons"
 import {
   ISheetBookmark,
   ITableBookmark,
@@ -27,7 +25,7 @@ import {
 } from "../../utils/FetchDataTable"
 import { Alert } from "@windmill/react-ui"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
 import { utils, writeFile } from "xlsx"
 import { ToastContext } from "../../contexts/ToastContext"
@@ -62,9 +60,9 @@ const Bookmark = () => {
     axios
       .get(getProxy("/api/v1/kol/bookmarks"), config)
       .then((response) => {
-        let handle_data = fetchToITableBookmark(response.data.data)
-        let meta = response.data.meta
-        let sheet = fetchToISheetBookmark(response.data.data)
+        const handle_data = fetchToITableBookmark(response.data.data)
+        const meta = response.data.meta
+        const sheet = fetchToISheetBookmark(response.data.data)
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -78,10 +76,6 @@ const Bookmark = () => {
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
-  }
-
-  function viewJob(job: string | number) {
-    setDetail(job)
   }
 
   const handleExportSheet = () => {
@@ -108,7 +102,7 @@ const Bookmark = () => {
     event: React.ChangeEvent<HTMLSelectElement>,
     job: ITableBookmark
   ) {
-    let action = event.target.value
+    const action = event.target.value
     if (action === "unmark") {
       axios
         .delete(getProxy(`/api/v1/kol/bookmarks/${job.id_job}/unmark`), {
@@ -116,7 +110,7 @@ const Bookmark = () => {
             Authorization: auth_state.auth_token,
           },
         })
-        .then((response) => {
+        .then(() => {
           generalMessage({
             message: "Change status successfully",
             toast_dispatch: toast_dispatch,
@@ -137,7 +131,7 @@ const Bookmark = () => {
             },
           }
         )
-        .then((response) => {
+        .then(() => {
           generalMessage({
             message: "Change status successfully",
             toast_dispatch: toast_dispatch,

@@ -29,12 +29,9 @@ const BaseSetupProfile = () => {
   })
   const previewAvatar = useRef<HTMLImageElement>(null)
   const { state: auth_state } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
-  const { state: status_state, dispatch: status_dispatch } =
-    useContext(StatusLoginContext)
+  const { dispatch: profile_dispatch } = useContext(ProfileContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { dispatch: status_dispatch } = useContext(StatusLoginContext)
   const navigate = useNavigate()
   const { setErrorCode } = useContext(ErrorContext)
 
@@ -79,8 +76,8 @@ const BaseSetupProfile = () => {
   }
 
   const handleCreateProfile = () => {
-    let formData = new FormData()
-    let bussiness = {
+    const formData = new FormData()
+    const bussiness = {
       bussiness_profile: {
         type_profile: profileData.type_profile,
         overview: profileData.overview,
@@ -105,12 +102,12 @@ const BaseSetupProfile = () => {
       .then((response) => {
         axios
           .post(getProxy("/api/v1/base/bussiness_profiles"), bussiness, config)
-          .then((res) => {
+          .then(() => {
             generalMessage({
               message: "Profile change successfully",
               toast_dispatch: toast_dispatch,
             })
-            let handle_data = {
+            const handle_data = {
               fullname: response.data.data.attributes.fullname,
               avatar: response.data.data.attributes.avatar,
               role: response.data.data.attributes.role,

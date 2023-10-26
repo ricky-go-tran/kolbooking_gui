@@ -16,14 +16,7 @@ import {
 } from "@windmill/react-ui"
 import PageTitle from "../../components/admin/typography/PageTitle"
 import SectionTitle from "../../components/admin/typography/SectionTitle"
-import {
-  EditIcon,
-  TrashIcon,
-  CancelIcon,
-  SuccessIcon,
-  InformationIcon,
-  PlayIcon,
-} from "../../icons"
+import { CancelIcon, SuccessIcon, InformationIcon, PlayIcon } from "../../icons"
 import {
   ISheetReport,
   ITableReport,
@@ -42,7 +35,7 @@ import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Report = () => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [pageTable, setPageTable] = useState(1)
   const [dataTable, setDataTable] = useState<ITableReport[]>([])
   const [totalResults, setTotalResults] = useState(0)
@@ -52,8 +45,7 @@ const Report = () => {
   const [tab, setTab] = useState<string>("all")
   const [sheetData, setSheetData] = useState<ISheetReport[]>([])
   const { search } = useContext(SearchAdminContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
@@ -72,9 +64,9 @@ const Report = () => {
     axios
       .get(getProxy("/api/v1/admin/reports"), config)
       .then((response) => {
-        let handle_data = fetchToITableReport(response.data.data)
-        let meta = response.data.meta
-        let sheet = fetchToISheetReport(response.data.data)
+        const handle_data = fetchToITableReport(response.data.data)
+        const meta = response.data.meta
+        const sheet = fetchToISheetReport(response.data.data)
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -103,10 +95,10 @@ const Report = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableReport[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableReport[] = dataTable.map((item) => {
             if (item.id === report.id) {
-              let rs: ITableReport = {
+              const rs: ITableReport = {
                 ...item,
                 status: "proccess",
                 status_color: "primary",
@@ -139,10 +131,10 @@ const Report = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableReport[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableReport[] = dataTable.map((item) => {
             if (item.id === report.id) {
-              let rs: ITableReport = {
+              const rs: ITableReport = {
                 ...item,
                 status: "sovled",
                 status_color: "success",
@@ -175,10 +167,10 @@ const Report = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableReport[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableReport[] = dataTable.map((item) => {
             if (item.id === report.id) {
-              let rs: ITableReport = {
+              const rs: ITableReport = {
                 ...item,
                 status: "rejected",
                 status_color: "danger",
@@ -366,7 +358,7 @@ const Report = () => {
                       layout="link"
                       size="small"
                       aria-label="Edit"
-                      onClick={(e) => {
+                      onClick={() => {
                         proccess(report)
                       }}
                     >
@@ -376,7 +368,7 @@ const Report = () => {
                       layout="link"
                       size="small"
                       aria-label="Edit"
-                      onClick={(e) => {
+                      onClick={() => {
                         sovled(report)
                       }}
                     >
@@ -386,7 +378,7 @@ const Report = () => {
                       layout="link"
                       size="small"
                       aria-label="Delete"
-                      onClick={(e) => {
+                      onClick={() => {
                         rejected(report)
                       }}
                     >

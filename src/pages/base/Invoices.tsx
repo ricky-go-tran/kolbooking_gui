@@ -1,17 +1,10 @@
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
-import {
-  IPaymentJob,
-  ITableJob,
-} from "../../global_variable/global_table_admin"
+import { IPaymentJob } from "../../global_variable/global_table_admin"
 import { getProxy } from "../../utils/PathUtil"
 import axios from "axios"
-import {
-  fetchToIPaymentJob,
-  fetchToISheetJob,
-  fetchToITableJob,
-} from "../../utils/FetchDataTable"
+import { fetchToIPaymentJob } from "../../utils/FetchDataTable"
 import PageTitle from "../../components/admin/typography/PageTitle"
 import {
   Avatar,
@@ -26,9 +19,8 @@ import {
   TableHeader,
   TableRow,
 } from "@windmill/react-ui"
-import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer"
+import { PDFDownloadLink } from "@react-pdf/renderer"
 import InvoicePdf from "./InvoicePdf"
-import { useNavigate } from "react-router-dom"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { ToastContext } from "../../contexts/ToastContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
@@ -41,9 +33,7 @@ const Invoices = () => {
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [totalResults, setTotalResults] = useState(0)
   const [tab, setTab] = useState<string>("payment")
-  const navigate = useNavigate()
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   function onPageChange(p: number) {
@@ -66,8 +56,8 @@ const Invoices = () => {
       .get(getProxy("/api/v1/base/invoices"), config)
       .then((response) => {
         console.log(response.data.data)
-        let handle_data = fetchToIPaymentJob(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToIPaymentJob(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)

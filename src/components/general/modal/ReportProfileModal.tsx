@@ -1,8 +1,7 @@
-import { SetStateAction, useEffect, useState } from "react"
-import { BookMarkIcon, WarningIcon } from "../../../icons"
+import { useState } from "react"
+import { WarningIcon } from "../../../icons"
 import { Label, Input, Textarea } from "@windmill/react-ui"
-import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
-import { ReportJobType, ReportType } from "../../../global_variable/global_type"
+import { ReportType } from "../../../global_variable/global_type"
 import { useContext } from "react"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
@@ -42,7 +41,7 @@ const ReportProfileModal = () => {
     }
     axios
       .post(getProxy("/api/v1/reports"), data, config)
-      .then((response) => {
+      .then(() => {
         generalMessage({
           message: "Success report",
           toast_dispatch: toast_dispatch,

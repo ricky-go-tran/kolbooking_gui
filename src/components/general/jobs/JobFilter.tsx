@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react"
-import SectionTitle from "../../admin/typography/SectionTitle"
 import { getProxy } from "../../../utils/PathUtil"
 import { INDUSTRY_URL } from "../../../global_variable/global_uri_backend"
 import axios from "axios"
@@ -16,8 +15,7 @@ const JobFilter = () => {
   const { setJobSearch } = useContext(SearchJobHomepageContext)
   const { setJobFilter } = useContext(FilterJobGeneralContext)
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   useEffect(() => {
     axios

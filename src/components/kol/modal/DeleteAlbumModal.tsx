@@ -1,42 +1,28 @@
-import { SetStateAction, useEffect, useState } from "react"
-import { BookMarkIcon, WarningIcon } from "../../../icons"
-import { Label, Input, Textarea, Alert } from "@windmill/react-ui"
-import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
-import { ReportJobType, ReportType } from "../../../global_variable/global_type"
+import { useEffect, useState } from "react"
+import { Alert } from "@windmill/react-ui"
 import { useContext } from "react"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ToastContext } from "../../../contexts/ToastContext"
-import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
+import { generalMessage } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
-import { checkValid } from "../../../validates/general/ReportValidate"
-import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
-import {
-  CloudArrowUpIcon,
-  PhotoIcon,
-  TrashIcon,
-  VideoCameraIcon,
-} from "@heroicons/react/24/solid"
+import { TrashIcon } from "@heroicons/react/24/solid"
 import PhotoAlbum from "react-photo-album"
 
 const DeleteAlbumModal = ({
-  profile_id,
   onClose,
 }: {
-  profile_id: string
   onClose: React.Dispatch<React.SetStateAction<number>>
 }) => {
-  const [album, setAlbum] = useState<File[]>([])
   const [message, setMessage] = useState("")
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const { setErrorCode } = useContext(ErrorContext)
   const [photos, setPhotos] = useState<any[]>([])
   const [removes, setRemoves] = useState<any[]>([])
-  const [index, setIndex] = useState(-1)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -55,7 +41,7 @@ const DeleteAlbumModal = ({
   }, [])
 
   const handleUrlAlbum = (album: object[]) => {
-    let rs = album.map((image: any) => {
+    const rs = album.map((image: any) => {
       return {
         id: image.id,
         src: getProxy(image.src),
@@ -107,7 +93,7 @@ const DeleteAlbumModal = ({
           Authorization: auth_state.auth_token,
         },
       })
-      .then((response) => {
+      .then(() => {
         setLoading(false)
         onClose(-1)
         generalMessage({

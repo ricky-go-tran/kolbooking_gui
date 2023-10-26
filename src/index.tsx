@@ -11,10 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google"
 import { ToastContextProvider } from "./contexts/ToastContext"
 import { SearchKolHomepageProvider } from "./contexts/SearchKolHomepageContext"
 import { ReportJobGeneralContextProvider } from "./contexts/ReportJobGeneralContext"
-import {
-  ReportProfileGeneralContext,
-  ReportProfileGeneralContextProvider,
-} from "./contexts/ReportProfileGeneralContext"
+import { ReportProfileGeneralContextProvider } from "./contexts/ReportProfileGeneralContext"
 import { StatusLoginContextProvider } from "./contexts/StatusLoginContext"
 import { ErrorContextProvider } from "./contexts/ErrorContext"
 import { SidebarProvider } from "./contexts/SidebarContext"

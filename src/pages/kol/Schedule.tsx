@@ -1,21 +1,11 @@
 import { Calendar, momentLocalizer } from "react-big-calendar"
 import moment from "moment"
-import SectionTitle from "../../components/admin/typography/SectionTitle"
-import { useCallback, useContext, useEffect, useRef, useState } from "react"
-import { TaskType } from "../../global_variable/global_type"
-import axios, { AxiosResponse } from "axios"
-import { getFEHost, getProxy } from "../../utils/PathUtil"
+import { useContext, useEffect, useState } from "react"
+import axios from "axios"
+import { getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
-import {
-  fetchDataToEvent,
-  fetchDataToGoogleEvent,
-  fetchDataToTasks,
-} from "../../utils/FetchData"
-import {
-  EventType,
-  GoogleEventType,
-  TasksSerializerType,
-} from "../../global_variable/global_serializer"
+import { fetchDataToEvent, fetchDataToGoogleEvent } from "../../utils/FetchData"
+import { EventType } from "../../global_variable/global_serializer"
 import CreateTaskModal from "../../components/kol/modal/CreateTaskModal"
 import UpdateTaskModal from "../../components/kol/modal/UpdateTaskModal"
 import { GoogleCalendarIcon } from "../../icons"
@@ -30,14 +20,11 @@ const Schedule = () => {
   const localizer = momentLocalizer(moment)
   const [tab, setTab] = useState("default")
   const [created, setCreated] = useState<number>(-1)
-  const [tasks, setTasks] = useState<TaskType[]>([])
   const [events, setEvents] = useState<EventType[]>([])
-  const [rangeChange, setRangeChange] = useState<Date>(new Date())
   const { state: auth_state } = useContext(AuthContext)
   const [edited, setEdited] = useState<number | string>(-1)
   const [integrate, setIntegrate] = useState<boolean>(false)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   const config = {
@@ -53,7 +40,7 @@ const Schedule = () => {
     scope: "https://www.googleapis.com/auth/calendar",
     onNonOAuthError: (nonError) => console.log(nonError),
     ux_mode: "redirect",
-    redirect_uri: "https://kolbooking-gui.vercel.app/redirect",
+    redirect_uri: "http://localhost:9000/redirect",
   })
 
   const handleEventDoubleClick = (event: EventType) => {
@@ -81,8 +68,6 @@ const Schedule = () => {
       axios
         .get(getProxy("/api/v1/kol/tasks"), config)
         .then((res) => {
-          console.log(res)
-          setTasks(fetchDataToTasks(res))
           setEvents(fetchDataToEvent(res))
         })
         .catch((error) => {

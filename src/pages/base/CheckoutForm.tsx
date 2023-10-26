@@ -1,20 +1,11 @@
-import {
-  useStripe,
-  useElements,
-  PaymentElement,
-  CardCvcElement,
-} from "@stripe/react-stripe-js"
-import axios from "axios"
-import { get } from "http"
-import { useContext, useEffect, useState } from "react"
-import { getFEHost, getProxy } from "../../utils/PathUtil"
-import { AuthContext } from "../../contexts/AuthContext"
+import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
+import { useEffect, useState } from "react"
+import { getFEHost } from "../../utils/PathUtil"
 import ImageOffice from "../../assets/images/create-account-office.jpeg"
 import { Job } from "../../global_variable/global_type"
 
 const CheckoutForm = ({ job }: { job: Job }) => {
   const [message, setMessage] = useState<string | undefined | null>(null)
-  const { state: auth_state } = useContext(AuthContext)
   const [isLoading, setIsLoading] = useState(false)
   const stripe = useStripe()
   const elements = useElements()

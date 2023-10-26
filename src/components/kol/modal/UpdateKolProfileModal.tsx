@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { EditIcon } from "../../../icons"
 import { AuthContext } from "../../../contexts/AuthContext"
-import { ProfileContext } from "../../../contexts/ProfileContext"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import {
@@ -10,7 +9,7 @@ import {
   IndustryWithoutDescription,
   KolProfile,
 } from "../../../global_variable/global_type"
-import { Input, Label, Select, Textarea } from "@windmill/react-ui"
+import { Input, Label, Select } from "@windmill/react-ui"
 import axios, { AxiosResponse } from "axios"
 import { getProxy } from "../../../utils/PathUtil"
 import {
@@ -25,15 +24,11 @@ import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 export const UpdateKolProfileModal = ({
-  profile_id,
   onClose,
 }: {
-  profile_id: string
   onClose: React.Dispatch<React.SetStateAction<number>>
 }) => {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [profileData, setProfileData] = useState<KolProfile>({
     facebook_path: "",
     youtube_path: "",
@@ -125,7 +120,7 @@ export const UpdateKolProfileModal = ({
   }
 
   const handleUpdateIndustry = () => {
-    let new_industry: IndustryAssocationNestd[] = []
+    const new_industry: IndustryAssocationNestd[] = []
     selectIndustries.forEach((item) => {
       if (
         industryAssociation.find((association) => {
@@ -174,7 +169,7 @@ export const UpdateKolProfileModal = ({
     }
     axios
       .put(getProxy("/api/v1/kol/kol_profiles/change"), param, config)
-      .then((response) => {
+      .then(() => {
         generalMessage({
           message: "Successfully update job",
           toast_dispatch: toast_dispatch,

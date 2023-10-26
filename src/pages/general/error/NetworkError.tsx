@@ -1,5 +1,3 @@
-import { useNavigate } from "react-router-dom"
-
 const ErrorNetwork = () => {
   const reloadPage = () => {
     window.location.reload()

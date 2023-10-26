@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useReducer, ReactNode } from "react"
 import { INITIAL_STATUS_LOGIN_STATE } from "../global_variable/global_constant"
-import { AuthReducer } from "../reducers/AuthReducer"
 import { StatusLoginType } from "../global_variable/global_type"
 import { StatusLoginReducer } from "../reducers/StatusLoginReducer"
 

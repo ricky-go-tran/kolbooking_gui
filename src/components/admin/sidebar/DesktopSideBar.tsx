@@ -7,6 +7,6 @@ function DesktopSidebar() {
       <SidebarContent />
     </aside>
   );
-};
+}
 
 export default DesktopSidebar;

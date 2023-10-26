@@ -14,7 +14,7 @@ import {
 export const MIN_PASSWORD_LENGTH = 6
 export const MAX_PASSWORD_LENGTH = 64
 export const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-export const PROXY_SERVER = "http://14.225.206.62/"
+export const PROXY_SERVER = "http://localhost:3000"
 export const CDN_SERVER = "https://res.cloudinary.com/daipfonbx"
 export const DEFAULT_IMAGE =
   "/image/upload/v1695613812/mowxzej1idnfvuwuket3.jpg"
@@ -42,12 +42,6 @@ export const REPORT_PROFILE_INIT_STATE: ReportProfileType = {
   name_profile: "",
   id_reporter: "",
 }
-export const APP_URL = "http://14.225.206.62/"
+export const APP_URL = "http://localhost:3000"
 export const FE_URL = "http://tdphatdev.xyz"
 export const APP_CABLE_URL = "ws://14.225.206.62:3000/cable"
-
-// export const PROFILE_INIT_STATE: ProfileType = {
-//   fullname: "",
-//   avatar: "",
-//   role: ""
-// }

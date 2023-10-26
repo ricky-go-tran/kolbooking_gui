@@ -11,18 +11,16 @@ import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const KOL = () => {
   const [kols, setKols] = useState([])
-  const [meta, setMeta] = useState({})
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [pageTable, setPageTable] = useState(1)
-  const { kolSearch, setKolSearch } = useContext(SearchKolHomepageContext)
+  const { kolSearch } = useContext(SearchKolHomepageContext)
   const [loading, setLoading] = useState(false)
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   useEffect(() => {
-    let config: any = {
+    const config: any = {
       params: {
         page: {
           number: pageTable,
@@ -35,7 +33,7 @@ const KOL = () => {
       .get(getProxy("/api/v1/kols"), config)
       .then((response) => {
         setKols(response.data.data)
-        let meta = response.data.meta
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setLoading(true)

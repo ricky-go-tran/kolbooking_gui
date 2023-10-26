@@ -45,12 +45,9 @@ const KolSetupProfile = () => {
     IndustryWithoutDescription[]
   >([])
   const { state: auth_state } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
-  const { state: status_state, dispatch: status_dispatch } =
-    useContext(StatusLoginContext)
+  const { dispatch: profile_dispatch } = useContext(ProfileContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const { dispatch: status_dispatch } = useContext(StatusLoginContext)
   const navigate = useNavigate()
   const { setErrorCode } = useContext(ErrorContext)
 
@@ -101,7 +98,7 @@ const KolSetupProfile = () => {
   }
 
   const handleCreateProfile = () => {
-    let formData = new FormData()
+    const formData = new FormData()
     if (avatar !== null) {
       formData.append("kol[avatar]", avatar)
     }
@@ -142,7 +139,7 @@ const KolSetupProfile = () => {
           message: "Profile change successfully",
           toast_dispatch: toast_dispatch,
         })
-        let handle_data = {
+        const handle_data = {
           fullname: response.data.data.attributes.fullname,
           avatar: response.data.data.attributes.avatar,
           role: response.data.data.attributes.role,

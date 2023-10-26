@@ -6,25 +6,9 @@ import { Link, useNavigate } from "react-router-dom"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 import { Dialog } from "@headlessui/react"
 
-import {
-  Avatar,
-  Badge,
-  Input,
-  Dropdown,
-  DropdownItem,
-  WindmillContext,
-} from "@windmill/react-ui"
+import { Avatar, Dropdown, DropdownItem } from "@windmill/react-ui"
 
-import {
-  SearchIcon,
-  MoonIcon,
-  SunIcon,
-  BellIcon,
-  MenuIcon,
-  OutlinePersonIcon,
-  OutlineCogIcon,
-  OutlineLogoutIcon,
-} from "../../../icons"
+import { OutlinePersonIcon, OutlineLogoutIcon } from "../../../icons"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
 import { LOGOUT_URL } from "../../../global_variable/global_uri_backend"
@@ -58,14 +42,14 @@ const Header = () => {
           Authorization: auth_state.auth_token,
         },
       })
-      .then((response) => {
+      .then(() => {
         auth_dispatch({
           type: "LOGOUT",
         })
         profile_dispatch({ type: "CLEAR" })
         navigate("/login")
       })
-      .catch((error) => {
+      .catch(() => {
         auth_dispatch({
           type: "LOGOUT",
         })

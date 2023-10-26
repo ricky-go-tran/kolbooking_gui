@@ -1,8 +1,4 @@
-import {
-  Validate,
-  TaskType,
-  IndustryWithoutDescription,
-} from "../../global_variable/global_type"
+import { Validate, TaskType } from "../../global_variable/global_type"
 
 export const checkValid = ({ task }: { task: TaskType }): Validate => {
   const start = new Date(task.start_time)

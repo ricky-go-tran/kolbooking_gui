@@ -1,13 +1,7 @@
-import axios from "axios";
-import { Link } from "react-router-dom";
-import { useState } from "react";
-import AuthenticationUtil from "../../../utils/AuthenticationUtil";
+import ImageLight from "../../../assets/images/setup-account.jpeg"
+import ImageDark from "../../../assets/images/create-account-office-dark.jpeg"
 
-import ImageLight from "../../../assets/images/setup-account.jpeg";
-import ImageDark from "../../../assets/images/create-account-office-dark.jpeg";
-import { GithubIcon, TwitterIcon } from "../../../icons";
-import { Alert, Input, Label, Button, Textarea } from "@windmill/react-ui";
-import { getProxy } from "../../../utils/PathUtil";
+import { Input, Label, Button } from "@windmill/react-ui"
 
 const SetupKolProfile = () => {
   return (
@@ -35,19 +29,43 @@ const SetupKolProfile = () => {
               </h1>
               <Label>
                 <span>Tiktok Url</span>
-                <Input crossOrigin="" css="" className="mt-1" type="text" placeholder="https://tiktok.com/your-url" />
+                <Input
+                  crossOrigin=""
+                  css=""
+                  className="mt-1"
+                  type="text"
+                  placeholder="https://tiktok.com/your-url"
+                />
               </Label>
               <Label className="mt-4">
                 <span>Youtube Url</span>
-                <Input crossOrigin="" css="" className="mt-1" type="text" placeholder="https://youtube.com/your-url" />
+                <Input
+                  crossOrigin=""
+                  css=""
+                  className="mt-1"
+                  type="text"
+                  placeholder="https://youtube.com/your-url"
+                />
               </Label>
               <Label className="mt-4">
                 <span>Facebook Url</span>
-                <Input crossOrigin="" css="" className="mt-1" type="text" placeholder="https://facebook.com/your-url" />
+                <Input
+                  crossOrigin=""
+                  css=""
+                  className="mt-1"
+                  type="text"
+                  placeholder="https://facebook.com/your-url"
+                />
               </Label>
               <Label className="mt-4">
                 <span>Instagram Url</span>
-                <Input crossOrigin="" css="" className="mt-1" type="text" placeholder="https://instagram.com/your-url" />
+                <Input
+                  crossOrigin=""
+                  css=""
+                  className="mt-1"
+                  type="text"
+                  placeholder="https://instagram.com/your-url"
+                />
               </Label>
               <hr className="mt-6" />
               <Button block className="mt-6">
@@ -58,7 +76,7 @@ const SetupKolProfile = () => {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default SetupKolProfile;
+export default SetupKolProfile

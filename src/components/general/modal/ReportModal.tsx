@@ -1,8 +1,8 @@
-import { SetStateAction, useEffect, useState } from "react"
-import { BookMarkIcon, WarningIcon } from "../../../icons"
-import { Label, Input, Textarea } from "@windmill/react-ui"
+import { useState } from "react"
+import { WarningIcon } from "../../../icons"
+import { Label, Input } from "@windmill/react-ui"
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
-import { ReportJobType, ReportType } from "../../../global_variable/global_type"
+import { ReportType } from "../../../global_variable/global_type"
 import { useContext } from "react"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
@@ -19,9 +19,8 @@ const ReportModal = () => {
   const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
     ReportJobGeneralContext
   )
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { state: auth_state } = useContext(AuthContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
   const [reported, setReported] = useState<ReportType>({
     title: "",
@@ -44,7 +43,7 @@ const ReportModal = () => {
     }
     axios
       .post(getProxy("/api/v1/reports"), data, config)
-      .then((response) => {
+      .then(() => {
         generalMessage({
           message: "Report successfully",
           toast_dispatch: toast_dispatch,

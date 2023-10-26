@@ -1,5 +1,5 @@
-import { Input, Label, Select, Textarea } from "@windmill/react-ui"
-import { AddIcon, EditIcon } from "../../../icons"
+import { Input, Label, Textarea } from "@windmill/react-ui"
+import { EditIcon } from "../../../icons"
 import { useContext, useEffect, useState } from "react"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { checkValid } from "../../../validates/kol/TaskValidate"
@@ -7,10 +7,7 @@ import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import axios from "axios"
 import { getProxy } from "../../../utils/PathUtil"
-import {
-  fetchDataToEventDetail,
-  fetchDataToTask,
-} from "../../../utils/FetchData"
+import { fetchDataToEventDetail } from "../../../utils/FetchData"
 import { TaskType } from "../../../global_variable/global_type"
 import { formatDateWithInputStringOrDate } from "../../../utils/DateUtil"
 
@@ -31,7 +28,7 @@ const UpdateEventGoogleCalendar = ({
     category: "",
   })
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const config = {
     headers: {
       Authorization: auth_state.auth_token,

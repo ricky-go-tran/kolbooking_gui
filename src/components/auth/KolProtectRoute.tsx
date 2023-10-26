@@ -1,8 +1,8 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { StatusLoginContext } from "../../contexts/StatusLoginContext"
 import { Navigate } from "react-router-dom"
-import { ProfileType, StatusLoginType } from "../../global_variable/global_type"
+
 const KolProtectRoute = ({ children }: { children: React.ReactNode }) => {
   const { state: profile_state } = useContext(ProfileContext)
   const { state: status_state } = useContext(StatusLoginContext)

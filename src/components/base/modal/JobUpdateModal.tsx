@@ -1,5 +1,5 @@
-import { Alert, Input, Label, Select, Textarea } from "@windmill/react-ui"
-import { AddIcon, EditIcon, WarningIcon } from "../../../icons"
+import { Alert, Input, Label, Select } from "@windmill/react-ui"
+import { EditIcon } from "../../../icons"
 import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import {
   IndustryAssociation,
@@ -38,17 +38,13 @@ const JobUpdateModal = ({
   const [avatar, setAvatar] = useState<File | null>(null)
   const previewAvatar = useRef<HTMLImageElement>(null)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
+  const { state: auth_state } = useContext(AuthContext)
+  const { state: profile_state } = useContext(ProfileContext)
   const [industries, setIndustries] = useState<IndustryWithoutDescription[]>([])
   const [industryAssociation, setIndustryAssociation] = useState<
     IndustryAssociation[]
   >([])
   const [selectIndustries, setSelectIndustries] = useState<
-    IndustryWithoutDescription[]
-  >([])
-  const [oldIndustries, setOldIndustries] = useState<
     IndustryWithoutDescription[]
   >([])
   const [job, setJob] = useState<Job>({
@@ -100,15 +96,6 @@ const JobUpdateModal = ({
           return rs !== undefined
         })
       )
-
-      setOldIndustries(
-        industries.filter((item) => {
-          const rs = industryAssociation.find((association) => {
-            return association.industry_id === item.id
-          })
-          return rs !== undefined
-        })
-      )
     }
   }, [industryAssociation])
 
@@ -153,8 +140,7 @@ const JobUpdateModal = ({
   )
 
   const submit = () => {
-    let count = 0
-    let formData = new FormData()
+    const formData = new FormData()
     if (avatar !== null) {
       formData.append("job[image]", avatar)
     }
@@ -165,7 +151,7 @@ const JobUpdateModal = ({
     formData.append("job[profile_id]", profile_state.id)
     formData.append("job[benefits]", job.benefits)
     formData.append("job[time_work]", job.time_work)
-    let industries_association = handleUpdateIndustry()
+    const industries_association = handleUpdateIndustry()
     const industries_association_json = JSON.stringify(industries_association)
     formData.append(
       "job[industry_associations_attributes]",
@@ -178,7 +164,7 @@ const JobUpdateModal = ({
     }
     axios
       .put(getProxy("/api/v1/base/jobs/" + job_id), formData, config)
-      .then((response) => {
+      .then(() => {
         generalMessage({
           message: "Successfully update job",
           toast_dispatch: toast_dispatch,
@@ -208,7 +194,7 @@ const JobUpdateModal = ({
     [job]
   )
   const handleUpdateIndustry = () => {
-    let new_industry: IndustryAssocationNestd[] = []
+    const new_industry: IndustryAssocationNestd[] = []
     selectIndustries.forEach((item) => {
       if (
         industryAssociation.find((association) => {

@@ -1,15 +1,5 @@
-import { useContext } from "react"
-import { NavigateFunction } from "react-router-dom"
-import { AuthContext } from "../contexts/AuthContext"
-import { getProxy } from "./PathUtil"
-import { LOGOUT_URL } from "../global_variable/global_uri_backend"
-import axios from "axios"
-import { ProfileContext } from "../contexts/ProfileContext"
-import { ErrorContext } from "../contexts/ErrorContext"
-import { AuthType } from "../global_variable/global_type"
 import { ActionToastReducerType } from "../global_variable/global_type_action_reducer"
-import { generalError, generalMessage } from "./ToastUtil"
-import { type } from "os"
+import { generalError } from "./ToastUtil"
 
 function HandleResponseError(
   error: any,

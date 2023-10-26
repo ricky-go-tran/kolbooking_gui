@@ -6,13 +6,11 @@ import {
   Notification,
   TaskType,
 } from "../global_variable/global_type"
-import { IndustryIcon } from "../icons"
 import {
   EventType,
   TaskSerializerType,
   TasksSerializerType,
 } from "../global_variable/global_serializer"
-import { Event } from "react-big-calendar"
 
 export const fetchDataToIndustryWithoutDescription = (
   data: any[]

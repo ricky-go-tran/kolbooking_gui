@@ -18,8 +18,7 @@ export const Profile = () => {
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -41,7 +40,7 @@ export const Profile = () => {
         },
       })
       .then((response) => {
-        let handle_data = response.data.data.attributes
+        const handle_data = response.data.data.attributes
         setProfileData({
           avatar: handle_data.avatar,
           fullname: handle_data.fullname,
@@ -55,11 +54,10 @@ export const Profile = () => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
         // navigate('/server/error')
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChangeProfile = () => {
-    let formData = new FormData()
+    const formData = new FormData()
     if (avatar !== null) {
       formData.append("profile[avatar]", avatar)
     }
@@ -80,7 +78,7 @@ export const Profile = () => {
           message: "Profile change successfully",
           toast_dispatch: toast_dispatch,
         })
-        let handle_data = {
+        const handle_data = {
           fullname: response.data.data.attributes.fullname,
           avatar: getProxy(response.data.data.attributes.avatar),
           role: response.data.data.attributes.role,

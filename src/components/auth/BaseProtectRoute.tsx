@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from "react"
+import React, { useContext } from "react"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { StatusLoginContext } from "../../contexts/StatusLoginContext"
 import { Navigate } from "react-router-dom"

@@ -1,16 +1,8 @@
-import { ITableJob } from "../../../../global_variable/global_table_admin"
 import "../../../../assets/css/component/job_modal.css"
 import React, { SetStateAction, useState, useEffect, useContext } from "react"
 import { getCDNImage } from "../../../../utils/PathUtil"
 import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant"
-import {
-  LikeIcon,
-  UnlikeIcon,
-  LikeOuletIcon,
-  UnlikeOutletIcon,
-  WarningIcon,
-  BookMarkIcon,
-} from "../../../../icons"
+
 import { Loading } from "../../../general/loading/Loading"
 import axios from "axios"
 import { AuthContext } from "../../../../contexts/AuthContext"
@@ -38,8 +30,7 @@ const JobDetail = ({
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   useEffect(() => {
     const config = { headers: { Authorization: auth_state.auth_token } }

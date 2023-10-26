@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react"
-import { useNavigate, Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ProfileContext } from "../../contexts/ProfileContext"
 import { AuthContext } from "../../contexts/AuthContext"
 import axios from "axios"
@@ -16,7 +16,6 @@ import {
 } from "../../icons"
 import {
   Avatar,
-  Badge,
   Input,
   Dropdown,
   DropdownItem,
@@ -24,10 +23,6 @@ import {
 } from "@windmill/react-ui"
 import { LOGOUT_URL } from "../../global_variable/global_uri_backend"
 import NotificationPanel from "../general/notifications/NotificationPanel"
-import { Notification as NotificationType } from "../../global_variable/global_type"
-import { fetchDataToNotification } from "../../utils/FetchData"
-import useActionCable from "../../hooks/useActionCable"
-import useChannel from "../../hooks/useChannel"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
 import { SearchStorageAdminContext } from "../../contexts/SearchStorageAdminContext"
 import { AdminTabContext } from "../../contexts/AdminTab"
@@ -41,15 +36,11 @@ const Header = () => {
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
   const navigate = useNavigate()
-  const { actionCable } = useActionCable("ws://localhost:3000/cable")
-  const { subscribe, unsubscribe, send } = useChannel(actionCable)
-  const [data, setData] = useState(null)
   const { setSearch } = useContext(SearchAdminContext)
-  const [inputField, setInputField] = useState("")
   const { searchStorage, setSearchStorage } = useContext(
     SearchStorageAdminContext
   )
-  const { tab, setTab } = useContext(AdminTabContext)
+  const { tab } = useContext(AdminTabContext)
   const { toggleSidebar } = useContext(SidebarContext)
 
   useEffect(() => {
@@ -60,11 +51,6 @@ const Header = () => {
   function handleNotificationsClick() {
     setIsNotificationsMenuOpen(!isNotificationsMenuOpen)
   }
-
-  function handleProfileClick() {
-    setIsProfileMenuOpen(!isProfileMenuOpen)
-  }
-
   function logout() {
     axios
       .delete(getProxy(LOGOUT_URL), {
@@ -72,14 +58,14 @@ const Header = () => {
           Authorization: auth_state.auth_token,
         },
       })
-      .then((response) => {
+      .then(() => {
         auth_dispatch({
           type: "LOGOUT",
         })
         profile_dispatch({ type: "CLEAR" })
         navigate("/login")
       })
-      .catch((error) => {
+      .catch(() => {
         auth_dispatch({
           type: "LOGOUT",
         })

@@ -1,28 +1,21 @@
 import SectionTitle from "../../components/admin/typography/SectionTitle"
 import PageTitle from "../../components/admin/typography/PageTitle"
 import InfoCard from "../../components/admin/cart/InfoCart"
-import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
+import { CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
 import RoundIcon from "../../components/admin/RoundIcon"
 import { Chart, registerables } from "chart.js"
-import { Line, Chart as ChartJS } from "react-chartjs-2"
-import ChartLegend from "../../components/admin/chart/CardLegend"
+import { Line } from "react-chartjs-2"
 import ChartCard from "../../components/admin/chart/ChartCard"
 import { AuthContext } from "../../contexts/AuthContext"
-import { lineStatisticalLegends } from "../../global_variable/global_charts_admin"
 import { useEffect, useContext, useState } from "react"
 import { getProxy } from "../../utils/PathUtil"
 import {
   defaultDataForLinechartCrontab,
-  fetchDataForLinechartStatistical,
   fetchDataForLinechartStatisticalKol,
 } from "../../utils/ChartUtil"
 import axios from "axios"
-import { KOL_STATISTICALS_URL } from "../../global_variable/global_uri_backend"
 import { getSumOfArray } from "../../utils/NumberUtil"
-import { ToastContext } from "../../contexts/ToastContext"
-import { ErrorContext } from "../../contexts/ErrorContext"
-import { HandleResponseError } from "../../utils/ErrorHandleUtil"
-import { Button, Input } from "@windmill/react-ui"
+import { Button } from "@windmill/react-ui"
 import { getCurrentDateFormatted } from "../../utils/DateUtil"
 Chart.register(...registerables)
 
@@ -31,9 +24,6 @@ const Statistics = () => {
   const { state: auth_state } = useContext(AuthContext)
   const [dataCard, setDataCard] = useState([0, 0, 0, 0])
   const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
-  const { setErrorCode } = useContext(ErrorContext)
   const [month, setMonth] = useState(getCurrentDateFormatted())
   const [year, setYear] = useState<number>(new Date().getFullYear())
   const [submit, setSubmit] = useState<string>("")

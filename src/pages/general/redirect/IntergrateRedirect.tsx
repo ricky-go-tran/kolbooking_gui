@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import { ErrorRedirectIcon, SuccessRedirectIcon } from "../../../icons"
 import { Loading } from "../../../components/general/loading/Loading"
-import { useParams } from "react-router-dom"
 import axios from "axios"
 import { getFEHost, getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
@@ -31,7 +30,7 @@ const IntergrateRedirect = () => {
             },
           }
         )
-        .then((res) => {
+        .then(() => {
           setLoading("success")
         })
         .catch((err) => {

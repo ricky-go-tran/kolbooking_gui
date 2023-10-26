@@ -10,10 +10,8 @@ import { ErrorContext } from "../../../contexts/ErrorContext"
 
 const Logout = () => {
   const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
-  const { state: status_state, dispatch: status_dispatch } =
-    useContext(StatusLoginContext)
+  const { dispatch: profile_dispatch } = useContext(ProfileContext)
+  const { dispatch: status_dispatch } = useContext(StatusLoginContext)
   const { setErrorCode } = useContext(ErrorContext)
   const [loading, setLoading] = useState(false)
 
@@ -24,7 +22,7 @@ const Logout = () => {
           Authorization: auth_state.auth_token,
         },
       })
-      .then((response) => {
+      .then(() => {
         auth_dispatch({
           type: "LOGOUT",
         })
@@ -33,7 +31,7 @@ const Logout = () => {
         status_dispatch({ type: "CLEAR" })
         setLoading(true)
       })
-      .catch((error) => {
+      .catch(() => {
         auth_dispatch({
           type: "LOGOUT",
         })

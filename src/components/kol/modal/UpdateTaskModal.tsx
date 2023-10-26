@@ -1,5 +1,5 @@
 import { Input, Label, Select, Textarea } from "@windmill/react-ui"
-import { AddIcon, EditIcon } from "../../../icons"
+import { EditIcon } from "../../../icons"
 import { useContext, useEffect, useState } from "react"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { checkValid } from "../../../validates/kol/TaskValidate"
@@ -30,7 +30,7 @@ const UpdateTaskModal = ({
     category: "",
   })
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const config = {
     headers: {
       Authorization: auth_state.auth_token,

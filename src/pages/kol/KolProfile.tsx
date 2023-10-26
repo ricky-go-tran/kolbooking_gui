@@ -3,26 +3,16 @@ import {
   DEFAULT_AVATAR,
   DEFAULT_VIDEO,
 } from "../../global_variable/global_constant"
-import {
-  CalendarIcon,
-  EditIcon,
-  IndustryIcon,
-  LineChartIcon,
-  PeopleIcon,
-} from "../../icons"
+import { EditIcon, IndustryIcon, PeopleIcon } from "../../icons"
 import { getCDNImage, getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
-import { ProfileContext } from "../../contexts/ProfileContext"
 import { Loading } from "../../components/general/loading/Loading"
 import { ToastContext } from "../../contexts/ToastContext"
 import { isAuth } from "../../utils/AuthUtil"
 import axios, { AxiosResponse } from "axios"
 import "yet-another-react-lightbox/plugins/thumbnails.css"
 import "yet-another-react-lightbox/styles.css"
-import {
-  KOL_PROFILE_URL,
-  PROFILE_URL,
-} from "../../global_variable/global_uri_backend"
+import { KOL_PROFILE_URL } from "../../global_variable/global_uri_backend"
 import { UpdateProfileModal } from "../../components/kol/modal/UpdateProfileModal"
 import { Link } from "react-router-dom"
 import { UpdateKolProfileModal } from "../../components/kol/modal/UpdateKolProfileModal"
@@ -45,18 +35,13 @@ import parse from "html-react-parser"
 
 const KolProfile = () => {
   const [data, setData] = useState<any>(null)
-  const [likeCount, setLikeCount] = useState(0)
-  const [unlikeCount, setUnlikeCount] = useState(0)
-  const [followerCount, setFollowerCount] = useState(0)
   const [updateProfile, setUpdateProfile] = useState<number>(-1)
   const [updateKolProfile, setUpdateKolProfile] = useState<number>(-1)
   const [updateVideo, setVideo] = useState<number>(-1)
   const [updateAlbum, setAlbum] = useState<number>(-1)
   const [deleteAlbum, setDeleteAlbum] = useState<number>(-1)
   const { state: auth_state } = useContext(AuthContext)
-  const { state: profile_state } = useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
   const [photos, setPhotos] = useState<any[]>([])
   const [index, setIndex] = useState(-1)
@@ -65,13 +50,10 @@ const KolProfile = () => {
     const raw_data = response.data.data.attributes
     setData(raw_data)
     setPhotos(handleUrlAlbum(raw_data.gallaries))
-    setLikeCount(raw_data.like_num)
-    setUnlikeCount(raw_data.unlike_num)
-    setFollowerCount(raw_data.follow_num)
   }
 
   const handleUrlAlbum = (album: object[]) => {
-    let rs = album.map((image: any) => {
+    const rs = album.map((image: any) => {
       return {
         id: image.id,
         src: getProxy(image.src),
@@ -81,14 +63,6 @@ const KolProfile = () => {
     })
     console.log(rs)
     return rs
-  }
-
-  const deleteImage = (i: number) => {
-    setPhotos(
-      photos.filter((item, index) => {
-        return index !== i
-      })
-    )
   }
 
   useEffect(() => {
@@ -447,35 +421,17 @@ const KolProfile = () => {
         </div>
       )}
       {data === null && <Loading />}
-      {updateVideo !== -1 && (
-        <UploadIntroductionVideo
-          profile_id={profile_state.id}
-          onClose={setVideo}
-        />
-      )}
-      {updateAlbum !== -1 && (
-        <UploadAlbumModal profile_id={profile_state.id} onClose={setAlbum} />
-      )}
+      {updateVideo !== -1 && <UploadIntroductionVideo onClose={setVideo} />}
+      {updateAlbum !== -1 && <UploadAlbumModal onClose={setAlbum} />}
 
-      {deleteAlbum !== -1 && (
-        <DeleteAlbumModal
-          profile_id={profile_state.id}
-          onClose={setDeleteAlbum}
-        />
-      )}
+      {deleteAlbum !== -1 && <DeleteAlbumModal onClose={setDeleteAlbum} />}
 
       {updateProfile !== -1 && (
-        <UpdateProfileModal
-          profile_id={profile_state.id}
-          onClose={setUpdateProfile}
-        />
+        <UpdateProfileModal onClose={setUpdateProfile} />
       )}
 
       {updateKolProfile !== -1 && (
-        <UpdateKolProfileModal
-          profile_id={profile_state.id}
-          onClose={setUpdateKolProfile}
-        />
+        <UpdateKolProfileModal onClose={setUpdateKolProfile} />
       )}
     </>
   )

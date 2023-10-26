@@ -1,33 +1,22 @@
-import { SetStateAction, useEffect, useState } from "react"
-import { BookMarkIcon, WarningIcon } from "../../../icons"
-import { Label, Input, Textarea, Alert } from "@windmill/react-ui"
-import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
-import { ReportJobType, ReportType } from "../../../global_variable/global_type"
+import { useState } from "react"
+import { Alert } from "@windmill/react-ui"
 import { useContext } from "react"
 import axios from "axios"
-import { getProxy } from "../../../utils/PathUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ToastContext } from "../../../contexts/ToastContext"
-import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
-import { ErrorContext } from "../../../contexts/ErrorContext"
-import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
-import { checkValid } from "../../../validates/general/ReportValidate"
-import ReactQuill from "react-quill"
+import { generalMessage } from "../../../utils/ToastUtil"
 import "react-quill/dist/quill.snow.css"
 import { CloudArrowUpIcon, VideoCameraIcon } from "@heroicons/react/24/solid"
 
 const UploadIntroductionVideo = ({
-  profile_id,
   onClose,
 }: {
-  profile_id: string
   onClose: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const [video, setVideo] = useState<File | null>(null)
   const [message, setMessage] = useState("")
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { setErrorCode } = useContext(ErrorContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [loading, setLoading] = useState(false)
 
   const handleFileInputChange = (
@@ -42,7 +31,6 @@ const UploadIntroductionVideo = ({
     const type = file.type.split("/")[1]
     const max_size_support = 50000000 // 50 mb
     const supportFile = ["mp4"]
-    const reader = new FileReader()
     if (supportFile.includes(type)) {
       if (file.size <= max_size_support) {
         setVideo(file)
@@ -59,7 +47,7 @@ const UploadIntroductionVideo = ({
 
   const handleChangeProfile = () => {
     setLoading(true)
-    let formData = new FormData()
+    const formData = new FormData()
     if (video !== null) {
       formData.append("kol_profile[intro_video]", video)
       axios
@@ -73,7 +61,7 @@ const UploadIntroductionVideo = ({
             },
           }
         )
-        .then((response) => {
+        .then(() => {
           setLoading(false)
           onClose(-1)
           generalMessage({

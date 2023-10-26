@@ -14,10 +14,8 @@ const Bussiness = () => {
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [search, setSearch] = useState("")
   const [pageTable, setPageTable] = useState(1)
-  const [loading, setLoading] = useState(false)
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [submitEvent, setSubmitEvent] = useState("")
   const [filter, setFilter] = useState("")
 
@@ -26,7 +24,7 @@ const Bussiness = () => {
   }
 
   useEffect(() => {
-    let config: any = {
+    const config: any = {
       params: {
         page: {
           number: pageTable,
@@ -40,10 +38,9 @@ const Bussiness = () => {
       .get(getProxy("/api/v1/bussiness"), config)
       .then((response) => {
         setBussinesses(response.data.data)
-        let meta = response.data.meta
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
-        setLoading(true)
       })
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)

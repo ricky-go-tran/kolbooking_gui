@@ -22,7 +22,6 @@ import { getProxy } from "../../utils/PathUtil"
 import { fetchToISheetJob, fetchToITableJob } from "../../utils/FetchDataTable"
 import { Alert } from "@windmill/react-ui"
 import JobDetail from "../../components/admin/modal/job/JobDetail"
-import { config } from "process"
 import { utils, writeFile } from "xlsx"
 import { SearchAdminContext } from "../../contexts/SearchAdminContext"
 
@@ -54,9 +53,9 @@ const Job = () => {
     axios
       .get(getProxy("/api/v1/admin/jobs"), config)
       .then((response) => {
-        let handle_data = fetchToITableJob(response.data.data)
-        let sheet = fetchToISheetJob(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableJob(response.data.data)
+        const sheet = fetchToISheetJob(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -85,10 +84,10 @@ const Job = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITableJob[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITableJob[] = dataTable.map((item) => {
             if (item.id === job.id) {
-              let rs: ITableJob = {
+              const rs: ITableJob = {
                 ...item,
                 status: "cancle",
                 status_color: "danger",
@@ -303,7 +302,7 @@ const Job = () => {
                         layout="link"
                         size="small"
                         aria-label="Edit"
-                        onClick={(e) => {
+                        onClick={() => {
                           lock(job)
                         }}
                       >

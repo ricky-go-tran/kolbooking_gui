@@ -34,8 +34,7 @@ const User = () => {
   const [detail, setDetail] = useState<number | string>(-1)
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
@@ -47,8 +46,8 @@ const User = () => {
       })
       .then((response) => {
         console.log(response.data.data)
-        let handle_data = fetchToITableUser(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableUser(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -56,7 +55,6 @@ const User = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   function onPageChangeTable(p: number) {
@@ -79,10 +77,10 @@ const User = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITabelUser[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITabelUser[] = dataTable.map((item) => {
             if (item.id === user.id) {
-              let rs: ITabelUser = {
+              const rs: ITabelUser = {
                 ...item,
                 status: "valid",
                 status_color: "success",
@@ -115,10 +113,10 @@ const User = () => {
             },
           }
         )
-        .then((response) => {
-          let handle_data: ITabelUser[] = dataTable.map((item) => {
+        .then(() => {
+          const handle_data: ITabelUser[] = dataTable.map((item) => {
             if (item.id === user.id) {
-              let rs: ITabelUser = {
+              const rs: ITabelUser = {
                 ...item,
                 status: "lock",
                 status_color: "danger",
@@ -149,8 +147,8 @@ const User = () => {
         },
       })
       .then((response) => {
-        let handle_data = fetchToITableUser(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableUser(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -158,7 +156,6 @@ const User = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageTable])
 
   return (
@@ -234,7 +231,7 @@ const User = () => {
                         layout="link"
                         size="small"
                         aria-label="Edit"
-                        onClick={(e) => {
+                        onClick={() => {
                           unlock(user)
                         }}
                       >

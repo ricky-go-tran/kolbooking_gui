@@ -5,8 +5,7 @@ import { Transition, Backdrop } from "@windmill/react-ui"
 import { SidebarContext } from "../../../contexts/SidebarContext"
 
 const MobileSideBar = () => {
-  const { isSidebarOpen, closeSidebar } = useContext(SidebarContext)
-  console.log(isSidebarOpen)
+  const { isSidebarOpen } = useContext(SidebarContext)
   return (
     <Transition show={isSidebarOpen}>
       <>

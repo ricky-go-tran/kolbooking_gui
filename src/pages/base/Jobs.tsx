@@ -13,12 +13,7 @@ import {
 } from "@windmill/react-ui"
 import PageTitle from "../../components/admin/typography/PageTitle"
 import { useContext, useEffect, useState } from "react"
-import {
-  ISheetJob,
-  ITableData,
-  ITableJob,
-} from "../../global_variable/global_table_admin"
-import response from "../../global_variable/global_table_admin"
+import { ISheetJob, ITableJob } from "../../global_variable/global_table_admin"
 import axios from "axios"
 import { getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -36,7 +31,6 @@ import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 
 const Jobs = () => {
   const { state: auth_state } = useContext(AuthContext)
-  const [page, setPage] = useState(1)
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [totalResults, setTotalResults] = useState(0)
   const [tab, setTab] = useState<string>("post")
@@ -61,9 +55,9 @@ const Jobs = () => {
           Authorization: auth_state.auth_token,
         },
       })
-      .then((response) => {
+      .then(() => {
         if (tab !== "cancle") {
-          let newData = dataTable.filter((item) => {
+          const newData = dataTable.filter((item) => {
             return item.id.toString() !== job.id.toString()
           })
           setDataTable([...newData])
@@ -120,9 +114,9 @@ const Jobs = () => {
     axios
       .get(getProxy("/api/v1/base/jobs"), config)
       .then((response) => {
-        let handle_data = fetchToITableJob(response.data.data)
-        let sheet = fetchToISheetJob(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableJob(response.data.data)
+        const sheet = fetchToISheetJob(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)

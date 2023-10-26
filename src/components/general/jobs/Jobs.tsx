@@ -1,6 +1,5 @@
 import Job from "./Job"
 import { Pagination } from "@windmill/react-ui"
-import { useState, useEffect } from "react"
 import Empty from "../empty/Empty"
 
 const Jobs = ({
@@ -14,8 +13,6 @@ const Jobs = ({
   resultsPerPage: number
   setPageTable: React.Dispatch<React.SetStateAction<number>>
 }) => {
-  const [alert, setAlert] = useState("")
-
   function onPageChangeTable(p: number) {
     setPageTable(p)
   }

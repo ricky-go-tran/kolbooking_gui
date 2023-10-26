@@ -23,7 +23,6 @@ import { isAuth } from "../../../utils/AuthUtil"
 import { ReportJobGeneralContext } from "../../../contexts/ReportJobGeneralContext"
 import { ReportJobType } from "../../../global_variable/global_type"
 import { ToastContext } from "../../../contexts/ToastContext"
-import { ToastComponentType } from "../../../global_variable/global_component_type"
 import { generalError } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
@@ -37,11 +36,8 @@ const Job = ({ job }: { job: any }) => {
   const [unlikeCount, setUnlikeCount] = useState(0)
   const [bookmarked, setBookmarked] = useState(false)
   const config = { headers: { Authorization: auth_state.auth_token } }
-  const { state: report_job_state, dispatch: report_job_dispatch } = useContext(
-    ReportJobGeneralContext
-  )
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: report_job_dispatch } = useContext(ReportJobGeneralContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {
@@ -145,7 +141,7 @@ const Job = ({ job }: { job: any }) => {
     const body = { bookmark: { job_id: job.id, status: "care" } }
     axios
       .post(getProxy(`/api/v1/kol/bookmarks/${job.id}/mark`), body, config)
-      .then((response) => {
+      .then(() => {
         setBookmarked(true)
       })
       .catch((error) => {
@@ -156,7 +152,7 @@ const Job = ({ job }: { job: any }) => {
   const unmark = (job: any) => {
     axios
       .delete(getProxy(`/api/v1/kol/bookmarks/${job.id}/unmark`), config)
-      .then((response) => {
+      .then(() => {
         setBookmarked(false)
       })
       .catch((error) => {
@@ -257,7 +253,7 @@ const Job = ({ job }: { job: any }) => {
             <>
               <li
                 className="flex items-center justify-center text-gray-500 cursor-pointer hover:text-gray-400"
-                onClick={(e) => {
+                onClick={() => {
                   like(job)
                 }}
               >

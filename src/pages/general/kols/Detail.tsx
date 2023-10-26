@@ -12,7 +12,6 @@ import "yet-another-react-lightbox/plugins/thumbnails.css"
 import {
   PeopleIcon,
   IndustryIcon,
-  CalendarIcon,
   LineChartIcon,
   LikeIcon,
   UnlikeIcon,
@@ -32,7 +31,6 @@ import { Link, useParams } from "react-router-dom"
 import { isAuth } from "../../../utils/AuthUtil"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { Loading } from "../../../components/general/loading/Loading"
-import JobCreateModal from "../../../components/base/modal/JobCreateModal"
 import { ToastContext } from "../../../contexts/ToastContext"
 import {
   generalError,
@@ -66,12 +64,12 @@ const Detail = () => {
   const { state: profile_state } = useContext(ProfileContext)
   const params = useParams()
   const [booking, setBooking] = useState<string>("-1")
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [review, setReview] = useState("")
 
-  const { state: report_profile_state, dispatch: report_profile_dispatch } =
-    useContext(ReportProfileGeneralContext)
+  const { dispatch: report_profile_dispatch } = useContext(
+    ReportProfileGeneralContext
+  )
   const { setErrorCode } = useContext(ErrorContext)
   const [photos, setPhotos] = useState<any[]>([])
   const [index, setIndex] = useState(-1)
@@ -120,7 +118,7 @@ const Detail = () => {
   }
 
   const handleUrlAlbum = (album: object[]) => {
-    let rs = album.map((image: any) => {
+    const rs = album.map((image: any) => {
       return {
         id: image.id,
         src: getProxy(image.src),
@@ -172,7 +170,7 @@ const Detail = () => {
       }
       axios
         .post(getProxy("/api/v1/reviews"), param, config)
-        .then((response) => {
+        .then(() => {
           generalMessage({
             message: "Successly reviews",
             toast_dispatch: toast_dispatch,
@@ -276,7 +274,7 @@ const Detail = () => {
     if (isAuth(auth_state)) {
       axios
         .post(getProxy("/api/v1/base/followers/follow"), param, config)
-        .then((res) => {
+        .then(() => {
           setFollower(true)
           setFollowerCount(followerCount + 1)
         })
@@ -287,12 +285,6 @@ const Detail = () => {
   }
 
   const unfollow = () => {
-    const param = {
-      follower: {
-        follower_id: profile_state.id,
-        followed_id: params.id,
-      },
-    }
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
@@ -304,7 +296,7 @@ const Detail = () => {
           getProxy(`/api/v1/base/followers/${params.id}/unfollow`),
           config
         )
-        .then((res) => {
+        .then(() => {
           setFollower(false)
           setFollowerCount(followerCount - 1)
         })

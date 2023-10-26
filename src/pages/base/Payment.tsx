@@ -17,7 +17,7 @@ const stripePromise = loadStripe(
 )
 
 export default function Payment() {
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [paymentId, setPaymetId] = useState<string | null>(null)
   const [data, setData] = useState<Job>({
@@ -34,8 +34,7 @@ export default function Payment() {
   })
   const params = useParams()
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const price = 2000
 
   const config = {

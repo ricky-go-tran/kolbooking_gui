@@ -1,10 +1,8 @@
 import { getCDNImage } from "../../../../utils/PathUtil"
 import { DEFAULT_AVATAR } from "../../../../global_variable/global_constant"
-import { Loading } from "../../../general/loading/Loading"
 import axios from "axios"
 import { AuthContext } from "../../../../contexts/AuthContext"
 import { getProxy } from "../../../../utils/PathUtil"
-import { ProfileContext } from "../../../../contexts/ProfileContext"
 import React, { SetStateAction, useState, useEffect, useContext } from "react"
 import { ToastContext } from "../../../../contexts/ToastContext"
 import { ErrorContext } from "../../../../contexts/ErrorContext"
@@ -19,9 +17,7 @@ const UserDetail = ({
 }) => {
   const [data, setData] = useState<any>(null)
   const { state: auth_state } = useContext(AuthContext)
-  const { state: profile_state } = useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {

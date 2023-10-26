@@ -1,5 +1,5 @@
-import { Alert, Input, Label, Select, Textarea } from "@windmill/react-ui"
-import { AddIcon, WarningIcon } from "../../../icons"
+import { Alert, Input, Label, Select } from "@windmill/react-ui"
+import { AddIcon } from "../../../icons"
 import { useContext, useEffect, useRef, useState } from "react"
 import {
   IndustryWithoutDescription,
@@ -13,7 +13,6 @@ import { ProfileContext } from "../../../contexts/ProfileContext"
 import { DEFAULT_IMAGE } from "../../../global_variable/global_constant"
 import "../../../assets/css/component/avatar_input.css"
 import { checkValid } from "../../../validates/base/CreateJobValidate"
-import Toast from "../../general/message/toast_component/Toast"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { ErrorContext } from "../../../contexts/ErrorContext"
@@ -26,9 +25,8 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
   const [avatar, setAvatar] = useState<File | null>(null)
   const previewAvatar = useRef<HTMLImageElement>(null)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: profile_state, dispatch: profile_dispatch } =
-    useContext(ProfileContext)
+  const { state: auth_state } = useContext(AuthContext)
+  const { state: profile_state } = useContext(ProfileContext)
 
   const { setErrorCode } = useContext(ErrorContext)
   const [industries, setIndustries] = useState<IndustryWithoutDescription[]>([])
@@ -83,8 +81,7 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
   }
 
   const submit = () => {
-    let count = 0
-    let formData = new FormData()
+    const formData = new FormData()
     if (avatar !== null) {
       formData.append("job[image]", avatar)
     }
@@ -97,7 +94,7 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
     formData.append("job[benefits]", job.benefits)
     formData.append("job[time_work]", job.time_work)
 
-    let industries_association = selectIndustries.map((item) => {
+    const industries_association = selectIndustries.map((item) => {
       return { industry_id: item.id }
     })
     const industries_association_json = JSON.stringify(industries_association)
@@ -113,7 +110,7 @@ const JobCreateModal = ({ onClose }: { onClose: React.Dispatch<string> }) => {
     }
     axios
       .post(getProxy("/api/v1/base/jobs"), formData, config)
-      .then((response) => {
+      .then(() => {
         generalMessage({
           message: "Successfully created job",
           toast_dispatch: toast_dispatch,

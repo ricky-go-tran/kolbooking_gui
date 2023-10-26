@@ -1,7 +1,6 @@
 import PageTitle from "../../components/admin/typography/PageTitle"
 import {
   Avatar,
-  Badge,
   Button,
   Pagination,
   Table,
@@ -12,7 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@windmill/react-ui"
-import { EditIcon, FollowIcon, LockIcon } from "../../icons"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../../contexts/AuthContext"
 import { ITableFollow } from "../../global_variable/global_table_admin"
@@ -48,8 +46,8 @@ const Follow = () => {
     axios
       .get(getProxy("/api/v1/base/followers"), config)
       .then((res) => {
-        let handle_data = fetchToITableFollow(res.data.data)
-        let meta = res.data.meta
+        const handle_data = fetchToITableFollow(res.data.data)
+        const meta = res.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -70,7 +68,7 @@ const Follow = () => {
         getProxy(`/api/v1/base/followers/${followed.id_followed}/unfollow`),
         config
       )
-      .then((res) => {
+      .then(() => {
         setResultPerPage(resultsPerPage - 1)
         generalMessage({
           message: `Unfollow ${followed.fullname_followed} successfully`,

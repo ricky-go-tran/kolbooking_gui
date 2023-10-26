@@ -3,7 +3,7 @@ import React from 'react';
 interface IChart {
   children: React.ReactNode
   title: string
-};
+}
 
 const ChartCard = ({ children, title }: IChart) => {
   return (

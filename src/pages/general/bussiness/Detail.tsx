@@ -3,13 +3,8 @@ import ReviewItem from "../../../components/general/review/ReviewItem"
 import ReactQuill from "react-quill"
 import "react-quill/dist/quill.snow.css"
 import { useCallback, useContext, useEffect, useState } from "react"
-import {
-  CommentOutlineIcon,
-  FollowOutlineIcon,
-  JobOutlineIcon,
-  PeopleIcon,
-} from "../../../icons"
-import { HeartIcon, UserIcon } from "@heroicons/react/24/outline"
+import { CommentOutlineIcon, JobOutlineIcon } from "../../../icons"
+import { HeartIcon } from "@heroicons/react/24/outline"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { isAuth } from "../../../utils/AuthUtil"
 import axios from "axios"
@@ -20,11 +15,7 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import { getCDNImage, getProxy } from "../../../utils/PathUtil"
 import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
 import JobQuickViewItem from "../../../components/general/bussiness/JobQuickViewItem"
-import {
-  generalError,
-  generalMessage,
-  generalWarning,
-} from "../../../utils/ToastUtil"
+import { generalMessage, generalWarning } from "../../../utils/ToastUtil"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import "react-quill/dist/quill.snow.css"
 import parse from "html-react-parser"
@@ -38,8 +29,7 @@ const Detail = () => {
   const { state: profile_state } = useContext(ProfileContext)
   const params = useParams()
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [pageTable, setPageTable] = useState(1)
@@ -73,7 +63,7 @@ const Detail = () => {
     if (isAuth(auth_state)) {
       axios
         .post(getProxy("/api/v1/base/followers/follow"), param, config)
-        .then((res) => {
+        .then(() => {
           setFollower(true)
           setFollow(follow + 1)
         })
@@ -84,12 +74,6 @@ const Detail = () => {
   }
 
   const unfollow = () => {
-    const param = {
-      follower: {
-        follower_id: profile_state.id,
-        followed_id: params.id,
-      },
-    }
     const config = {
       headers: {
         Authorization: auth_state.auth_token,
@@ -101,7 +85,7 @@ const Detail = () => {
           getProxy(`/api/v1/base/followers/${params.id}/unfollow`),
           config
         )
-        .then((res) => {
+        .then(() => {
           setFollower(false)
           setFollow(follow - 1)
         })
@@ -121,7 +105,7 @@ const Detail = () => {
     axios
       .get(getProxy(`/api/v1/bussiness/${params.id}`), { ...config })
       .then((response) => {
-        let handle_data = response.data.data.attributes
+        const handle_data = response.data.data.attributes
         // console.log(handle_data)
         setData(handle_data)
         setFollow(handle_data.follow_num || 0)
@@ -140,7 +124,7 @@ const Detail = () => {
   }, [])
 
   useEffect(() => {
-    let config: any = {
+    const config: any = {
       params: {
         page: {
           number: pageTable,
@@ -151,7 +135,7 @@ const Detail = () => {
       .get(getProxy(`/api/v1/jobs/${params.id}/jobs_by_owner`), config)
       .then((response) => {
         setJobs(response.data.data)
-        let meta = response.data.meta
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
       })
@@ -186,7 +170,7 @@ const Detail = () => {
       }
       axios
         .post(getProxy("/api/v1/reviews"), param, config)
-        .then((response) => {
+        .then(() => {
           generalMessage({
             message: "Successly reviews",
             toast_dispatch: toast_dispatch,

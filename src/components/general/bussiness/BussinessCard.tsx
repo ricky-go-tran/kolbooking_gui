@@ -1,13 +1,5 @@
-import {
-  DEFAULT_AVATAR,
-  DEFAULT_IMAGE,
-} from "../../../global_variable/global_constant"
-import {
-  AddIcon,
-  CommentOutlineIcon,
-  FormsIcon,
-  JobOutlineIcon,
-} from "../../../icons"
+import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
+import { CommentOutlineIcon, JobOutlineIcon } from "../../../icons"
 import { getCDNImage, getProxy } from "../../../utils/PathUtil"
 import "react-quill/dist/quill.snow.css"
 import parse from "html-react-parser"

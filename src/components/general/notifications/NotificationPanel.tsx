@@ -16,9 +16,8 @@ const NotificationPanel = ({
   onClose: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
   const [notifications, setNotifications] = useState<NotificationType[]>([])
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { state: auth_state } = useContext(AuthContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {

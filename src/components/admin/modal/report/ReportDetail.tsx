@@ -22,8 +22,7 @@ const ReportDetail = ({
   const [data, setData] = useState<any>(null)
   const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state } = useContext(ProfileContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {

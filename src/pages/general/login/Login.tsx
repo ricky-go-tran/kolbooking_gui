@@ -7,16 +7,10 @@ import { AuthContext } from "../../../contexts/AuthContext"
 
 import ImageLight from "../../../assets/images/login-office.jpeg"
 import ImageDark from "../../../assets/images/login-office-dark.jpeg"
-import { GithubIcon } from "../../../icons"
 import { Alert, Label, Input, Button } from "@windmill/react-ui"
 import { getProxy, getCDNImage, getProxyPath } from "../../../utils/PathUtil"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { ProfileType } from "../../../global_variable/global_type"
-import {
-  CredentialResponse,
-  GoogleLogin,
-  useGoogleLogin,
-} from "@react-oauth/google"
 import {
   LOGIN_URL,
   PROFILE_URL,
@@ -37,32 +31,13 @@ const Login = () => {
     message: "",
   })
 
-  const { state, dispatch } = useContext(AuthContext)
+  const { dispatch } = useContext(AuthContext)
   const { dispatch: status_login_dispatch } = useContext(StatusLoginContext)
   const { dispatch: profile_dispatch } = useContext(ProfileContext)
-  const { errorCode, setErrorCode } = useContext(ErrorContext)
+  const { setErrorCode } = useContext(ErrorContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   const navigate = useNavigate()
-  const login = useGoogleLogin({
-    onSuccess: (codeResponse) => {
-      console.log(codeResponse)
-    },
-    onError: (err) => {
-      console.log(err)
-    },
-    flow: "auth-code",
-    scope: "https://www.googleapis.com/auth/calendar",
-  })
-
-  const clickGoogleLogin = useGoogleLogin({
-    onSuccess: (response) => {
-      console.log(response)
-    },
-    onError: (err) => {
-      console.log(err)
-    },
-  })
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault()
@@ -82,7 +57,7 @@ const Login = () => {
         axios
           .post(getProxyPath(LOGIN_URL), data)
           .then((res) => {
-            let response = {
+            const response = {
               token: res.headers.authorization,
               profile: res.data.status.data.user,
             }
@@ -135,8 +110,8 @@ const Login = () => {
         },
       })
       .then((res) => {
-        let data = res.data.data.attributes
-        let profileData: ProfileType = {
+        const data = res.data.data.attributes
+        const profileData: ProfileType = {
           id: data.id,
           fullname: data.fullname,
           avatar:
@@ -151,7 +126,7 @@ const Login = () => {
 
         navigate("/")
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch({ type: "LOGOUT", payload: null })
         profile_dispatch({ type: "CLEAR", payload: null })
       })

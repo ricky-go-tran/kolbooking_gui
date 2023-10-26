@@ -1,8 +1,4 @@
-import {
-  Validate,
-  IndustryWithoutDescription,
-  ReportType,
-} from "../../global_variable/global_type"
+import { Validate, ReportType } from "../../global_variable/global_type"
 
 export const checkValid = ({ report }: { report: ReportType }): Validate => {
   const rs: Validate = { status: true, message: "" }

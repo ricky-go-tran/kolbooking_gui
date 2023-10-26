@@ -1,14 +1,9 @@
-import Banner from "../../../assets/images/banner-job.jpg"
 import { useContext, useState } from "react"
 import { SearchKolHomepageContext } from "../../../contexts/SearchKolHomepageContext"
 
 const KOLSearch = () => {
   const [tempSearch, setTempSearch] = useState("")
   const { setKolSearch } = useContext(SearchKolHomepageContext)
-
-  const Test = (a: any) => {
-    console.log(a)
-  }
 
   return (
     <div className="w-full  bg-blue-400 rounded-lg p-14">

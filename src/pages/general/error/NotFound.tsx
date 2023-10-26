@@ -1,25 +1,4 @@
-import { useEffect, useState } from "react"
-import { ForbiddenIcon } from "../../../icons"
-import useActionCable from "../../../hooks/useActionCable"
-import useChannel from "../../../hooks/useChannel"
-
 function Page404() {
-  const { actionCable } = useActionCable("ws://localhost:3000/cable")
-  const { subscribe, unsubscribe, send } = useChannel(actionCable)
-  const [data, setData] = useState(null)
-
-  useEffect(() => {
-    subscribe(
-      { channel: "NotificationChannel" },
-      {
-        received: (x: any) => setData(x),
-      }
-    )
-    return () => {
-      unsubscribe()
-    }
-  }, [])
-
   return (
     <div className="h-screen w-screen bg-gray-50 flex items-center">
       <div className="container flex flex-col md:flex-row items-center justify-between px-5 text-gray-700">

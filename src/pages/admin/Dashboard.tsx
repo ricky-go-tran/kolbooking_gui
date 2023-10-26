@@ -2,39 +2,13 @@ import React, { useState, useEffect, useContext } from "react"
 
 import InfoCard from "../../components/admin/cart/InfoCart"
 import ChartCard from "../../components/admin/chart/ChartCard"
-import { Doughnut, Line } from "react-chartjs-2"
-import ChartLegend from "../../components/admin/chart/CardLegend"
-import PageTitle from "../../components/admin/typography/PageTitle"
+import { Line } from "react-chartjs-2"
+
 import { ChatIcon, CartIcon, MoneyIcon, PeopleIcon } from "../../icons"
-import RoundIcon from "../../components/admin/RoundIcon"
-import response from "../../global_variable/global_table_admin"
-import { ITableData } from "../../global_variable/global_table_admin"
-import {
-  TableBody,
-  TableContainer,
-  Table,
-  TableHeader,
-  TableCell,
-  TableRow,
-  TableFooter,
-  Avatar,
-  Badge,
-  Pagination,
-  Button,
-} from "@windmill/react-ui"
+import { Button } from "@windmill/react-ui"
 import { Chart, registerables } from "chart.js"
-import {
-  lineDashboardlLegends,
-  lineStatisticalLegends,
-} from "../../global_variable/global_charts_admin"
 Chart.register(...registerables)
 
-import {
-  doughnutOptions,
-  lineOptions,
-  doughnutLegends,
-  lineLegends,
-} from "../../global_variable/global_charts_admin"
 import axios from "axios"
 import { getProxy } from "../../utils/PathUtil"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -50,11 +24,10 @@ import { getCurrentDateFormatted } from "../../utils/DateUtil"
 
 function Dashboard() {
   const [tab, setTab] = useState<string>("month")
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const [dataCard, setDataCard] = useState([0, 0, 0, 0])
   const [dataChart, setDataChart] = useState(defaultDataForLinechartCrontab)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
   const [month, setMonth] = useState(getCurrentDateFormatted())
   const [year, setYear] = useState<number>(new Date().getFullYear())
@@ -208,7 +181,7 @@ function Dashboard() {
         </div>
       </div>
       <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-        <InfoCard title="Total Jobs" value={`${dataCard[0]}`}>
+        <InfoCard title="Total New Jobs" value={`${dataCard[0]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={PeopleIcon}
@@ -218,7 +191,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Total Base User" value={`${dataCard[1]}`}>
+        <InfoCard title="Total New Base User" value={`${dataCard[1]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={MoneyIcon}
@@ -227,7 +200,7 @@ function Dashboard() {
             className="mr-4"
           />
         </InfoCard>
-        <InfoCard title="Total Kol" value={`${dataCard[2]}`}>
+        <InfoCard title="Total New Kol" value={`${dataCard[2]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={CartIcon}
@@ -237,7 +210,7 @@ function Dashboard() {
           />
         </InfoCard>
 
-        <InfoCard title="Total Report" value={`${dataCard[3]}`}>
+        <InfoCard title="Total New Report" value={`${dataCard[3]}`}>
           {/* @ts-ignore */}
           <RoundIcon
             icon={ChatIcon}

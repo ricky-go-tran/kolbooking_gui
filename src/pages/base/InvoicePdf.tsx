@@ -1,21 +1,5 @@
-import React, { useContext, useEffect, useState } from "react"
-import {
-  Page,
-  Text,
-  View,
-  Document,
-  StyleSheet,
-  Image,
-  Font,
-} from "@react-pdf/renderer"
-import {
-  IPaymentJob,
-  ITableJob,
-} from "../../global_variable/global_table_admin"
-import Logo from "../../assets/images/logoo.png"
-import axios from "axios"
-import { getProxy } from "../../utils/PathUtil"
-import { AuthContext } from "../../contexts/AuthContext"
+import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer"
+import { IPaymentJob } from "../../global_variable/global_table_admin"
 
 const styles = StyleSheet.create({
   page: {

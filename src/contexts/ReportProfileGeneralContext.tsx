@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer, ReactNode } from "react"
+import React, { createContext, useReducer, ReactNode } from "react"
 import { ReportProfileType } from "../global_variable/global_type"
 import { REPORT_PROFILE_INIT_STATE } from "../global_variable/global_constant"
 import { ReportProfileGeneralReducer } from "../reducers/ReportProfileGeneralReducer"

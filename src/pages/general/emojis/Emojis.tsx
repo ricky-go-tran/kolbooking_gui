@@ -30,11 +30,9 @@ const Emojis = () => {
   const [dataTable, setDataTable] = useState<ITableEmoji[]>([])
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
-  const [detail, setDetail] = useState<number | string>(-1)
   const [tab, setTab] = useState<string>("job")
   const { setErrorCode } = useContext(ErrorContext)
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
 
   function onPageChangeTable(p: number) {
     setPageTable(p)
@@ -57,8 +55,8 @@ const Emojis = () => {
     axios
       .get(getProxy(url), config)
       .then((response) => {
-        let handle_data = fetchToITableEmoji(response.data.data)
-        let meta = response.data.meta
+        const handle_data = fetchToITableEmoji(response.data.data)
+        const meta = response.data.meta
         setResultPerPage(meta.items)
         setTotalResults(meta.count)
         setDataTable(handle_data)
@@ -80,7 +78,7 @@ const Emojis = () => {
     }
     axios
       .post(getProxy(url), {}, config)
-      .then((res) => {
+      .then(() => {
         setDataTable(
           dataTable.map((item) => {
             if (item.id === emoji.id) {
@@ -108,7 +106,7 @@ const Emojis = () => {
     }
     axios
       .post(getProxy(url), {}, config)
-      .then((res) => {
+      .then(() => {
         setDataTable(
           dataTable.map((item) => {
             if (item.id === emoji.id) {
@@ -136,7 +134,7 @@ const Emojis = () => {
     }
     axios
       .delete(getProxy(url), config)
-      .then((res) => {
+      .then(() => {
         setResultPerPage(resultsPerPage - 1)
       })
       .catch((error) => {

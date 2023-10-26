@@ -8,6 +8,6 @@ function Sidebar() {
       <MobileSidebar />
     </>
   );
-};
+}
 
 export default Sidebar;

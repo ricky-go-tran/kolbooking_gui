@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useState, useEffect, useContext } from "react"
+import { useEffect, useContext } from "react"
 import { getProxy } from "../../../utils/PathUtil"
 import { useParams } from "react-router-dom"
 import { ErrorContext } from "../../../contexts/ErrorContext"
@@ -8,8 +8,7 @@ import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 
 const Detail = () => {
   const params = useParams()
-  const { state: toast_state, dispatch: toast_dispatch } =
-    useContext(ToastContext)
+  const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { setErrorCode } = useContext(ErrorContext)
 
   useEffect(() => {

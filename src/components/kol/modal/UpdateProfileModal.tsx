@@ -3,7 +3,7 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import { AuthContext } from "../../../contexts/AuthContext"
 import { ProfileContext } from "../../../contexts/ProfileContext"
 import { EditIcon } from "../../../icons"
-import { Alert, Button, Input, Label, Textarea } from "@windmill/react-ui"
+import { Alert, Input, Label, Textarea } from "@windmill/react-ui"
 import axios from "axios"
 import { getCDNImage, getProxy } from "../../../utils/PathUtil"
 import { PROFILE_URL } from "../../../global_variable/global_uri_backend"
@@ -14,10 +14,8 @@ import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
 import { DEFAULT_AVATAR } from "../../../global_variable/global_constant"
 
 export const UpdateProfileModal = ({
-  profile_id,
   onClose,
 }: {
-  profile_id: string
   onClose: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const [avatar, setAvatar] = useState<File | null>(null)
@@ -25,7 +23,7 @@ export const UpdateProfileModal = ({
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState("")
-  const { state: auth_state, dispatch: auth_dispatch } = useContext(AuthContext)
+  const { state: auth_state } = useContext(AuthContext)
   const { state: profile_state, dispatch: profile_dispatch } =
     useContext(ProfileContext)
   const { setErrorCode } = useContext(ErrorContext)
@@ -46,7 +44,7 @@ export const UpdateProfileModal = ({
         },
       })
       .then((response) => {
-        let handle_data = response.data.data.attributes
+        const handle_data = response.data.data.attributes
         setProfileData({
           avatar: handle_data.avatar,
           fullname: handle_data.fullname,
@@ -59,7 +57,6 @@ export const UpdateProfileModal = ({
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleFileInputChange = (
@@ -103,7 +100,7 @@ export const UpdateProfileModal = ({
   }
 
   const handleChangeProfile = () => {
-    let formData = new FormData()
+    const formData = new FormData()
     if (avatar !== null) {
       formData.append("profile[avatar]", avatar)
     }
@@ -125,7 +122,7 @@ export const UpdateProfileModal = ({
           message: "Profile change successfully",
           toast_dispatch: toast_dispatch,
         })
-        let handle_data = {
+        const handle_data = {
           fullname: response.data.data.attributes.fullname,
           avatar: getProxy(response.data.data.attributes.avatar),
           role: response.data.data.attributes.role,
