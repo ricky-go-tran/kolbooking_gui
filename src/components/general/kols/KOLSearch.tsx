@@ -1,7 +1,11 @@
 import { useContext, useState } from "react"
 import { SearchKolHomepageContext } from "../../../contexts/SearchKolHomepageContext"
 
-const KOLSearch = () => {
+const KOLSearch = ({
+  setFilter,
+}: {
+  setFilter: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
   const [tempSearch, setTempSearch] = useState("")
   const { setKolSearch } = useContext(SearchKolHomepageContext)
 
@@ -20,6 +24,16 @@ const KOLSearch = () => {
           }}
           value={tempSearch}
         />
+        <div className="lg:flex hidden items-center px-2 rounded-lg space-x-4 mx-auto ">
+          <button
+            className="bg-gray-200 w-24  border border-gray-200 text-base rounded-lg px-4 py-2 font-thin"
+            onClick={() => {
+              setFilter(true)
+            }}
+          >
+            Filter
+          </button>
+        </div>
         <div className="lg:flex hidden items-center px-2 rounded-lg space-x-4 mx-auto ">
           <button
             className="bg-blue-400 text-white text-base rounded-lg px-4 py-2 font-thin"

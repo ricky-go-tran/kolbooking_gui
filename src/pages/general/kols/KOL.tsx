@@ -8,9 +8,12 @@ import { Loading } from "../../../components/general/loading/Loading"
 import { ErrorContext } from "../../../contexts/ErrorContext"
 import { ToastContext } from "../../../contexts/ToastContext"
 import { HandleResponseError } from "../../../utils/ErrorHandleUtil"
+import KolFilterModal from "../../../components/general/modal/KolFilterModal"
+import { FilterKol } from "../../../global_variable/global_type"
 
 const KOL = () => {
   const [kols, setKols] = useState([])
+  const [filter, setFilter] = useState(false)
   const [totalResults, setTotalResults] = useState(0)
   const [resultsPerPage, setResultPerPage] = useState(0)
   const [pageTable, setPageTable] = useState(1)
@@ -18,6 +21,18 @@ const KOL = () => {
   const [loading, setLoading] = useState(false)
   const { setErrorCode } = useContext(ErrorContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
+  const [filterData, setFilterData] = useState<FilterKol>({
+    follow: {
+      min: 0,
+      max: 0,
+    },
+    like: {
+      min: 0,
+      max: 0,
+    },
+    industry: [],
+  })
+  const [submit, setSubmit] = useState<FilterKol | null>(null)
 
   useEffect(() => {
     const config: any = {
@@ -27,6 +42,7 @@ const KOL = () => {
           size: 8,
         },
         search: kolSearch,
+        filter: filterData,
       },
     }
     axios
@@ -41,11 +57,11 @@ const KOL = () => {
       .catch((error) => {
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
-  }, [pageTable, kolSearch])
+  }, [pageTable, kolSearch, submit])
 
   return (
     <>
-      <KOLSearch />
+      <KOLSearch setFilter={setFilter} />
       {loading === false && <Loading />}
       {loading === true && (
         <KOLs
@@ -53,6 +69,14 @@ const KOL = () => {
           resultsPerPage={resultsPerPage}
           totalResults={totalResults}
           setPageTable={setPageTable}
+        />
+      )}
+      {filter === true && (
+        <KolFilterModal
+          filter={filterData}
+          onSubmit={setSubmit}
+          setFilterKol={setFilterData}
+          onClose={setFilter}
         />
       )}
     </>

@@ -66,7 +66,6 @@ const Detail = () => {
   const [booking, setBooking] = useState<string>("-1")
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const [review, setReview] = useState("")
-
   const { dispatch: report_profile_dispatch } = useContext(
     ReportProfileGeneralContext
   )

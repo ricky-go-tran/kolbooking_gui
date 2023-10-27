@@ -6,6 +6,18 @@ export type AuthType = {
   loading: boolean
 }
 
+export type FilterKol = {
+  follow: {
+    min: number
+    max: number
+  }
+  like: {
+    min: number
+    max: number
+  }
+  industry: string[]
+}
+
 export type StatusLoginType = {
   status: string
 }
