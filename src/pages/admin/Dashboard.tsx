@@ -21,6 +21,7 @@ import { ToastContext } from "../../contexts/ToastContext"
 import { ErrorContext } from "../../contexts/ErrorContext"
 import { HandleResponseError } from "../../utils/ErrorHandleUtil"
 import { getCurrentDateFormatted } from "../../utils/DateUtil"
+import RoundIcon from "../../components/admin/RoundIcon"
 
 function Dashboard() {
   const [tab, setTab] = useState<string>("month")

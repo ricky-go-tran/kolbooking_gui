@@ -62,6 +62,7 @@ const JobContent = () => {
         setLoading(true)
       })
       .catch((error) => {
+        console.log(error)
         HandleResponseError(error, setErrorCode, toast_dispatch)
       })
   }, [auth_state, pageTable, jobSearch, jobFilter])

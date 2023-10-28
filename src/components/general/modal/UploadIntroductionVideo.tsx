@@ -7,6 +7,7 @@ import { ToastContext } from "../../../contexts/ToastContext"
 import { generalMessage } from "../../../utils/ToastUtil"
 import "react-quill/dist/quill.snow.css"
 import { CloudArrowUpIcon, VideoCameraIcon } from "@heroicons/react/24/solid"
+import { getProxy } from "../../../utils/PathUtil"
 
 const UploadIntroductionVideo = ({
   onClose,
@@ -51,16 +52,12 @@ const UploadIntroductionVideo = ({
     if (video !== null) {
       formData.append("kol_profile[intro_video]", video)
       axios
-        .put(
-          "http://14.225.206.62:3000/api/v1/kol/kol_profiles/change_video",
-          formData,
-          {
-            headers: {
-              Authorization: auth_state.auth_token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        )
+        .put(getProxy("/api/v1/kol/kol_profiles/change_video"), formData, {
+          headers: {
+            Authorization: auth_state.auth_token,
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then(() => {
           setLoading(false)
           onClose(-1)

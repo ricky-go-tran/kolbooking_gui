@@ -467,7 +467,7 @@ const Detail = () => {
                         <h3 className="text-center text-xl text-gray-400 font-medium leading-8">
                           Social Media
                         </h3>
-                        <table className="text-xs my-3">
+                        <table className="text-xs mx-auto my-3">
                           <tbody>
                             <tr>
                               <td className="px-11 py-2">
