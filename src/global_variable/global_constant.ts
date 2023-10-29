@@ -44,4 +44,4 @@ export const REPORT_PROFILE_INIT_STATE: ReportProfileType = {
 }
 export const APP_URL = "https://tdphatdev.xyz"
 export const FE_URL = "https://kolbooking-gui.vercel.app/"
-export const APP_CABLE_URL = "wss://tdphatdev.xyz/cable"
+export const APP_CABLE_URL = "ws://103.149.86.29:3000/cable"
