@@ -20,6 +20,7 @@ import HomePage from "./pages/general/newfeed/HomePage"
 import Logout from "./components/general/logout/Logout"
 import BussinessProfile from "./pages/base/BussinessProfile"
 import Statistics from "./pages/base/Statistical"
+import { APP_CABLE_URL } from "./global_variable/global_constant"
 const UnAuthRoutes = lazy(() => import("./pages/general/redirect/UnAuthRoutes"))
 const RedirectByRole = lazy(
   () => import("./pages/general/redirect/RedirectByRole")
@@ -70,30 +71,30 @@ function App() {
     useContext(ProfileContext)
   const { dispatch: toast_dispatch } = useContext(ToastContext)
   const { dispatch: status_dispatch } = useContext(StatusLoginContext)
-  // const cable = ActionCable.createConsumer(`ws://14.225.206.62:3000/cable`)
+  const cable = ActionCable.createConsumer(APP_CABLE_URL)
   const { errorCode } = useContext(ErrorContext)
 
-  // useEffect(() => {
-  //   cable.subscriptions.create(
-  //     { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
-  //     {
-  //       connected: function () {
-  //         console.log("You've subscribed to the  Channel")
-  //       },
-  //       disconnected: function () {
-  //         console.log("You've disconnected from the  Channel")
-  //       },
-  //       received: (message: string) => {
-  //         if (message) {
-  //           generalMessage({
-  //             message: "You have a new message. Please check your inbox",
-  //             toast_dispatch: toast_dispatch,
-  //           })
-  //         }
-  //       },
-  //     }
-  //   )
-  // }, [])
+  useEffect(() => {
+    cable.subscriptions.create(
+      { channel: "NotificationsChannel", profile_id: Number(profile_state.id) },
+      {
+        connected: function () {
+          console.log("You've subscribed to the  Channel")
+        },
+        disconnected: function () {
+          console.log("You've disconnected from the  Channel")
+        },
+        received: (message: string) => {
+          if (message) {
+            generalMessage({
+              message: "You have a new message. Please check your inbox",
+              toast_dispatch: toast_dispatch,
+            })
+          }
+        },
+      }
+    )
+  }, [])
 
   useEffect(() => {
     if (auth_state.auth_token !== "null" && auth_state.auth_token !== "") {
