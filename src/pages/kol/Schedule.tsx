@@ -40,7 +40,7 @@ const Schedule = () => {
     scope: "https://www.googleapis.com/auth/calendar",
     onNonOAuthError: (nonError) => console.log(nonError),
     ux_mode: "redirect",
-    redirect_uri: "http://localhost:9000/redirect",
+    redirect_uri: "https://kolbooking-gui.vercel.app/redirect",
   })
 
   const handleEventDoubleClick = (event: EventType) => {
