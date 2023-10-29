@@ -91,17 +91,13 @@ const Statistics = () => {
     <>
       <PageTitle>Statistics</PageTitle>
 
-      <div className="w-full flex justify-between py-6">
-        <SectionTitle>
-          {tab === "moth"
-            ? "Index month"
-            : tab === "half_year"
-            ? "Index 6 Month"
-            : "Index year"}
-        </SectionTitle>
-        <div className="w-3/5 flex flex-row justify-between">
+      <div className="w-full flex flex-col lg:flex-row justify-between py-6">
+        <h1 className="text-xl lg:text-2xl font-semibold text-gray-700 dark:text-gray-200">
+          Statisticals
+        </h1>
+        <div className="w-full lg:w-3/5 flex flex-col lg:flex-row justify-between">
           {tab === "month" && (
-            <div className="w-1/2">
+            <div className="w-full my-2 lg:w-1/2 lg:my-0">
               <input
                 type="month"
                 placeholder="Picker month"
@@ -121,7 +117,7 @@ const Statistics = () => {
             </div>
           )}
           {tab === "year" && (
-            <div className="w-1/2">
+            <div className="w-full my-2 lg:w-1/2 lg:my-0">
               <input
                 type="number"
                 min="2000"

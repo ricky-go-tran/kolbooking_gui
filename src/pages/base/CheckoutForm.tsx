@@ -1,8 +1,11 @@
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
 import { useEffect, useState } from "react"
-import { getFEHost } from "../../utils/PathUtil"
+import { getCDNImage, getFEHost, getProxy } from "../../utils/PathUtil"
 import ImageOffice from "../../assets/images/create-account-office.jpeg"
 import { Job } from "../../global_variable/global_type"
+import { DEFAULT_IMAGE } from "../../global_variable/global_constant"
+import "react-quill/dist/quill.snow.css"
+import parse from "html-react-parser"
 
 const CheckoutForm = ({ job }: { job: Job }) => {
   const [message, setMessage] = useState<string | undefined | null>(null)
@@ -117,7 +120,11 @@ const CheckoutForm = ({ job }: { job: Job }) => {
               <li className="flex justify-between">
                 <div className="inline-flex">
                   <img
-                    src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fGhhaXIlMjBkcnllcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+                    src={
+                      job.image === "null"
+                        ? getCDNImage(DEFAULT_IMAGE)
+                        : getProxy(job.image)
+                    }
                     alt=""
                     className="max-h-16"
                   />
@@ -125,9 +132,13 @@ const CheckoutForm = ({ job }: { job: Job }) => {
                     <p className="text-base font-semibold text-white">
                       {job.title}
                     </p>
-                    <p className="text-sm font-medium text-white text-opacity-80">
-                      {job.description}
-                    </p>
+                    <div className="text-sm font-medium text-white text-opacity-80">
+                      <main className="ql-snow">
+                        <div className="ql-editor">
+                          {parse(`${job.description}`)}
+                        </div>
+                      </main>
+                    </div>
                   </div>
                 </div>
                 <p className="text-sm font-semibold text-white">

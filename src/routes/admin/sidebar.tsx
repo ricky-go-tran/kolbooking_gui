@@ -7,6 +7,11 @@ const externalRoutes: IRoute[] = [
     name: "Dashboard",
   },
   {
+    path: "/base/follow",
+    icon: "PeopleIcon",
+    name: "Follow",
+  },
+  {
     path: "/admin/users",
     icon: "PeopleIcon",
     name: "Users",

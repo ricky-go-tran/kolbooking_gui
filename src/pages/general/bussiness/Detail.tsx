@@ -108,7 +108,7 @@ const Detail = () => {
         const handle_data = response.data.data.attributes
         // console.log(handle_data)
         setData(handle_data)
-        setFollow(handle_data.follow_num || 0)
+        setFollow(handle_data.follow || 0)
         if (
           handle_data.current_user_follow === undefined ||
           handle_data.current_user_follow === null
@@ -272,21 +272,21 @@ const Detail = () => {
                   <span className="text-gray-600 uppercase font-bold tracking-wider mb-2">
                     Profile Infomation
                   </span>
-                  <table className="text-base font-thin my-3">
-                    <tbody>
+                  <table className="text-sm font-thin my-3 max-w-xs w-9/12">
+                    <tbody className="w-full">
                       <tr>
                         <td className="px-2 py-2 text-gray-600 font-medium">
                           Birthday
                         </td>
-                        <td className="px-2 py-2 dark:text-gray-100">
+                        <td className="px-2 py-2 dark:text-gray-100 w-24">
                           {data.birthday}
                         </td>
                       </tr>
-                      <tr>
+                      <tr className="w-full">
                         <td className="px-2 py-2 text-gray-600 font-medium">
                           Email
                         </td>
-                        <td className="px-2 py-2 dark:text-gray-100">
+                        <td className="px-2 py-2 dark:text-gray-100 w-24">
                           {data.email}
                         </td>
                       </tr>
@@ -294,7 +294,7 @@ const Detail = () => {
                         <td className="px-2 py-2 text-gray-600 font-medium">
                           Location
                         </td>
-                        <td className="px-2 py-2 dark:text-gray-100">
+                        <td className="px-2 py-2 dark:text-gray-100 truncate overflow-hidden">
                           {data.address}
                         </td>
                       </tr>
@@ -302,7 +302,7 @@ const Detail = () => {
                         <td className="px-2 py-2 text-gray-600 font-medium">
                           Phone
                         </td>
-                        <td className="px-2 py-2 dark:text-gray-100">{`+84 ${data.phone}`}</td>
+                        <td className="px-2 py-2 dark:text-gray-100 truncate overflow-hidden">{`+84 ${data.phone}`}</td>
                       </tr>
                     </tbody>
                   </table>

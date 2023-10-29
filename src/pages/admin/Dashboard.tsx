@@ -114,7 +114,7 @@ function Dashboard() {
             </div>
           )}
           {tab === "year" && (
-            <div className="w-1/2">
+            <div className="w-full my-2 lg:w-1/2 lg:my-0">
               <input
                 type="number"
                 min="2000"

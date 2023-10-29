@@ -7,6 +7,11 @@ const externalRoutes: IRoute[] = [
     name: "Statistics",
   },
   {
+    path: "/base/follow",
+    icon: "PeopleIcon",
+    name: "Follow",
+  },
+  {
     path: "/kol/schedule",
     icon: "CalendarOutlineIcon",
     name: "Calendar",

@@ -430,18 +430,18 @@ const Detail = () => {
                           >
                             <WarningOutlineIcon />
                           </li>
+                          <li
+                            className="flex text-gray-500 cursor-pointer hover:text-gray-400"
+                            onClick={() => {
+                              followOrUnfollow()
+                            }}
+                          >
+                            {follower === false && <FollowOutlineIcon />}
+                            {follower === true && <FollowIcon />}
+                          </li>
 
                           {profile_state.role === "base" && (
                             <>
-                              <li
-                                className="flex text-gray-500 cursor-pointer hover:text-gray-400"
-                                onClick={() => {
-                                  followOrUnfollow()
-                                }}
-                              >
-                                {follower === false && <FollowOutlineIcon />}
-                                {follower === true && <FollowIcon />}
-                              </li>
                               <li
                                 className="flex text-gray-500 cursor-pointer hover:text-gray-400"
                                 onClick={() => {

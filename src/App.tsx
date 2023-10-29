@@ -343,11 +343,9 @@ function App() {
             <Route
               path="/base/follow"
               element={
-                <BaseProtectRoute>
-                  <AdminLayout>
-                    <Follow />
-                  </AdminLayout>
-                </BaseProtectRoute>
+                <AdminLayout>
+                  <Follow />
+                </AdminLayout>
               }
             />
             <Route

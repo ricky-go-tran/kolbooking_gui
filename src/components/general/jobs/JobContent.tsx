@@ -68,7 +68,7 @@ const JobContent = () => {
   }, [auth_state, pageTable, jobSearch, jobFilter])
 
   return (
-    <div className="w-full min-h-full flex bg-gray-100 pt-3 dark:bg-gray-600">
+    <div className="w-full min-h-full flex flex-col lg:flex-row bg-gray-100 pt-3 dark:bg-gray-600">
       <hr className="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700"></hr>
       <JobFilter />
       {loading === false && (

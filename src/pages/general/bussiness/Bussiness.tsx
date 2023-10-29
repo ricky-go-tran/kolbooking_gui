@@ -57,7 +57,7 @@ const Bussiness = () => {
         onSubmit={setSubmitEvent}
       />
       <div className="container mx-auto">
-        <div className="flex flex-wrap -mx-4">
+        <div className="flex flex-wrap -mx-4 px-5 lg:px-0">
           {bussinesses.length === 0 && (
             <ul id="gallery" className="flex flex-1 flex-wrap -m-1 mt-16">
               <li
