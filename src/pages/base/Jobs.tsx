@@ -50,7 +50,7 @@ const Jobs = () => {
 
   function cancle(job: ITableJob) {
     axios
-      .delete(getProxy(`/api/v1/base/jobs/${job.id}/cancle`), {
+      .put(getProxy(`/api/v1/base/jobs/${job.id}/cancle`), {
         headers: {
           Authorization: auth_state.auth_token,
         },
