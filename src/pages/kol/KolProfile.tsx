@@ -324,40 +324,6 @@ const KolProfile = () => {
           </div>
           <div className="w-full bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
             <div className="mx-5 my-7">
-              <div className="w-full flex justify-between">
-                <div className="flex justify-start">
-                  <PhotoIcon className="text-gray-400 w-6 h-6" />
-                  <span className="text-base text-gray-400 font-semibold ml-4">
-                    Introduction Video
-                  </span>
-                </div>
-                <span
-                  className="text-gray-400 mr-5"
-                  onClick={() => {
-                    setVideo(1)
-                  }}
-                >
-                  <EditIcon />
-                </span>
-              </div>
-              <div className="mt-5 flex justify-center h-96">
-                <ReactPlayer
-                  url={
-                    data?.intro_video === "null"
-                      ? getCDNImage(DEFAULT_VIDEO)
-                      : getProxy(data.intro_video)
-                  }
-                  width="85%"
-                  height="100%"
-                  playing={true}
-                  controls={true}
-                  style={{ borderRadius: "10px" }}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="w-full bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
-            <div className="mx-5 my-7">
               <div className="w-full flex justify-between mb-5">
                 <div className="flex justify-start">
                   <PhotoIcon className="text-gray-400 w-6 h-6" />
@@ -416,6 +382,40 @@ const KolProfile = () => {
                   </li>
                 </ul>
               )}
+            </div>
+          </div>
+          <div className="w-full bg-white rounded h-auto shadow-xl my-2 dark:bg-gray-800">
+            <div className="mx-5 my-7">
+              <div className="w-full flex justify-between">
+                <div className="flex justify-start">
+                  <PhotoIcon className="text-gray-400 w-6 h-6" />
+                  <span className="text-base text-gray-400 font-semibold ml-4">
+                    Introduction Video
+                  </span>
+                </div>
+                <span
+                  className="text-gray-400 mr-5"
+                  onClick={() => {
+                    setVideo(1)
+                  }}
+                >
+                  <EditIcon />
+                </span>
+              </div>
+              <div className="mt-5 flex justify-center h-96">
+                <ReactPlayer
+                  url={
+                    data?.intro_video === "null"
+                      ? getCDNImage(DEFAULT_VIDEO)
+                      : getProxy(data.intro_video)
+                  }
+                  width="85%"
+                  height="100%"
+                  playing={true}
+                  controls={true}
+                  style={{ borderRadius: "10px" }}
+                />
+              </div>
             </div>
           </div>
         </div>

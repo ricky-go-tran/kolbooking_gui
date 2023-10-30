@@ -21,7 +21,7 @@ export const DEFAULT_IMAGE =
 export const DEFAULT_AVATAR =
   "/image/upload/v1695013387/xqipgdlevshas5fjqtzx.jpg"
 export const DEFAULT_VIDEO =
-  "/video/upload/v1698028006/ojf5jlvffa7d6q7glwb1.mp4"
+  "video/upload/v1698646788/j0ul9jizfvw3mb73csuqt3jh7jvl.mp4"
 
 export const INITIAL_STATE: AuthType = {
   auth_token: TokenStorage(),
